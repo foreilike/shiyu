@@ -1,0 +1,761 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>语言陪练 · 拾语风 UI 高保真预览 v4</title>
+<style>
+  :root{
+    --paper:#FAF7F2; --card:#FFFFFF; --ink:#211B16; --ink2:#57493D; --mute:#9A8C7D;
+    --line:#ECE4D8; --clay:#A34E28; --clay-deep:#7E3A1B; --clay-soft:#F5E7DC;
+    --dark:#17120E; --dark2:#241B14; --cream:#F4EDE5; --gold:#C89B72;
+    --ja:#C4586B; --en:#4A5D9E; --ok:#3E6B54; --bad:#B3261E;
+  }
+  *{margin:0;padding:0;box-sizing:border-box}
+  body{background:#EDEAE4;color:var(--ink);
+    font-family:system-ui,-apple-system,"PingFang SC","Hiragino Sans GB","Microsoft YaHei",sans-serif;
+    -webkit-font-smoothing:antialiased}
+  .serif{font-family:"Noto Serif SC","Source Han Serif SC","Songti SC","SimSun",Georgia,serif}
+  header{max-width:1240px;margin:0 auto;padding:36px 24px 6px}
+  header h1{font-size:23px}
+  header h1 b{color:var(--clay)}
+  header p{margin-top:8px;color:#6B5F52;font-size:13px;line-height:1.8}
+  .srcs{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}
+  .srcs span{background:#fff;border:1px solid var(--line);border-radius:999px;padding:5px 12px;font-size:12px;color:#4A423A}
+  .srcs span i{font-style:normal;color:var(--clay);font-weight:600;margin-right:4px}
+  .grid{max-width:1240px;margin:22px auto 60px;padding:0 24px;
+    display:grid;grid-template-columns:repeat(auto-fill,minmax(340px,1fr));gap:36px 28px}
+  .cell{display:flex;flex-direction:column;align-items:center}
+  .cap{margin-top:12px;text-align:center;max-width:330px}
+  .cap b{display:block;font-size:13px;color:#2A241E}
+  .cap small{display:block;font-size:11.5px;color:#7A7065;margin-top:3px;line-height:1.6}
+  .cap em{font-style:normal;color:var(--clay);font-weight:600}
+  /* 手机框 */
+  .phone{width:330px;height:690px;border-radius:46px;background:#14100C;padding:10px;flex:none;
+    box-shadow:0 24px 60px rgba(38,33,28,.22),0 4px 12px rgba(38,33,28,.12);position:relative}
+  .screen{width:100%;height:100%;border-radius:38px;background:var(--paper);overflow:hidden;
+    display:flex;flex-direction:column;position:relative;font-size:14px}
+  .notch{position:absolute;top:10px;left:50%;transform:translateX(-50%);width:96px;height:22px;
+    background:#14100C;border-radius:12px;z-index:30}
+  .status{height:40px;flex:none;display:flex;align-items:center;justify-content:space-between;
+    padding:0 26px 0 30px;font-size:12px;font-weight:600;color:var(--ink);z-index:20}
+  .status.dark{color:var(--cream)}
+  .signal{display:flex;gap:1.5px;align-items:flex-end}
+  .signal i{width:3px;background:currentColor;border-radius:1px;display:block}
+  .signal i:nth-child(1){height:4px}.signal i:nth-child(2){height:6px}
+  .signal i:nth-child(3){height:8px}.signal i:nth-child(4){height:10px}
+  .batt{width:20px;height:10px;border:1.5px solid currentColor;border-radius:3px;position:relative}
+  .batt::after{content:"";position:absolute;inset:1.5px;right:35%;background:currentColor;border-radius:1px}
+  .batt::before{content:"";position:absolute;right:-4px;top:2.5px;width:2px;height:4px;background:currentColor;border-radius:0 2px 2px 0}
+  .body{flex:1;overflow:hidden;display:flex;flex-direction:column;padding:0 20px}
+  .body.scroll{overflow-y:auto;scrollbar-width:none}
+  .body.scroll::-webkit-scrollbar{display:none}
+  /* tabbar：中央麦克风 FAB */
+  .tabbar{flex:none;height:72px;background:rgba(255,253,250,.94);border-top:1px solid var(--line);
+    display:flex;align-items:stretch;padding:0 6px 10px;position:relative}
+  .tab{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;
+    font-size:10px;color:var(--mute);border-radius:12px}
+  .tab.on{color:var(--clay);font-weight:700}
+  .tab svg{width:21px;height:21px}
+  .tab .dot{width:4px;height:4px;border-radius:50%;background:transparent}
+  .tab.on .dot{background:var(--clay)}
+  .tab-mic{flex:1;position:relative}
+  .tab-mic .fab{position:absolute;left:50%;top:-24px;transform:translateX(-50%);width:52px;height:52px;
+    border-radius:50%;background:linear-gradient(150deg,#C89B72,var(--clay-deep));
+    display:flex;align-items:center;justify-content:center;box-shadow:0 8px 18px rgba(163,78,40,.35)}
+  .tab-mic .fab svg{width:22px;height:22px;fill:none;stroke:#FFF6EC;stroke-width:1.8;stroke-linecap:round}
+  .tab-mic span{position:absolute;bottom:2px;left:0;right:0;text-align:center;font-size:10px;color:var(--mute)}
+  /* 通用 */
+  .row{display:flex;align-items:center}
+  .card{background:var(--card);border:1px solid var(--line);border-radius:20px;padding:16px;margin-bottom:14px}
+  .pg-head .t{font-size:24px;font-weight:700;color:var(--ink)}
+  .pg-head .s{font-size:12px;color:var(--mute);margin-top:2px}
+  .greet{display:flex;align-items:flex-end;justify-content:space-between;margin:6px 0 14px}
+  .greet small{display:block;color:var(--mute);font-size:12px;margin-bottom:2px}
+  .greet .name{font-size:24px;font-weight:700;color:var(--ink)}
+  .streak{display:flex;align-items:center;gap:6px;background:var(--card);border:1px solid var(--line);
+    border-radius:999px;padding:6px 12px;font-size:12.5px;font-weight:600;color:var(--clay)}
+  .ring-wrap{position:relative;width:64px;height:64px;flex:none}
+  .ring-wrap svg{transform:rotate(-90deg)}
+  .ring-txt{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;
+    justify-content:center;font-size:13px;font-weight:700;color:var(--ink);line-height:1.1}
+  .ring-txt small{font-size:9px;color:var(--mute);font-weight:500}
+  .goal-row{display:flex;align-items:center;gap:14px}
+  .goal-info .t1{font-weight:600;color:var(--ink)}
+  .goal-info .t2{font-size:12px;color:var(--mute);margin-top:2px}
+  .goal-stats{display:flex;gap:8px;margin-top:10px}
+  .goal-stats span{font-size:11.5px;color:var(--ink2);background:var(--paper);border-radius:8px;padding:4px 10px}
+  .tagline{display:inline-flex;align-items:center;gap:6px;font-size:11px;font-weight:600;color:var(--ja);
+    background:#fff;border:1px solid var(--line);border-radius:999px;padding:3px 10px;margin-bottom:10px}
+  .tagline i{width:7px;height:7px;border-radius:50%;background:var(--ja)}
+  .unit{font-size:17px;font-weight:700;color:var(--ink)}
+  .lvl{font-size:12px;color:var(--ink2);margin:4px 0 12px}
+  .prog{height:6px;border-radius:999px;background:rgba(33,27,22,.08);overflow:hidden}
+  .prog i{display:block;height:100%;border-radius:999px;background:var(--ja)}
+  .cont-foot{display:flex;align-items:center;justify-content:space-between;margin-top:12px}
+  .cont-foot .pct{font-size:12px;color:var(--mute)}
+  .btn-clay{border:none;background:var(--clay);color:#FFF6EC;font-size:13px;font-weight:600;
+    border-radius:999px;padding:8px 18px}
+  .btn-ghost{border:1px solid var(--line);background:var(--card);color:var(--ink2);
+    border-radius:999px;padding:8px 18px;font-size:13px;font-weight:600}
+  .voice-card{background:radial-gradient(140% 120% at 85% -20%,#3A2A1D 0%,var(--dark) 55%);
+    border:none;color:var(--cream);position:relative;overflow:hidden;cursor:pointer}
+  .voice-card .vc-k{font-size:11px;letter-spacing:.18em;color:var(--gold);margin-bottom:8px}
+  .voice-card .vc-t{font-size:17px;font-weight:700}
+  .voice-card .vc-s{font-size:12px;color:#B7A890}
+  .mini-wave{display:flex;align-items:center;gap:3px;height:26px;margin-top:12px}
+  .mini-wave i{width:3px;border-radius:2px;background:linear-gradient(180deg,#E0A875,#A34E28);
+    animation:mw 1.6s ease-in-out infinite}
+  @keyframes mw{0%,100%{transform:scaleY(.35)}50%{transform:scaleY(1)}}
+  .voice-card .vc-go{position:absolute;right:16px;bottom:16px;width:40px;height:40px;border-radius:50%;
+    background:rgba(244,237,229,.12);border:1px solid rgba(244,237,229,.25);
+    display:flex;align-items:center;justify-content:center;color:var(--cream)}
+  .duo{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+  .duo .card{margin-bottom:0;padding:14px;cursor:pointer}
+  .duo .d-t{font-size:13.5px;font-weight:600;color:var(--ink);margin-top:8px}
+  .duo .d-s{font-size:11.5px;color:var(--mute);margin-top:2px}
+  .d-ico{width:34px;height:34px;border-radius:10px;display:flex;align-items:center;justify-content:center}
+  .d-ico svg{width:17px;height:17px}
+  /* 假名表 */
+  .kchart{background:var(--card);border:1px solid var(--line);border-radius:20px;padding:12px 10px 10px;margin-top:10px}
+  .krow{display:grid;grid-template-columns:repeat(5,1fr);gap:6px;margin-bottom:6px}
+  .kcell{background:var(--paper);border-radius:12px;padding:7px 2px 5px;text-align:center;
+    border:1.5px solid transparent;cursor:pointer}
+  .kcell:hover{border-color:var(--ja);background:#FDF2F3}
+  .kcell .h{font-size:17px;font-weight:700;line-height:1.1}
+  .kcell .k{font-size:11.5px;color:var(--ja);font-weight:700}
+  .kcell .r{font-size:8.5px;color:var(--mute);margin-top:1px}
+  .krow.head .kcell{background:transparent;border:none;cursor:default;padding:2px}
+  .krow.head .kcell span{font-size:9.5px;color:var(--mute);font-weight:600}
+  .toggle{display:flex;background:var(--clay-soft);border-radius:999px;padding:3px;margin-left:auto}
+  .toggle b{font-size:10.5px;padding:4px 10px;border-radius:999px;color:var(--ink2)}
+  .toggle b.on{background:#fff;color:var(--ink);box-shadow:0 1px 4px rgba(17,24,39,.12)}
+  .tip{margin-top:8px;background:#FDF2F3;border:1px dashed var(--ja);border-radius:12px;
+    padding:8px 12px;font-size:11px;color:#8F3A4B;text-align:center}
+  /* 场景列表 */
+  .scn{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:14px;
+    display:flex;gap:12px;align-items:center;margin-bottom:10px}
+  .scn .ico{width:46px;height:46px;border-radius:14px;flex:none;display:flex;align-items:center;
+    justify-content:center;font-size:21px}
+  .scn .tt{font-size:14px;font-weight:700;color:var(--ink)}
+  .scn .zz{font-size:11px;color:var(--mute);margin-top:2px}
+  .scn .go{margin-left:auto;text-align:right;flex:none}
+  .scn .go .n{font-size:11px;font-weight:700;color:var(--clay)}
+  .scn .go .bar{width:52px;height:5px;background:var(--clay-soft);border-radius:99px;margin-top:5px;overflow:hidden}
+  .scn .go .bar i{display:block;height:100%;background:var(--clay);border-radius:99px}
+  /* 对话页 */
+  .msgs{flex:1;overflow-y:auto;padding:4px 0 10px;display:flex;flex-direction:column;gap:12px;scrollbar-width:none}
+  .msgs::-webkit-scrollbar{display:none}
+  .msg{max-width:86%;border-radius:16px;padding:12px 14px;font-size:13px;line-height:1.65}
+  .msg.ai{background:#fff;border:1px solid var(--line);align-self:flex-start;border-bottom-left-radius:5px}
+  .msg.me{background:linear-gradient(150deg,#B85C31,var(--clay-deep));color:var(--cream);
+    align-self:flex-end;border-bottom-right-radius:5px}
+  .msg .zh{margin-top:8px;background:var(--paper);border-radius:10px;padding:6px 10px;font-size:11px;color:var(--mute)}
+  .msg .fix{margin-top:8px;background:#FFFBEB;border:1px solid #FDE68A;border-radius:10px;
+    padding:7px 10px;font-size:11px;color:#92400E;cursor:pointer}
+  .msg .fix b{color:#B45309}
+  .msg .fix .more{display:none;margin-top:6px;padding-top:6px;border-top:1px dashed #FDE68A}
+  .msg .fix.open .more{display:block}
+  .chatbar{flex:none;display:flex;gap:8px;align-items:center;padding:8px 0 12px}
+  .chatbar .box{flex:1;background:#fff;border:1.5px solid var(--line);border-radius:999px;height:42px;
+    display:flex;align-items:center;padding:0 16px;font-size:12.5px;color:var(--mute)}
+  .micbtn{width:42px;height:42px;border-radius:50%;background:var(--clay);flex:none;
+    display:flex;align-items:center;justify-content:center;box-shadow:0 6px 14px rgba(163,78,40,.4)}
+  .micbtn svg{width:19px;height:19px;fill:#fff}
+  .recbar{flex:none;display:flex;align-items:center;gap:10px;padding:8px 0 12px}
+  .recbar .timer{background:#FEF2F2;border:1px solid #FECACA;color:#B3261E;font-weight:800;
+    font-size:12px;padding:7px 12px;border-radius:999px;display:flex;align-items:center;gap:6px;flex:none}
+  .recbar .timer i{width:8px;height:8px;border-radius:50%;background:var(--bad);animation:blink 1s infinite}
+  @keyframes blink{50%{opacity:.2}}
+  .recbar .stop{flex:1;height:42px;border-radius:999px;background:var(--bad);color:#fff;
+    font-size:13px;font-weight:800;display:flex;align-items:center;justify-content:center}
+  .vadbar{background:#ECFDF5;border:1px dashed #86EFAC;border-radius:12px;padding:8px 12px;
+    font-size:11px;color:#166534;margin:8px 0;display:flex;align-items:center;gap:7px}
+  /* 实时语音（深色沉浸） */
+  .voicepage{background:radial-gradient(120% 90% at 50% 115%,#2E2015 0%,var(--dark) 60%);
+    color:var(--cream);display:flex;flex-direction:column;height:100%}
+  .v-top{display:flex;align-items:center;justify-content:space-between;padding:52px 16px 8px}
+  .v-iconbtn{width:38px;height:38px;border-radius:50%;border:1px solid rgba(244,237,229,.18);
+    background:rgba(244,237,229,.06);color:var(--cream);display:flex;align-items:center;justify-content:center}
+  .v-partner{display:flex;align-items:center;gap:10px}
+  .v-ava{width:40px;height:40px;border-radius:50%;background:var(--ja);color:#fff;
+    display:flex;align-items:center;justify-content:center;font-weight:700;position:relative}
+  .v-ava::after{content:"";position:absolute;right:-1px;bottom:-1px;width:10px;height:10px;
+    border-radius:50%;background:#7BC96F;border:2px solid var(--dark)}
+  .v-partner .n{font-size:14px;font-weight:600}
+  .v-partner .s{font-size:11px;color:#A79684}
+  .v-timer{font-variant-numeric:tabular-nums;font-size:13px;color:#C8B8A5}
+  .v-stage{display:flex;flex-direction:column;align-items:center;padding:10px 0 2px}
+  .wave{display:flex;align-items:center;gap:4px;height:64px}
+  .wave i{width:5px;border-radius:3px;background:linear-gradient(180deg,#E0A875,#A34E28);animation:wv 1.1s ease-in-out infinite}
+  .wave i:nth-child(1){height:12px}.wave i:nth-child(2){height:28px;animation-delay:.1s}
+  .wave i:nth-child(3){height:44px;animation-delay:.2s}.wave i:nth-child(4){height:22px;animation-delay:.3s}
+  .wave i:nth-child(5){height:36px;animation-delay:.4s}.wave i:nth-child(6){height:16px;animation-delay:.5s}
+  .wave i:nth-child(7){height:30px;animation-delay:.6s}.wave i:nth-child(8){height:42px;animation-delay:.7s}
+  .wave i:nth-child(9){height:18px;animation-delay:.8s}.wave i:nth-child(10){height:26px;animation-delay:.9s}
+  @keyframes wv{0%,100%{transform:scaleY(.5)}50%{transform:scaleY(1.15)}}
+  .v-state{font-size:12.5px;letter-spacing:.12em;color:var(--gold);margin-top:8px}
+  .v-transcript{flex:1;overflow-y:auto;padding:12px 20px;display:flex;flex-direction:column;gap:10px;scrollbar-width:none}
+  .v-transcript::-webkit-scrollbar{display:none}
+  .bubble{max-width:82%;border-radius:16px;padding:10px 14px;font-size:13.5px;line-height:1.55;animation:bin .3s ease}
+  @keyframes bin{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+  .bubble.ai{align-self:flex-start;background:var(--dark2);border:1px solid rgba(244,237,229,.08)}
+  .bubble.user{align-self:flex-end;background:linear-gradient(150deg,#B85C31,var(--clay-deep))}
+  .bubble .tr{display:block;font-size:11px;color:rgba(244,237,229,.55);margin-top:4px}
+  .v-controls{flex:none;display:flex;align-items:center;justify-content:center;gap:26px;padding:8px 0 30px;position:relative}
+  .v-hintline{position:absolute;top:-16px;left:0;right:0;text-align:center;font-size:11.5px;color:var(--gold)}
+  .v-mic{width:74px;height:74px;border-radius:50%;border:none;position:relative;
+    background:linear-gradient(150deg,#C89B72,var(--clay-deep));color:#FFF6EC;
+    display:flex;align-items:center;justify-content:center;box-shadow:0 10px 30px rgba(163,78,40,.45)}
+  .v-mic svg{width:28px;height:28px}
+  .v-mic.pulse::before{content:"";position:absolute;inset:-8px;border-radius:50%;
+    border:2px solid rgba(200,155,114,.5);animation:vp 1.4s ease-out infinite}
+  @keyframes vp{from{transform:scale(.85);opacity:1}to{transform:scale(1.35);opacity:0}}
+  .v-ready{background:radial-gradient(120% 90% at 50% 115%,#2E2015 0%,var(--dark) 60%);
+    display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;
+    text-align:center;padding:0 40px;flex:1}
+  .big-ava{width:92px;height:92px;border-radius:50%;background:var(--ja);color:#fff;
+    display:flex;align-items:center;justify-content:center;font-size:36px;font-weight:700;
+    box-shadow:0 0 0 10px rgba(244,237,229,.05),0 0 0 22px rgba(244,237,229,.03)}
+  .v-ready .t{font-size:21px;font-weight:700}
+  .v-ready .s{font-size:12.5px;color:#A79684;line-height:1.7}
+  .v-start{border:none;border-radius:999px;padding:14px 40px;font-size:15px;font-weight:600;
+    color:#FFF6EC;background:linear-gradient(150deg,#C89B72,var(--clay-deep));margin-top:22px}
+  .sum-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;width:100%;margin:22px 0 26px}
+  .sum-cell{background:var(--dark2);border:1px solid rgba(244,237,229,.08);border-radius:16px;padding:14px 6px;text-align:center}
+  .sum-cell b{display:block;font-size:20px;color:#E8C9A8}
+  .sum-cell span{font-size:10.5px;color:#A79684}
+  /* 我的 */
+  .pf-user{display:flex;align-items:center;gap:14px;margin:6px 0 16px}
+  .pf-ava{width:56px;height:56px;border-radius:50%;background:linear-gradient(150deg,#C89B72,var(--clay));
+    color:#FFF6EC;display:flex;align-items:center;justify-content:center;font-size:22px}
+  .pf-user .n{font-size:18px;font-weight:700}
+  .pf-user .d{font-size:12px;color:var(--mute)}
+  .pf-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:14px}
+  .pf-stat{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:12px 8px;text-align:center}
+  .pf-stat b{display:block;font-size:19px;color:var(--ink)}
+  .pf-stat span{font-size:11px;color:var(--mute)}
+  .week-bars{display:flex;align-items:flex-end;justify-content:space-between;height:96px;padding:6px 4px 0}
+  .week-bars .wb{display:flex;flex-direction:column;align-items:center;gap:6px;flex:1}
+  .week-bars .bar{width:14px;border-radius:7px;background:var(--clay-soft)}
+  .week-bars .wb.today .bar{background:linear-gradient(180deg,#C89B72,var(--clay))}
+  .week-bars small{font-size:10px;color:var(--mute)}
+  .badges{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+  .badge{border:1px solid var(--line);background:var(--card);border-radius:16px;padding:14px 8px;text-align:center}
+  .badge .b-ico{width:40px;height:40px;margin:0 auto 8px;border-radius:50%;display:flex;align-items:center;justify-content:center}
+  .badge .b-ico svg{width:19px;height:19px}
+  .badge .n{font-size:12px;font-weight:600;color:var(--ink)}
+  .badge .d{font-size:10.5px;color:var(--mute)}
+  /* 设置 */
+  .sec-title{font-size:11.5px;color:var(--mute);letter-spacing:.08em;margin:14px 2px 8px}
+  .f-label{font-size:12px;color:var(--ink2);font-weight:600;margin:14px 0 6px}
+  .inp{width:100%;border:1px solid var(--line);background:#fff;border-radius:12px;
+    padding:10px 12px;font-size:13px;color:var(--ink);outline:none;font-family:inherit}
+  .key-row{position:relative}
+  .key-row .inp{padding-right:42px;font-family:ui-monospace,Consolas,monospace}
+  .eye-btn{position:absolute;right:6px;top:50%;transform:translateY(-50%);width:32px;height:32px;
+    border:none;background:none;color:var(--mute);display:flex;align-items:center;justify-content:center}
+  .chips{display:flex;flex-wrap:wrap;gap:8px}
+  .chip{border:1px solid var(--line);background:#fff;color:var(--ink2);border-radius:999px;
+    padding:6px 13px;font-size:12px}
+  .chip.on{background:var(--clay-soft);border-color:var(--clay);color:var(--clay-deep);font-weight:600}
+  .switch{width:44px;height:26px;border-radius:999px;background:#E4DACC;position:relative;flex:none}
+  .switch::after{content:"";position:absolute;left:3px;top:3px;width:20px;height:20px;border-radius:50%;
+    background:#fff;box-shadow:0 1px 3px rgba(0,0,0,.2);transition:transform .2s}
+  .switch.on{background:var(--clay)}
+  .switch.on::after{transform:translateX(18px)}
+  .set-row{display:flex;align-items:center;justify-content:space-between;padding:13px 4px;
+    border-bottom:1px solid var(--line);font-size:13.5px;color:var(--ink2)}
+  .set-row:last-child{border-bottom:none}
+  /* toast */
+  .toast{position:absolute;left:50%;bottom:96px;transform:translateX(-50%) translateY(20px);
+    background:rgba(33,27,22,.92);color:#FFF6EC;font-size:11.5px;padding:8px 16px;border-radius:99px;
+    opacity:0;transition:.25s;pointer-events:none;z-index:40;white-space:nowrap}
+  .toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+  footer{max-width:1240px;margin:0 auto;padding:0 24px 40px;color:#8A7F72;font-size:11.5px;line-height:1.8}
+</style>
+</head>
+<body>
+
+<header>
+  <h1>语言陪练 <b>LangPartner</b> · 拾语风 UI 预览 v4</h1>
+  <p>按「拾语」设计稿重做：暖纸底 #FAF7F2 · 陶土主色 #A34E28 · 衬线标题 · 语种点缀色（日 #C4586B / 英 #4A5D9E）·
+     卡片细描边分层 · 底部导航中央麦克风 FAB · 全屏深色实时语音页。共 8 屏，深色语音屏为本次新增的实时对话。</p>
+  <div class="srcs">
+    <span><i>Duolingo</i>目标环 · 连续天数 · 四色评分</span>
+    <span><i>Busuu</i>编辑感版式 · 场景单元卡</span>
+    <span><i>HelloTalk</i>三段式消息 / 语伴轮流</span>
+    <span><i>LingQ</i>来自对话的记忆卡片</span>
+    <span><i>ELSA</i>波形可视化 · 实时聆听态</span>
+    <span><i>拾语稿</i>暖纸 + 陶土 + 衬线 + 中央 FAB</span>
+  </div>
+</header>
+
+<div class="grid">
+
+<!-- 1 今日（学习） -->
+<div class="cell">
+  <div class="phone"><div class="screen">
+    <div class="notch"></div>
+    <div class="status"><span>9:41</span><div class="icons"><div class="signal"><i></i><i></i><i></i><i></i></div><div class="batt"></div></div></div>
+    <div class="body scroll">
+      <div class="greet">
+        <div><small>9 月 20 日 · 周日</small><div class="name serif">晚上好，晓白</div></div>
+        <div class="streak">🔥 连续 7 天</div>
+      </div>
+      <div class="card">
+        <div class="goal-row">
+          <div class="ring-wrap">
+            <svg width="64" height="64" viewBox="0 0 64 64">
+              <circle cx="32" cy="32" r="27" fill="none" stroke="#ECE4D8" stroke-width="7"/>
+              <circle cx="32" cy="32" r="27" fill="none" stroke="#A34E28" stroke-width="7" stroke-linecap="round" stroke-dasharray="169.6" stroke-dashoffset="59"/>
+            </svg>
+            <div class="ring-txt">65<small>%</small></div>
+          </div>
+          <div class="goal-info">
+            <div class="t1">今日目标 · 新学 5 张</div>
+            <div class="t2">还差 2 张达成目标，睡前再刷一轮</div>
+          </div>
+        </div>
+        <div class="goal-stats"><span>新词 +3</span><span>待复习 6</span><span>预计 4 分钟</span></div>
+      </div>
+      <div class="card">
+        <span class="tagline"><i></i>日语 · N5</span>
+        <div class="unit serif">第 3 组 · 日常代词</div>
+        <div class="lvl">假名拼写 · 4 个新词 · 2 组句型</div>
+        <div class="prog"><i style="width:65%"></i></div>
+        <div class="cont-foot"><span class="pct">已学 65%</span><button class="btn-clay">继续学习</button></div>
+      </div>
+      <div class="card voice-card">
+        <div class="vc-k">REALTIME TALK</div>
+        <div class="vc-t serif">实时语音对话</div>
+        <div class="vc-s">AI 语伴 Yuki 在线 · 像朋友一样聊天</div>
+        <div class="mini-wave">
+          <i style="height:10px"></i><i style="height:18px;animation-delay:.12s"></i><i style="height:24px;animation-delay:.24s"></i>
+          <i style="height:14px;animation-delay:.36s"></i><i style="height:22px;animation-delay:.48s"></i><i style="height:12px;animation-delay:.6s"></i>
+          <i style="height:20px;animation-delay:.72s"></i><i style="height:16px;animation-delay:.84s"></i><i style="height:24px;animation-delay:.96s"></i>
+          <i style="height:10px;animation-delay:1.08s"></i>
+        </div>
+        <div class="vc-go">→</div>
+      </div>
+      <div class="duo">
+        <div class="card">
+          <div class="d-ico" style="background:#F5E7DC;color:#A34E28">▤</div>
+          <div class="d-t">五十音图</div><div class="d-s">平/片假名速查</div>
+        </div>
+        <div class="card">
+          <div class="d-ico" style="background:#EAF0EC;color:#3E6B54">🔊</div>
+          <div class="d-t">音素表</div><div class="d-s">IPA 辅音元音</div>
+        </div>
+      </div>
+      <div style="height:8px"></div>
+    </div>
+    <div class="tabbar">
+      <div class="tab on"><svg viewBox="0 0 22 22" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"><path d="M3.5 10 11 3.5 18.5 10v8a1.5 1.5 0 0 1-1.5 1.5h-4v-5h-4v5H5A1.5 1.5 0 0 1 3.5 18z"/></svg>今日<span class="dot"></span></div>
+      <div class="tab"><svg viewBox="0 0 22 22" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"><path d="M3.5 5h15v14h-15z"/><path d="M7 9h8M7 12.5h5"/></svg>图表<span class="dot"></span></div>
+      <div class="tab-mic"><div class="fab"><svg viewBox="0 0 24 24"><rect x="9" y="3" width="6" height="11" rx="3"/><path d="M5.5 11.5a6.5 6.5 0 0 0 13 0M12 18v3"/></svg></div><span>对话</span></div>
+      <div class="tab"><svg viewBox="0 0 22 22" fill="none" stroke="currentColor" stroke-width="1.7"><rect x="3" y="5" width="13" height="14" rx="2.5"/><path d="M7 5V4.5A1.5 1.5 0 0 1 8.5 3H17a2 2 0 0 1 2 2v10.5a1.5 1.5 0 0 1-1.5 1.5H16"/></svg>复习<span class="dot"></span></div>
+      <div class="tab"><svg viewBox="0 0 22 22" fill="none" stroke="currentColor" stroke-width="1.7"><circle cx="11" cy="7.5" r="3.5"/><path d="M4.5 19c.8-3.5 3.4-5.5 6.5-5.5s5.7 2 6.5 5.5"/></svg>我的<span class="dot"></span></div>
+    </div>
+  </div></div>
+  <div class="cap"><b>① 今日页</b><small>衬线问候 + 目标环 + 续学卡；深色语音卡是全页唯一重色块，宣告核心功能。<em>中央麦克风 FAB</em> 直达实时对话。</small></div>
+</div>
+
+<!-- 2 学习翻面 -->
+<div class="cell">
+  <div class="phone"><div class="screen">
+    <div class="notch"></div>
+    <div class="status"><span>9:41</span><div class="icons"><div class="signal"><i></i><i></i><i></i><i></i></div><div class="batt"></div></div></div>
+    <div class="body scroll">
+      <div class="pg-head" style="margin:6px 0 14px"><div class="t serif">复习</div><div class="s">来自对话场景的记忆卡片</div></div>
+      <div class="row" style="justify-content:space-between;margin-bottom:12px">
+        <span style="font-size:12px;color:var(--ink2);background:#fff;border:1px solid var(--line);border-radius:999px;padding:5px 12px">今日待复习 <b style="color:var(--clay)">6</b></span>
+        <span style="font-size:12px;color:var(--ink2);background:#fff;border:1px solid var(--line);border-radius:999px;padding:5px 12px">已掌握 <b style="color:var(--clay)">42</b></span>
+      </div>
+      <div style="background:#fff;border:1px solid var(--line);border-radius:24px;padding:28px 24px;text-align:center">
+        <div style="font-size:10.5px;color:var(--mute);text-align:left">来自「カフェで注文する」对话</div>
+        <div class="serif" style="font-size:34px;font-weight:700;margin-top:14px">おすすめ</div>
+        <div style="font-size:13px;color:var(--ja);margin-top:8px;letter-spacing:.06em">o-su-su-me</div>
+        <div style="font-size:11px;color:var(--mute);margin-top:26px">轻触查看释义</div>
+      </div>
+      <div style="background:linear-gradient(165deg,#fff 60%,var(--clay-soft));border:1px solid var(--line);border-radius:24px;padding:22px;text-align:center;margin-top:12px">
+        <div style="font-size:20px;font-weight:700;color:var(--ink)">推荐</div>
+        <div style="font-size:13px;color:var(--ink2);margin-top:10px;line-height:1.7">おすすめをお願いします。<small style="display:block;color:var(--mute);margin-top:4px">请交给你来推荐。</small></div>
+      </div>
+      <div style="display:flex;gap:12px;margin-top:16px">
+        <button class="btn-ghost" style="flex:1">再想想</button>
+        <button class="btn-clay" style="flex:1">掌握了</button>
+      </div>
+      <div style="display:flex;justify-content:center;gap:6px;margin-top:14px">
+        <i style="width:6px;height:6px;border-radius:50%;background:var(--line)"></i>
+        <i style="width:6px;height:6px;border-radius:50%;background:var(--ja)"></i>
+        <i style="width:6px;height:6px;border-radius:50%;background:var(--line)"></i>
+      </div>
+    </div>
+    <div class="tabbar">
+      <div class="tab"><svg viewBox="0 0 22 22" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"><path d="M3.5 10 11 3.5 18.5 10v8a1.5 1.5 0 0 1-1.5 1.5h-4v-5h-4v5H5A1.5 1.5 0 0 1 3.5 18z"/></svg>今日<span class="dot"></span></div>
+      <div class="tab"><svg viewBox="0 0 22 22" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"><path d="M3.5 5h15v14h-15z"/><path d="M7 9h8M7 12.5h5"/></svg>图表<span class="dot"></span></div>
+      <div class="tab-mic"><div class="fab"><svg viewBox="0 0 24 24"><rect x="9" y="3" width="6" height="11" rx="3"/><path d="M5.5 11.5a6.5 6.5 0 0 0 13 0M12 18v3"/></svg></div><span>对话</span></div>
+      <div class="tab on"><svg viewBox="0 0 22 22" fill="none" stroke="currentColor" stroke-width="1.7"><rect x="3" y="5" width="13" height="14" rx="2.5"/><path d="M7 5V4.5A1.5 1.5 0 0 1 8.5 3H17a2 2 0 0 1 2 2v10.5a1.5 1.5 0 0 1-1.5 1.5H16"/></svg>复习<span class="dot"></span></div>
+      <div class="tab"><svg viewBox="0 0 22 22" fill="none" stroke="currentColor" stroke-width="1.7"><circle cx="11" cy="7.5" r="3.5"/><path d="M4.5 19c.8-3.5 3.4-5.5 6.5-5.5s5.7 2 6.5 5.5"/></svg>我的<span class="dot"></span></div>
+    </div>
+  </div></div>
+  <div class="cap"><b>② 学习页 · 翻面</b><small>例句取自对话场景（LingQ 式语境记忆）；判定后四色评分键对应 SM-2 档位。</small></div>
+</div>
+
+<!-- 3 图表页 -->
+<div class="cell">
+  <div class="phone"><div class="screen">
+    <div class="notch"></div>
+    <div class="status"><span>9:41</span><div class="icons"><div class="signal"><i></i><i></i><i></i><i></i></div><div class="batt"></div></div></div>
+    <div class="body scroll">
+      <div class="row" style="margin:6px 0 12px">
+        <div class="serif" style="font-size:24px;font-weight:700;flex:1">五十音図</div>
+        <div class="toggle"><b class="on">ひらがな</b><b>カタカナ</b></div>
+      </div>
+      <div class="kchart">
+        <div class="krow head">
+          <div class="kcell"><span>あ段</span></div><div class="kcell"><span>い段</span></div>
+          <div class="kcell"><span>う段</span></div><div class="kcell"><span>え段</span></div><div class="kcell"><span>お段</span></div>
+        </div>
+        <div class="krow">
+          <div class="kcell"><div class="h">あ</div><div class="k">ア</div><div class="r">a</div></div>
+          <div class="kcell"><div class="h">い</div><div class="k">イ</div><div class="r">i</div></div>
+          <div class="kcell"><div class="h">う</div><div class="k">ウ</div><div class="r">u</div></div>
+          <div class="kcell"><div class="h">え</div><div class="k">エ</div><div class="r">e</div></div>
+          <div class="kcell"><div class="h">お</div><div class="k">オ</div><div class="r">o</div></div>
+        </div>
+        <div class="krow">
+          <div class="kcell"><div class="h">か</div><div class="k">カ</div><div class="r">ka</div></div>
+          <div class="kcell"><div class="h">き</div><div class="k">キ</div><div class="r">ki</div></div>
+          <div class="kcell"><div class="h">く</div><div class="k">ク</div><div class="r">ku</div></div>
+          <div class="kcell"><div class="h">け</div><div class="k">ケ</div><div class="r">ke</div></div>
+          <div class="kcell"><div class="h">こ</div><div class="k">コ</div><div class="r">ko</div></div>
+        </div>
+        <div class="krow">
+          <div class="kcell"><div class="h">さ</div><div class="k">サ</div><div class="r">sa</div></div>
+          <div class="kcell"><div class="h">し</div><div class="k">シ</div><div class="r">shi</div></div>
+          <div class="kcell"><div class="h">す</div><div class="k">ス</div><div class="r">su</div></div>
+          <div class="kcell"><div class="h">せ</div><div class="k">セ</div><div class="r">se</div></div>
+          <div class="kcell"><div class="h">そ</div><div class="k">ソ</div><div class="r">so</div></div>
+        </div>
+        <div class="krow">
+          <div class="kcell"><div class="h">た</div><div class="k">タ</div><div class="r">ta</div></div>
+          <div class="kcell"><div class="h">ち</div><div class="k">チ</div><div class="r">chi</div></div>
+          <div class="kcell"><div class="h">つ</div><div class="k">ツ</div><div class="r">tsu</div></div>
+          <div class="kcell"><div class="h">て</div><div class="k">テ</div><div class="r">te</div></div>
+          <div class="kcell"><div class="h">と</div><div class="k">ト</div><div class="r">to</div></div>
+        </div>
+        <div class="krow">
+          <div class="kcell"><div class="h">な</div><div class="k">ナ</div><div class="r">na</div></div>
+          <div class="kcell"><div class="h">に</div><div class="k">ニ</div><div class="r">ni</div></div>
+          <div class="kcell"><div class="h">ぬ</div><div class="k">ヌ</div><div class="r">nu</div></div>
+          <div class="kcell"><div class="h">ね</div><div class="k">ネ</div><div class="r">ne</div></div>
+          <div class="kcell"><div class="h">の</div><div class="k">ノ</div><div class="r">no</div></div>
+        </div>
+        <div class="krow" style="margin-bottom:0">
+          <div class="kcell"><div class="h">わ</div><div class="k">ワ</div><div class="r">wa</div></div>
+          <div class="kcell" style="background:transparent;border:none"></div>
+          <div class="kcell"><div class="h">を</div><div class="k">ヲ</div><div class="r">wo</div></div>
+          <div class="kcell" style="background:transparent;border:none"></div>
+          <div class="kcell"><div class="h">ん</div><div class="k">ン</div><div class="r">n</div></div>
+        </div>
+      </div>
+      <div class="tip">👆 点任意格子：朗读 + 罗马字提示</div>
+      <div style="height:6px"></div>
+    </div>
+    <div class="tabbar">
+      <div class="tab"><svg viewBox="0 0 22 22" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"><path d="M3.5 10 11 3.5 18.5 10v8a1.5 1.5 0 0 1-1.5 1.5h-4v-5h-4v5H5A1.5 1.5 0 0 1 3.5 18z"/></svg>今日<span class="dot"></span></div>
+      <div class="tab on"><svg viewBox="0 0 22 22" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"><path d="M3.5 5h15v14h-15z"/><path d="M7 9h8M7 12.5h5"/></svg>图表<span class="dot"></span></div>
+      <div class="tab-mic"><div class="fab"><svg viewBox="0 0 24 24"><rect x="9" y="3" width="6" height="11" rx="3"/><path d="M5.5 11.5a6.5 6.5 0 0 0 13 0M12 18v3"/></svg></div><span>对话</span></div>
+      <div class="tab"><svg viewBox="0 0 22 22" fill="none" stroke="currentColor" stroke-width="1.7"><rect x="3" y="5" width="13" height="14" rx="2.5"/><path d="M7 5V4.5A1.5 1.5 0 0 1 8.5 3H17a2 2 0 0 1 2 2v10.5a1.5 1.5 0 0 1-1.5 1.5H16"/></svg>复习<span class="dot"></span></div>
+      <div class="tab"><svg viewBox="0 0 22 22" fill="none" stroke="currentColor" stroke-width="1.7"><circle cx="11" cy="7.5" r="3.5"/><path d="M4.5 19c.8-3.5 3.4-5.5 6.5-5.5s5.7 2 6.5 5.5"/></svg>我的<span class="dot"></span></div>
+    </div>
+  </div></div>
+  <div class="cap"><b>③ 图表页 · 五十音</b><small>暖纸质感的假名网格；段头说明 + 片假名切换 chip；英语侧切换为 IPA 音素表（元/辅分节）。</small></div>
+</div>
+
+<!-- 4 对话列表 -->
+<div class="cell">
+  <div class="phone"><div class="screen">
+    <div class="notch"></div>
+    <div class="status"><span>9:41</span><div class="icons"><div class="signal"><i></i><i></i><i></i><i></i></div><div class="batt"></div></div></div>
+    <div class="body scroll">
+      <div class="pg-head" style="margin:6px 0 12px"><div class="t serif">对话</div><div class="s">选一个场景开始练习</div></div>
+      <div class="card voice-card" style="margin-bottom:14px">
+        <div class="vc-k">REALTIME TALK</div>
+        <div class="vc-t serif">实时语音对话</div>
+        <div class="vc-s">Yuki 在线 · 说完自动断句 · 像朋友一样聊天</div>
+        <div class="vc-go">→</div>
+      </div>
+      <div class="scn">
+        <div class="ico" style="background:#FEF3C7">☕</div>
+        <div><div class="tt">カフェで注文する</div><div class="zz">在咖啡店点餐</div></div>
+        <div class="go"><div class="n">4/5 轮</div><div class="bar"><i style="width:80%"></i></div></div>
+      </div>
+      <div class="scn">
+        <div class="ico" style="background:#DBEAFE">🏨</div>
+        <div><div class="tt">ホテルでチェックイン</div><div class="zz">酒店办理入住</div></div>
+        <div class="go"><div class="n">2/5 轮</div><div class="bar"><i style="width:40%"></i></div></div>
+      </div>
+      <div class="scn">
+        <div class="ico" style="background:#DCFCE7">🚃</div>
+        <div><div class="tt">電車で道を尋ねる</div><div class="zz">在电车问路</div></div>
+        <div class="go"><div class="n">5/5 轮 ✓</div><div class="bar"><i style="width:100%"></i></div></div>
+      </div>
+      <div class="scn">
+        <div class="ico" style="background:#F3E8FF">🛍️</div>
+        <div><div class="tt">買い物で値段を交渉する</div><div class="zz">购物讲价</div></div>
+        <div class="go"><div class="n">1/5 轮</div><div class="bar"><i style="width:20%"></i></div></div>
+      </div>
+    </div>
+    <div class="tabbar">
+      <div class="tab"><svg viewBox="0 0 22 22" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"><path d="M3.5 10 11 3.5 18.5 10v8a1.5 1.5 0 0 1-1.5 1.5h-4v-5h-4v5H5A1.5 1.5 0 0 1 3.5 18z"/></svg>今日<span class="dot"></span></div>
+      <div class="tab"><svg viewBox="0 0 22 22" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"><path d="M3.5 5h15v14h-15z"/><path d="M7 9h8M7 12.5h5"/></svg>图表<span class="dot"></span></div>
+      <div class="tab-mic on"><div class="fab"><svg viewBox="0 0 24 24"><rect x="9" y="3" width="6" height="11" rx="3"/><path d="M5.5 11.5a6.5 6.5 0 0 0 13 0M12 18v3"/></svg></div><span>对话</span></div>
+      <div class="tab"><svg viewBox="0 0 22 22" fill="none" stroke="currentColor" stroke-width="1.7"><rect x="3" y="5" width="13" height="14" rx="2.5"/><path d="M7 5V4.5A1.5 1.5 0 0 1 8.5 3H17a2 2 0 0 1 2 2v10.5a1.5 1.5 0 0 1-1.5 1.5H16"/></svg>复习<span class="dot"></span></div>
+      <div class="tab"><svg viewBox="0 0 22 22" fill="none" stroke="currentColor" stroke-width="1.7"><circle cx="11" cy="7.5" r="3.5"/><path d="M4.5 19c.8-3.5 3.4-5.5 6.5-5.5s5.7 2 6.5 5.5"/></svg>我的<span class="dot"></span></div>
+    </div>
+  </div></div>
+  <div class="cap"><b>④ 对话列表</b><small>深色语音卡置顶（核心功能前置）；场景卡带轮次进度；未配置 Provider 也可用 Mock 跑通。</small></div>
+</div>
+
+<!-- 5 文字对话 -->
+<div class="cell">
+  <div class="phone"><div class="screen">
+    <div class="notch"></div>
+    <div class="status"><span>9:41</span><div class="icons"><div class="signal"><i></i><i></i><i></i><i></i></div><div class="batt"></div></div></div>
+    <div class="body">
+      <div class="serif" style="font-size:19px;font-weight:700;padding:14px 0 4px">カフェで注文する · 咖啡店点餐</div>
+      <div style="font-size:11.5px;color:var(--mute);padding-bottom:8px">目标表达：注文をお願いします　·　おすすめは何ですか</div>
+      <div class="msgs">
+        <div class="msg ai">
+          <div>いらっしゃいませ！</div>
+          <div>ご注文はお決まりですか？</div>
+          <div class="zh">[ZH] 欢迎光临！请问决定点什么了吗？</div>
+        </div>
+        <div class="msg me">コーヒーを一つください。</div>
+        <div class="msg ai">
+          <div>かしこまりました。</div>
+          <div>サイズは S・M・L がございますが、いかがなさいますか？</div>
+          <div class="zh">[ZH] 明白了。尺寸有 S/M/L，您要哪一种？</div>
+        </div>
+        <div class="msg me">M サイズでおねがいします。</div>
+        <div class="msg ai">
+          <div>M サイズ、承知いたしました。</div>
+          <div class="fix" onclick="this.classList.toggle('open')"><b>[FIX] 小修正</b> · 点击展开
+            <div class="more">「おねがいします」→「お願いします」更自然；此处用「おねがいします」也完全正确。</div>
+          </div>
+        </div>
+      </div>
+      <div class="vadbar">🔇 录音中自动静音外放 · 停止后裁剪静音再上传</div>
+      <div class="chatbar">
+        <div class="box">日本語で入力…</div>
+        <div class="micbtn"><svg viewBox="0 0 24 24"><path d="M12 15a3 3 0 0 0 3-3V6a3 3 0 1 0-6 0v6a3 3 0 0 0 3 3zm5-3a5 5 0 0 1-10 0H5a7 7 0 0 0 6 6.9V21h2v-2.1A7 7 0 0 0 19 12h-2z"/></svg></div>
+      </div>
+    </div>
+  </div></div>
+  <div class="cap"><b>⑤ 文字对话页</b><small>三段式消息：正文逐句可读 + [ZH] 折叠译文 + [FIX] 纠错；A 档防护提示条常驻。</small></div>
+</div>
+
+<!-- 6 实时语音（准备） -->
+<div class="cell">
+  <div class="phone"><div class="screen">
+    <div class="notch"></div>
+    <div class="voicepage">
+      <div class="status dark" style="padding:0 26px"><span>9:41</span><div class="icons"><div class="signal"><i></i><i></i><i></i><i></i></div><div class="batt"></div></div></div>
+      <div class="v-ready" style="padding-top:40px">
+        <div class="big-ava">Y</div>
+        <div class="t serif">和 Yuki 聊聊天</div>
+        <div class="s">实时语音对话 · 沉浸式全屏波形<br>AI 语伴会先开口，说完自动断句</div>
+        <button class="v-start">开始对话</button>
+        <div style="font-size:12px;color:#A79684;margin-top:14px;text-decoration:underline">返回首页</div>
+      </div>
+    </div>
+  </div></div>
+  <div class="cap"><b>⑥ 实时语音 · 准备态</b><small>深色沉浸屏（昼/夜情绪对比）；未配置 REALTIME 凭证时显示 Mock 提示仍可体验流程。</small></div>
+</div>
+
+<!-- 7 实时语音（进行中） -->
+<div class="cell">
+  <div class="phone"><div class="screen">
+    <div class="notch"></div>
+    <div class="voicepage">
+      <div class="status dark" style="padding:0 26px"><span>9:41</span><div class="icons"><div class="signal"><i></i><i></i><i></i><i></i></div><div class="batt"></div></div></div>
+      <div class="v-top">
+        <div class="v-iconbtn">←</div>
+        <div class="v-partner">
+          <div class="v-ava">Y</div>
+          <div><div class="n">Yuki</div><div class="s">AI 语伴 · 日语</div></div>
+        </div>
+        <span class="v-timer">02:47</span>
+      </div>
+      <div class="v-stage">
+        <div class="wave"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
+        <div class="v-state">正在聆听…</div>
+      </div>
+      <div class="v-transcript">
+        <div class="bubble ai">いらっしゃいませ！ご注文はお決まれですか？<span class="tr">欢迎光临！请问决定点什么了吗？</span></div>
+        <div class="bubble user">コーヒーを M サイズでおねがいします。</div>
+        <div class="bubble ai">M サイズ、承知いたしました。<span class="tr">M 号，知道了。</span></div>
+      </div>
+      <div class="v-controls">
+        <div class="v-hintline">静音 0.8s 已暂停推流 · 省计费</div>
+        <div class="v-iconbtn">CC</div>
+        <button class="v-mic pulse"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><rect x="9" y="3" width="6" height="11" rx="3"/><path d="M5.5 11.5a6.5 6.5 0 0 0 13 0M12 18v3"/></svg></button>
+        <div class="v-iconbtn">?</div>
+      </div>
+    </div>
+  </div></div>
+  <div class="cap"><b>⑦ 实时语音 · 进行中</b><small>波形随说话方起伏；字幕流可开关译文；说话即停播（barge-in 防回环）；静音门控提示在麦克风上方。</small></div>
+</div>
+
+<!-- 8 我的 -->
+<div class="cell">
+  <div class="phone"><div class="screen">
+    <div class="notch"></div>
+    <div class="status"><span>9:41</span><div class="icons"><div class="signal"><i></i><i></i><i></i><i></i></div><div class="batt"></div></div></div>
+    <div class="body scroll">
+      <div class="pf-user">
+        <div class="pf-ava">晓</div>
+        <div><div class="n serif">林晓</div><div class="d">主学日语 · 辅修英语</div></div>
+      </div>
+      <div class="pf-stats">
+        <div class="pf-stat"><b>7</b><span>连续天数</span></div>
+        <div class="pf-stat"><b>77</b><span>掌握词汇</span></div>
+        <div class="pf-stat"><b>18.5</b><span>累计小时</span></div>
+      </div>
+      <div class="card">
+        <div class="row" style="justify-content:space-between;align-items:baseline">
+          <span style="font-weight:600;color:var(--ink)">本周学习</span>
+          <span style="font-size:11.5px;color:var(--mute)">共 142 分钟</span>
+        </div>
+        <div class="week-bars">
+          <div class="wb"><div class="bar" style="height:34px"></div><small>一</small></div>
+          <div class="wb"><div class="bar" style="height:52px"></div><small>二</small></div>
+          <div class="wb"><div class="bar" style="height:26px"></div><small>三</small></div>
+          <div class="wb"><div class="bar" style="height:60px"></div><small>四</small></div>
+          <div class="wb"><div class="bar" style="height:44px"></div><small>五</small></div>
+          <div class="wb"><div class="bar" style="height:70px"></div><small>六</small></div>
+          <div class="wb today"><div class="bar" style="height:40px"></div><small>日</small></div>
+        </div>
+      </div>
+      <div class="badges">
+        <div class="badge">
+          <div class="b-ico" style="background:#F5E7DC;color:#A34E28">🔥</div>
+          <div class="n">七日之火</div><div class="d">连续打卡 7 天</div>
+        </div>
+        <div class="badge">
+          <div class="b-ico" style="background:#EAF0EC;color:#3E6B54">🎙</div>
+          <div class="n">初次开口</div><div class="d">完成首次语音对话</div>
+        </div>
+        <div class="badge">
+          <div class="b-ico" style="background:#ECEAF4;color:#6E5AA0">📖</div>
+          <div class="n">词海拾贝</div><div class="d">掌握 200 个词汇</div>
+        </div>
+      </div>
+      <div class="card" style="margin-top:14px;padding:4px 16px">
+        <div class="set-row"><span>API 设置 · 对话模型与语音服务</span><span style="color:var(--mute)">›</span></div>
+        <div class="set-row"><span>自动朗读 AI 回复</span><div class="switch on"></div></div>
+        <div class="set-row"><span>清空学习数据</span><span style="color:var(--bad)">🗑</span></div>
+      </div>
+      <div style="height:8px"></div>
+    </div>
+    <div class="tabbar">
+      <div class="tab"><svg viewBox="0 0 22 22" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"><path d="M3.5 10 11 3.5 18.5 10v8a1.5 1.5 0 0 1-1.5 1.5h-4v-5h-4v5H5A1.5 1.5 0 0 1 3.5 18z"/></svg>今日<span class="dot"></span></div>
+      <div class="tab"><svg viewBox="0 0 22 22" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"><path d="M3.5 5h15v14h-15z"/><path d="M7 9h8M7 12.5h5"/></svg>图表<span class="dot"></span></div>
+      <div class="tab-mic"><div class="fab"><svg viewBox="0 0 24 24"><rect x="9" y="3" width="6" height="11" rx="3"/><path d="M5.5 11.5a6.5 6.5 0 0 0 13 0M12 18v3"/></svg></div><span>对话</span></div>
+      <div class="tab"><svg viewBox="0 0 22 22" fill="none" stroke="currentColor" stroke-width="1.7"><rect x="3" y="5" width="13" height="14" rx="2.5"/><path d="M7 5V4.5A1.5 1.5 0 0 1 8.5 3H17a2 2 0 0 1 2 2v10.5a1.5 1.5 0 0 1-1.5 1.5H16"/></svg>复习<span class="dot"></span></div>
+      <div class="tab on"><svg viewBox="0 0 22 22" fill="none" stroke="currentColor" stroke-width="1.7"><circle cx="11" cy="7.5" r="3.5"/><path d="M4.5 19c.8-3.5 3.4-5.5 6.5-5.5s5.7 2 6.5 5.5"/></svg>我的<span class="dot"></span></div>
+    </div>
+  </div></div>
+  <div class="cap"><b>⑧ 我的</b><small>衬线统计数字 + 周柱状图（今日高亮）+ 成就徽章；设置入口收纳 API 配置。</small></div>
+</div>
+
+<!-- 9 设置 -->
+<div class="cell">
+  <div class="phone"><div class="screen">
+    <div class="notch"></div>
+    <div class="status"><span>9:41</span><div class="icons"><div class="signal"><i></i><i></i><i></i><i></i></div><div class="batt"></div></div></div>
+    <div class="body scroll">
+      <div class="pg-head" style="margin:6px 0 12px"><div class="t serif">设置</div><div class="s">AI 服务配置 · 每语言 4 组</div></div>
+      <div class="sec-title">AI 对话服务</div>
+      <div class="card">
+        <div class="f-label">服务商</div>
+        <div class="chips">
+          <button class="chip on">OpenAI</button><button class="chip">Claude</button>
+          <button class="chip">DeepSeek</button><button class="chip">自定义</button>
+        </div>
+        <div class="f-label">API Key</div>
+        <div class="key-row">
+          <input class="inp" type="password" value="sk-1a2b3c4d5e6f7g8h9i0j" readonly>
+          <button class="eye-btn" title="显示/隐藏">👁</button>
+        </div>
+        <div class="f-label">Base URL</div>
+        <input class="inp" type="text" value="https://api.openai.com/v1" readonly>
+        <div class="f-label">对话模型</div>
+        <div class="chips">
+          <button class="chip on">gpt-4o</button><button class="chip">gpt-4o-mini</button><button class="chip">o4-mini</button>
+        </div>
+      </div>
+      <div class="sec-title">语音服务</div>
+      <div class="card">
+        <div class="f-label">语音识别 ASR</div>
+        <div class="chips">
+          <button class="chip on">Whisper</button><button class="chip">Azure 语音</button><button class="chip">paraformer</button>
+        </div>
+        <div class="f-label">TTS 音色</div>
+        <div class="chips">
+          <button class="chip on">Yuki · 日语女声</button><button class="chip">Emma · 英语女声</button><button class="chip">清朗男声</button>
+        </div>
+      </div>
+      <div class="sec-title">实时语音 REALTIME <span style="color:var(--clay)">· 新增</span></div>
+      <div class="card" style="border-color:#C7D2FE">
+        <div class="f-label">Base URL（wss）</div>
+        <input class="inp" type="text" value="wss://api.stepfun.com/v1/realtime" readonly>
+        <div class="f-label">模型 / 音色</div>
+        <div class="chips">
+          <button class="chip on">step-audio-2-mini</button><button class="chip">wenrounansheng</button>
+        </div>
+        <div class="set-row" style="margin-top:10px">
+          <span>服务端 VAD（server_vad）</span><div class="switch on"></div>
+        </div>
+        <div style="font-size:10.5px;color:var(--mute);margin-top:8px;line-height:1.6">
+          silence_duration_ms 100 · energy 2500 · prefix 500<br>测试连接 = WS 握手等 session.created
+        </div>
+      </div>
+      <div style="display:flex;gap:12px;margin:16px 0 12px">
+        <button class="btn-ghost" style="flex:1">测试连接</button>
+        <button class="btn-clay" style="flex:1">保存设置</button>
+      </div>
+    </div>
+  </div></div>
+  <div class="cap"><b>⑨ 设置 · 4 组 Provider</b><small>Chat/STT/TTS 之外新增 <em>REALTIME 组</em>：wss 端点、模型/音色 chip、server_vad 开关与高级参数；Key 默认掩码。</small></div>
+</div>
+
+</div>
+
+<footer>
+  预览为静态高保真稿，按拾语设计稿 + lang-partner 工程实际实现绘制（界面结构与 App 内布局一致；示例数据为演示值）。<br>
+  深色实时语音屏为新增页面（VoiceChatActivity）；真机效果以 APK 为准：app/build/outputs/apk/debug/app-debug.apk。
+</footer>
+
+<script>
+  document.querySelectorAll('.msg .fix').forEach(function(el){
+    el.addEventListener('click', function(){ el.classList.toggle('open'); });
+  });
+  function toast(msg){
+    var t = document.getElementById('toast');
+    if(!t) return;
+    t.textContent = msg; t.classList.add('show');
+    clearTimeout(t._t); t._t = setTimeout(function(){ t.classList.remove('show'); }, 1400);
+  }
+  document.querySelectorAll('.kcell').forEach(function(c){
+    c.addEventListener('click', function(){
+      var h = c.querySelector('.h'); if(!h) return;
+      toast('🔊 ' + h.textContent + ' / ' + (c.querySelector('.r') ? c.querySelector('.r').textContent : ''));
+    });
+  });
+</script>
+</body>
+</html>

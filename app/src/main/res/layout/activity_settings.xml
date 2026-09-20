@@ -1,0 +1,410 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/paper">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="20dp">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:fontFamily="serif"
+            android:text="@string/settings_title"
+            android:textColor="@color/ink"
+            android:textSize="24sp"
+            android:textStyle="bold" />
+
+        <include
+            android:id="@+id/langBar"
+            layout="@layout/view_lang_bar" />
+
+        <!-- 对话服务 -->
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:letterSpacing="0.08"
+            android:paddingTop="16dp"
+            android:paddingBottom="8dp"
+            android:text="@string/provider_chat"
+            android:textColor="@color/mute"
+            android:textSize="11sp" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/bg_card"
+            android:orientation="vertical"
+            android:padding="16dp">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="OpenAI 兼容"
+                    android:textColor="@color/ink"
+                    android:textSize="15sp"
+                    android:textStyle="bold" />
+
+                <Switch
+                    android:id="@+id/switchChat"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
+            </LinearLayout>
+
+            <EditText
+                android:id="@+id/chatBaseUrl"
+                style="@style/FieldInput"
+                android:hint="@string/field_base_url"
+                android:inputType="textUri" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
+
+                <EditText
+                    android:id="@+id/chatApiKey"
+                    style="@style/FieldInput"
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:hint="@string/field_api_key"
+                    android:inputType="textPassword" />
+
+                <Button
+                    android:id="@+id/chatKeyToggle"
+                    style="@style/MiniButton"
+                    android:text="@string/settings_key_show" />
+            </LinearLayout>
+
+            <EditText
+                android:id="@+id/chatModel"
+                style="@style/FieldInput"
+                android:hint="@string/field_model"
+                android:inputType="text" />
+
+            <Button
+                android:id="@+id/chatTest"
+                style="@style/MiniButton"
+                android:layout_width="match_parent"
+                android:text="@string/test_connection" />
+        </LinearLayout>
+
+        <!-- 语音识别 -->
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:letterSpacing="0.08"
+            android:paddingTop="16dp"
+            android:paddingBottom="8dp"
+            android:text="@string/provider_asr"
+            android:textColor="@color/mute"
+            android:textSize="11sp" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/bg_card"
+            android:orientation="vertical"
+            android:padding="16dp">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="Whisper 兼容"
+                    android:textColor="@color/ink"
+                    android:textSize="15sp"
+                    android:textStyle="bold" />
+
+                <Switch
+                    android:id="@+id/switchAsr"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
+            </LinearLayout>
+
+            <EditText
+                android:id="@+id/asrBaseUrl"
+                style="@style/FieldInput"
+                android:hint="@string/field_base_url"
+                android:inputType="textUri" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
+
+                <EditText
+                    android:id="@+id/asrApiKey"
+                    style="@style/FieldInput"
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:hint="@string/field_api_key"
+                    android:inputType="textPassword" />
+
+                <Button
+                    android:id="@+id/asrKeyToggle"
+                    style="@style/MiniButton"
+                    android:text="@string/settings_key_show" />
+            </LinearLayout>
+
+            <EditText
+                android:id="@+id/asrModel"
+                style="@style/FieldInput"
+                android:hint="@string/field_model"
+                android:inputType="text" />
+
+            <Button
+                android:id="@+id/asrTest"
+                style="@style/MiniButton"
+                android:layout_width="match_parent"
+                android:text="@string/test_connection" />
+        </LinearLayout>
+
+        <!-- 语音合成 -->
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:letterSpacing="0.08"
+            android:paddingTop="16dp"
+            android:paddingBottom="8dp"
+            android:text="@string/provider_tts"
+            android:textColor="@color/mute"
+            android:textSize="11sp" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/bg_card"
+            android:orientation="vertical"
+            android:padding="16dp">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="OpenAI TTS"
+                    android:textColor="@color/ink"
+                    android:textSize="15sp"
+                    android:textStyle="bold" />
+
+                <Switch
+                    android:id="@+id/switchTts"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
+            </LinearLayout>
+
+            <EditText
+                android:id="@+id/ttsBaseUrl"
+                style="@style/FieldInput"
+                android:hint="@string/field_base_url"
+                android:inputType="textUri" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
+
+                <EditText
+                    android:id="@+id/ttsApiKey"
+                    style="@style/FieldInput"
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:hint="@string/field_api_key"
+                    android:inputType="textPassword" />
+
+                <Button
+                    android:id="@+id/ttsKeyToggle"
+                    style="@style/MiniButton"
+                    android:text="@string/settings_key_show" />
+            </LinearLayout>
+
+            <EditText
+                android:id="@+id/ttsModel"
+                style="@style/FieldInput"
+                android:hint="@string/field_model"
+                android:inputType="text" />
+
+            <EditText
+                android:id="@+id/ttsVoice"
+                style="@style/FieldInput"
+                android:hint="@string/field_voice"
+                android:inputType="text" />
+
+            <Button
+                android:id="@+id/ttsTest"
+                style="@style/MiniButton"
+                android:layout_width="match_parent"
+                android:text="@string/test_connection" />
+        </LinearLayout>
+
+        <!-- 实时语音（第 4 组） -->
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:letterSpacing="0.08"
+            android:paddingTop="16dp"
+            android:paddingBottom="8dp"
+            android:text="@string/provider_realtime"
+            android:textColor="@color/mute"
+            android:textSize="11sp" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/bg_card"
+            android:orientation="vertical"
+            android:padding="16dp">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="stepfun realtime"
+                    android:textColor="@color/ink"
+                    android:textSize="15sp"
+                    android:textStyle="bold" />
+
+                <Switch
+                    android:id="@+id/switchRealtime"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
+            </LinearLayout>
+
+            <EditText
+                android:id="@+id/realtimeBaseUrl"
+                style="@style/FieldInput"
+                android:hint="@string/realtime_default_url"
+                android:inputType="textUri" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
+
+                <EditText
+                    android:id="@+id/realtimeApiKey"
+                    style="@style/FieldInput"
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:hint="@string/field_api_key"
+                    android:inputType="textPassword" />
+
+                <Button
+                    android:id="@+id/realtimeKeyToggle"
+                    style="@style/MiniButton"
+                    android:text="@string/settings_key_show" />
+            </LinearLayout>
+
+            <EditText
+                android:id="@+id/realtimeModel"
+                style="@style/FieldInput"
+                android:hint="@string/realtime_default_model"
+                android:inputType="text" />
+
+            <EditText
+                android:id="@+id/realtimeVoice"
+                style="@style/FieldInput"
+                android:hint="@string/field_voice"
+                android:inputType="text" />
+
+            <!-- server_vad -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical"
+                android:orientation="horizontal"
+                android:paddingTop="12dp">
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="@string/field_server_vad"
+                    android:textColor="@color/ink2"
+                    android:textSize="13sp" />
+
+                <Switch
+                    android:id="@+id/switchServerVad"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
+            </LinearLayout>
+
+            <EditText
+                android:id="@+id/realtimeSilence"
+                style="@style/FieldInput"
+                android:hint="@string/field_silence_ms"
+                android:inputType="number" />
+
+            <EditText
+                android:id="@+id/realtimeEnergy"
+                style="@style/FieldInput"
+                android:hint="@string/field_energy_threshold"
+                android:inputType="number" />
+
+            <EditText
+                android:id="@+id/realtimePrefix"
+                style="@style/FieldInput"
+                android:hint="@string/field_prefix_padding_ms"
+                android:inputType="number" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingTop="8dp"
+                android:text="@string/realtime_hint"
+                android:textColor="@color/mute"
+                android:textSize="11sp" />
+
+            <Button
+                android:id="@+id/realtimeTest"
+                style="@style/MiniButton"
+                android:layout_width="match_parent"
+                android:layout_marginTop="8dp"
+                android:text="@string/test_connection" />
+        </LinearLayout>
+
+        <Button
+            android:id="@+id/btnSave"
+            android:layout_width="match_parent"
+            android:layout_height="46dp"
+            android:layout_marginTop="20dp"
+            android:layout_marginBottom="16dp"
+            android:background="@drawable/bg_btn_clay"
+            android:text="@string/save"
+            android:textColor="@color/cream"
+            android:textSize="14sp" />
+    </LinearLayout>
+</ScrollView>

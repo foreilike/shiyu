@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- ===== 拾语设计稿色板（Warm Editorial） ===== -->
+    <color name="paper">#FAF7F2</color>          <!-- 页面暖纸底 -->
+    <color name="card">#FFFFFFFF</color>          <!-- 卡片 -->
+    <color name="ink">#FF211B16</color>           <!-- 主文字 墨色 -->
+    <color name="ink2">#FF57493D</color>          <!-- 次文字 -->
+    <color name="mute">#FF9A8C7D</color>          <!-- 辅助文字 -->
+    <color name="line">#FFECE4D8</color>          <!-- 描边 -->
+    <color name="clay">#FFA34E28</color>          <!-- 陶土主色 -->
+    <color name="clay_deep">#FF7E3A1B</color>     <!-- 陶土深 -->
+    <color name="clay_soft">#FFF5E7DC</color>     <!-- 陶土浅底 -->
+    <color name="dark">#FF17120E</color>          <!-- 夜幕（语音页） -->
+    <color name="dark2">#FF241B14</color>         <!-- 夜幕卡片 -->
+    <color name="cream">#FFF4EDE5</color>         <!-- 深色页上的浅字 -->
+    <color name="gold">#FFC89B72</color>          <!-- 暖金 -->
+    <color name="lang_ja">#FFC4586B</color>       <!-- 日语点缀 -->
+    <color name="lang_en">#FF4A5D9E</color>       <!-- 英语点缀 -->
+    <color name="ok_green">#FF3E6B54</color>      <!-- 正确（柔和绿） -->
+    <color name="bad_red">#FFB3261E</color>       <!-- 错误（柔和红） -->
+
+    <!-- ===== 兼容旧引用（代码/布局里的历史名，指向新色板） ===== -->
+    <color name="purple_500">#FFA34E28</color>
+    <color name="purple_700">#FF7E3A1B</color>
+    <color name="teal_200">#FFC89B72</color>
+    <color name="black">#FF211B16</color>
+    <color name="white">#FFFFFFFF</color>
+    <color name="gray_light">#FFF5E7DC</color>
+    <color name="gray_text">#FF9A8C7D</color>
+    <color name="bubble_user">#FFA34E28</color>
+    <color name="bubble_ai">#FFFFFFFF</color>
+    <color name="wrong_red">#FFB3261E</color>
+    <color name="right_green">#FF3E6B54</color>
+</resources>
