@@ -86,6 +86,18 @@ class SettingsRepository(private val store: SecretStore) {
         save(settings.copy(autoPlayTts = value))
     }
 
+    /** 昵称，未设置时为空串 */
+    fun nickname(): String = load().nickname
+
+    /**
+     * 设置昵称。前后空白会被去掉、长度截到 [MAX_NICKNAME_LENGTH]；
+     * 传空串等于「清空，恢复默认称呼」。
+     */
+    fun setNickname(value: String) {
+        val settings = load()
+        save(settings.copy(nickname = value.trim().take(MAX_NICKNAME_LENGTH)))
+    }
+
     fun configFor(lang: LangId): LanguageConfig = load().langs[lang] ?: LanguageConfig()
 
     fun groupFor(lang: LangId, group: Group): ProviderConfig {
@@ -115,6 +127,8 @@ class SettingsRepository(private val store: SecretStore) {
         val version = root.optInt("version", 1)
         val activeLang = LangId.fromTag(root.optString("activeLang", LangId.JA.tag))
         val autoPlayTts = if (root.has("autoPlayTts")) root.optBoolean("autoPlayTts", true) else true
+        // 后加字段：老文件没有 nickname，按空串处理（UI 会用占位名兜底）
+        val nickname = root.optString("nickname", "").trim().take(MAX_NICKNAME_LENGTH)
 
         val langs = mutableMapOf<LangId, LanguageConfig>()
         val langsObj = root.optJSONObject("langs")
@@ -136,6 +150,7 @@ class SettingsRepository(private val store: SecretStore) {
             version = if (version >= 1) version else 1,
             activeLang = activeLang,
             autoPlayTts = autoPlayTts,
+            nickname = nickname,
             langs = langs
         )
     }
@@ -167,6 +182,7 @@ class SettingsRepository(private val store: SecretStore) {
         root.put("version", settings.version)
         root.put("activeLang", settings.activeLang.tag)
         root.put("autoPlayTts", settings.autoPlayTts)
+        root.put("nickname", settings.nickname)
         val langs = JSONObject()
         for ((lang, langConfig) in settings.langs) {
             val langObj = JSONObject()
@@ -194,5 +210,10 @@ class SettingsRepository(private val store: SecretStore) {
         o.put("enabled", config.enabled)
         if (hasVoice) o.put("voice", config.voice)
         return o
+    }
+
+    companion object {
+        /** 昵称长度上限，超出即截断（首页问候语与头像只需要短名） */
+        const val MAX_NICKNAME_LENGTH = 12
     }
 }

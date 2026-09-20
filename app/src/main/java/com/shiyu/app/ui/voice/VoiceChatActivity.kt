@@ -218,6 +218,7 @@ class VoiceChatActivity : BaseActivity() {
     }
 
     private fun endSession() {
+        val started = startElapsed != 0L
         running = false
         handler.removeCallbacks(ticker)
         provider?.close()
@@ -225,6 +226,11 @@ class VoiceChatActivity : BaseActivity() {
         audio?.release()
         audio = null
         resetWave()
+        if (!started) {
+            // 还没点「开始对话」就按了返回：没有会话可结算，直接退出
+            finish()
+            return
+        }
         val secs = (System.currentTimeMillis() - startElapsed) / 1000
         recordSession(secs)
         binding.sumTime.text = "%02d:%02d".format(secs / 60, secs % 60)
@@ -234,14 +240,18 @@ class VoiceChatActivity : BaseActivity() {
 
     /**
      * 把这一轮实时语音计入当日统计（首页目标环 / 我的页周柱状图 / 「初次开口」成就）。
-     * 幂等靠 [recorded] 标记：endSession 与 onDestroy 都会调，只算一次。
+     *
+     * 两道闸：
+     * - [recorded] 保证幂等 —— endSession 与 onDestroy 都会调，只算一次；
+     * - [startElapsed] 为 0 表示会话从未开始，此时 now-0 会算出五十多年，绝不能入账。
+     * 另外单次封顶 [MAX_SESSION_SECONDS]，防止用户开着页面睡着导致时长虚高。
      */
     private fun recordSession(seconds: Long) {
-        if (recorded || seconds <= 0L) return
+        if (recorded || startElapsed == 0L || seconds <= 0L) return
         recorded = true
         AppGraph.dailyStatsStore.record(
             LocalDate.now().toEpochDay(),
-            voiceSeconds = seconds,
+            voiceSeconds = seconds.coerceAtMost(MAX_SESSION_SECONDS),
             chatTurns = turns
         )
     }
@@ -371,6 +381,9 @@ class VoiceChatActivity : BaseActivity() {
 
     companion object {
         const val EXTRA_SCENARIO_ID = "extra_scenario_id"
+
+        /** 单次实时会话最多计 2 小时，防止挂着页面不管导致统计虚高 */
+        private const val MAX_SESSION_SECONDS = 2L * 3600L
 
         fun intent(context: android.content.Context, scenarioId: String): Intent =
             Intent(context, VoiceChatActivity::class.java)

@@ -12,7 +12,7 @@
         android:layout_height="match_parent"
         android:orientation="vertical">
 
-        <!-- 页头：用当前语种徽标当头像，不编造用户名 -->
+        <!-- 页头：头像取昵称首字，点名字可改 -->
         <LinearLayout
             android:id="@+id/header"
             android:layout_width="match_parent"
@@ -32,26 +32,40 @@
                 android:background="@drawable/bg_circle"
                 android:gravity="center"
                 android:textColor="@color/card"
-                android:textSize="16sp"
+                android:textSize="18sp"
                 android:textStyle="bold"
                 tools:backgroundTint="@color/lang_ja"
-                tools:text="JA" />
+                tools:text="林" />
 
             <LinearLayout
+                android:id="@+id/nameBlock"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="12dp"
                 android:layout_weight="1"
                 android:orientation="vertical">
                 <TextView
+                    android:id="@+id/profileName"
                     style="@style/ShiyuTitle"
-                    android:text="@string/profile_title" />
+                    android:ellipsize="end"
+                    android:maxLines="1"
+                    tools:text="林晓" />
                 <TextView
                     android:id="@+id/profileSub"
                     style="@style/ShiyuSubtitle"
                     android:layout_marginTop="2dp"
                     tools:text="主学日语 · 辅修英语" />
             </LinearLayout>
+
+            <ImageView
+                android:id="@+id/btnEditName"
+                android:layout_width="38dp"
+                android:layout_height="38dp"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                android:contentDescription="@string/profile_edit_name"
+                android:padding="11dp"
+                android:src="@drawable/ic_edit"
+                app:tint="@color/mute" />
         </LinearLayout>
 
         <ScrollView

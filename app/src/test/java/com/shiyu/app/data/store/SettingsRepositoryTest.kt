@@ -235,4 +235,49 @@ class SettingsRepositoryTest {
         assertEquals(2500, opts.energyAwakenessThreshold)
         assertEquals(500, opts.prefixPaddingMs)
     }
+
+    // ---------- 昵称（后加字段，老文件缺字段要能自愈） ----------
+
+    @Test
+    fun nickname_defaults_to_empty() {
+        assertEquals("", SettingsRepository(InMemoryStore()).nickname())
+    }
+
+    @Test
+    fun nickname_round_trips() {
+        val store = InMemoryStore()
+        SettingsRepository(store).setNickname("林晓")
+        assertEquals("林晓", SettingsRepository(store).nickname())
+    }
+
+    @Test
+    fun nickname_is_trimmed_and_length_capped() {
+        val store = InMemoryStore()
+        val repo = SettingsRepository(store)
+        repo.setNickname("   ab   ")
+        assertEquals("ab", repo.nickname())
+        repo.setNickname("x".repeat(40))
+        assertEquals(SettingsRepository.MAX_NICKNAME_LENGTH, repo.nickname().length)
+    }
+
+    @Test
+    fun blank_nickname_clears_back_to_default() {
+        val store = InMemoryStore()
+        val repo = SettingsRepository(store)
+        repo.setNickname("林晓")
+        repo.setNickname("   ")
+        assertEquals("", repo.nickname())
+    }
+
+    @Test
+    fun missing_nickname_field_does_not_break_old_files() {
+        // 模拟改造前写下的 version 2 文件：没有 nickname 字段
+        val store = InMemoryStore(
+            """{"version":2,"activeLang":"en","autoPlayTts":false,"langs":{}}"""
+        )
+        val repo = SettingsRepository(store)
+        assertEquals("", repo.nickname())
+        assertEquals(LangId.EN, repo.activeLang())
+        assertFalse(repo.autoPlayTts())
+    }
 }

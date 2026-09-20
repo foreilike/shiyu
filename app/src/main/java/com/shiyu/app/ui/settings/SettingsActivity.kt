@@ -141,15 +141,24 @@ class SettingsActivity : BaseActivity() {
         if (keyVisible[group] == true) {
             keyField.inputType = InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD
             keyField.setText(key)
+            setEditable(keyField, true)
             keyToggle.setText(R.string.settings_key_hide)
         } else {
             keyField.inputType = InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_VARIATION_PASSWORD
             keyField.setText(if (key.isEmpty()) "" else LogRedactor.mask(key))
-            keyField.isFocusable = false
-            keyField.isFocusableInTouchMode = false
-            keyField.isCursorVisible = false
+            // 只有「已经存了 Key、当前显示的是掩码」才锁编辑 —— 锁的目的是防止把
+            // 掩码文本当成真 Key 存回去。Key 为空时没有掩码可言，必须能直接输入，
+            // 否则全新安装的用户会发现这个框永远点不进去。
+            setEditable(keyField, key.isEmpty())
             keyToggle.setText(R.string.settings_key_show)
         }
+    }
+
+    private fun setEditable(field: EditText, editable: Boolean) {
+        field.isFocusable = editable
+        field.isFocusableInTouchMode = editable
+        field.isCursorVisible = editable
+        field.isLongClickable = editable
     }
 
     private fun setupKeyToggle(
@@ -160,11 +169,6 @@ class SettingsActivity : BaseActivity() {
         keyToggle.setOnClickListener {
             val nowVisible = keyVisible[group] != true
             keyVisible[group] = nowVisible
-            if (nowVisible) {
-                keyField.isFocusable = true
-                keyField.isFocusableInTouchMode = true
-                keyField.isCursorVisible = true
-            }
             renderKey(group, keyField, keyToggle)
         }
     }

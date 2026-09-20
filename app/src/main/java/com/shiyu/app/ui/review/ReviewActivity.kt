@@ -106,11 +106,17 @@ class ReviewActivity : BaseActivity() {
         showNext()
     }
 
+    /**
+     * 两枚胶囊。「今日待复习」用的是今日队列的剩余张数，与首页
+     * [com.shiyu.app.ui.home.HomeActivity] 完全同源（都走 selectToday），
+     * 不是「进度表里 due<=today 的条数」—— 后者对从没学过的新卡恒为 0，
+     * 会出现首页说 20 张、复习页说 0 张的矛盾。
+     */
     private fun renderChips() {
         val progress = AppGraph.studyStore.progressFor(module.id)
-        val due = progress.values.count { it.dueEpochDay <= today }
+        val remaining = (queue.size - queueIndex).coerceAtLeast(0)
         val mastered = progress.values.count { it.reps >= MASTERED_REPS }
-        binding.chipDue.text = "${getString(R.string.today_due)} $due"
+        binding.chipDue.text = "${getString(R.string.today_due)} $remaining"
         binding.chipMastered.text = "${getString(R.string.mastered)} $mastered"
     }
 

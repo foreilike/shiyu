@@ -204,13 +204,12 @@
         <Button
             android:id="@+id/btnStartVoice"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
             android:layout_marginTop="24dp"
-            android:background="@drawable/bg_mic_clay"
+            android:layout_height="50dp"
+            style="@style/ShiyuButton.Primary"
             android:paddingStart="36dp"
             android:paddingEnd="36dp"
             android:text="@string/voice_start"
-            android:textColor="@color/cream"
             android:textSize="15sp" />
     </LinearLayout>
 
@@ -306,11 +305,10 @@
                 android:id="@+id/btnAgain"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:background="@drawable/bg_mic_clay"
+                style="@style/ShiyuButton.Primary"
                 android:paddingStart="24dp"
                 android:paddingEnd="24dp"
                 android:text="@string/voice_again"
-                android:textColor="@color/cream"
                 android:textSize="13sp" />
 
             <Button
@@ -318,11 +316,10 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="12dp"
-                android:background="@drawable/bg_btn_ghost"
+                style="@style/ShiyuButton.OnDark"
                 android:paddingStart="24dp"
                 android:paddingEnd="24dp"
                 android:text="@string/voice_back_home"
-                android:textColor="@color/cream"
                 android:textSize="13sp" />
         </LinearLayout>
     </LinearLayout>

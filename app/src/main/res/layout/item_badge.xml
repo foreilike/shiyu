@@ -37,8 +37,10 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="1dp"
         android:gravity="center"
+        android:lineSpacingExtra="-1dp"
+        android:minLines="2"
         android:textColor="@color/mute"
-        android:textSize="10.5sp"
+        android:textSize="10sp"
         tools:text="连续打卡 7 天" />
 
     <TextView

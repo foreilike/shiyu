@@ -34,6 +34,50 @@
         <item name="android:windowLightStatusBar">false</item>
     </style>
 
+    <!--
+      ===== 按钮样式 =====
+      Theme.Material3 会把布局里的 <Button> 自动换成 MaterialButton，而 MaterialButton
+      **完全忽略 android:background**，改用自己的 backgroundTint/cornerRadius/stroke。
+      所以不能再用 android:background="@drawable/bg_btn_*" —— 那样背景会退回主题默认的
+      陶土填充，如果文字色恰好也是陶土（原来的「显示 Key」「测试连接」「录音」就是），
+      就变成陶土字印在陶土底上，等于一个没字的深色方块。下面三个样式按 Material 的
+      方式上色，杜绝这一类问题。
+    -->
+    <style name="ShiyuButton.Primary" parent="Widget.Material3.Button">
+        <item name="android:textColor">@color/cream</item>
+        <item name="android:textSize">14sp</item>
+        <item name="android:insetTop">0dp</item>
+        <item name="android:insetBottom">0dp</item>
+        <item name="backgroundTint">@color/clay</item>
+        <item name="cornerRadius">999dp</item>
+        <item name="rippleColor">@color/clay_soft</item>
+    </style>
+
+    <style name="ShiyuButton.Outlined" parent="Widget.Material3.Button.OutlinedButton">
+        <item name="android:textColor">@color/clay</item>
+        <item name="android:textSize">13sp</item>
+        <item name="android:insetTop">0dp</item>
+        <item name="android:insetBottom">0dp</item>
+        <item name="backgroundTint">@color/card</item>
+        <item name="strokeColor">@color/line</item>
+        <item name="strokeWidth">1dp</item>
+        <item name="cornerRadius">999dp</item>
+        <item name="rippleColor">@color/clay_soft</item>
+    </style>
+
+    <!-- 深色沉浸页上的次级按钮（语音页「返回首页」） -->
+    <style name="ShiyuButton.OnDark" parent="Widget.Material3.Button.OutlinedButton">
+        <item name="android:textColor">@color/cream</item>
+        <item name="android:textSize">14sp</item>
+        <item name="android:insetTop">0dp</item>
+        <item name="android:insetBottom">0dp</item>
+        <item name="backgroundTint">@android:color/transparent</item>
+        <item name="strokeColor">@color/gold</item>
+        <item name="strokeWidth">1dp</item>
+        <item name="cornerRadius">999dp</item>
+        <item name="rippleColor">@color/clay</item>
+    </style>
+
     <!-- 设置页输入框（拾语：白底细描边小圆角） -->
     <style name="FieldInput" parent="Widget.AppCompat.EditText">
         <item name="android:layout_width">match_parent</item>
@@ -49,14 +93,12 @@
     </style>
 
     <!-- 设置页小按钮（显示/隐藏 Key、测试连接） -->
-    <style name="MiniButton" parent="Widget.AppCompat.Button.Borderless">
+    <style name="MiniButton" parent="ShiyuButton.Outlined">
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">40dp</item>
-        <item name="android:background">@drawable/bg_btn_ghost</item>
         <item name="android:layout_marginStart">8dp</item>
         <item name="android:paddingStart">14dp</item>
         <item name="android:paddingEnd">14dp</item>
-        <item name="android:textColor">@color/clay</item>
         <item name="android:textSize">12sp</item>
         <item name="android:minWidth">0dp</item>
         <item name="android:minHeight">0dp</item>

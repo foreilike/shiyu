@@ -88,7 +88,11 @@ class HomeActivity : BaseActivity() {
     private fun renderHeader(today: LocalDate, epochDay: Long) {
         val weekday = today.dayOfWeek.getDisplayName(TextStyle.FULL, Locale.CHINA)
         binding.homeDate.text = "${today.monthValue} 月 ${today.dayOfMonth} 日 · $weekday"
-        binding.homeGreet.text = greeting()
+
+        // 设过名字就带上称呼（"晚上好，林晓"），没设就只留问候语，不硬塞占位名
+        val nickname = AppGraph.settingsRepository.nickname()
+        binding.homeGreet.text =
+            if (nickname.isBlank()) greeting() else "${greeting()}，$nickname"
 
         val streak = AppGraph.dailyStatsStore.streak(epochDay)
         if (streak > 0) {

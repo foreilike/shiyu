@@ -88,11 +88,10 @@
             android:layout_width="wrap_content"
             android:layout_height="44dp"
             android:layout_marginStart="8dp"
-            android:background="@drawable/bg_btn_clay"
+            style="@style/ShiyuButton.Primary"
             android:paddingStart="18dp"
             android:paddingEnd="18dp"
             android:text="@string/chat_send"
-            android:textColor="@color/cream"
             android:textSize="13sp" />
 
         <Button
@@ -100,9 +99,10 @@
             android:layout_width="wrap_content"
             android:layout_height="44dp"
             android:layout_marginStart="8dp"
-            android:background="@drawable/bg_btn_ghost"
+            style="@style/ShiyuButton.Outlined"
+            android:paddingStart="16dp"
+            android:paddingEnd="16dp"
             android:text="@string/chat_record"
-            android:textColor="@color/clay"
             android:textSize="13sp" />
     </LinearLayout>
 </LinearLayout>

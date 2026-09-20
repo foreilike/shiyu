@@ -62,6 +62,11 @@
     <string name="lang_fr">法语</string>
 
     <!-- 我的（统计 / 周柱状图 / 成就） -->
+    <string name="profile_name_default">拾语学习者</string>
+    <string name="profile_edit_name">修改名字</string>
+    <string name="profile_name_hint">写个你喜欢的称呼</string>
+    <string name="profile_name_saved">已改为「%1$s」</string>
+    <string name="profile_name_cleared">已恢复默认称呼</string>
     <string name="profile_streak">连续天数</string>
     <string name="profile_mastered_words">掌握词汇</string>
     <string name="profile_total_hours">累计小时</string>

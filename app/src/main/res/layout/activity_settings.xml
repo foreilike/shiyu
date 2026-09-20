@@ -406,10 +406,8 @@
             android:layout_height="46dp"
             android:layout_marginTop="20dp"
             android:layout_marginBottom="16dp"
-            android:background="@drawable/bg_btn_clay"
-            android:text="@string/save"
-            android:textColor="@color/cream"
-            android:textSize="14sp" />
+            style="@style/ShiyuButton.Primary"
+            android:text="@string/save" />
     </LinearLayout>
     </ScrollView>
 </LinearLayout>

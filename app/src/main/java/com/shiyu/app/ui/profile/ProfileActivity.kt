@@ -3,8 +3,11 @@ package com.shiyu.app.ui.profile
 import android.content.Intent
 import android.content.res.ColorStateList
 import android.os.Bundle
+import android.text.InputFilter
 import android.view.LayoutInflater
 import android.view.View
+import android.widget.EditText
+import android.widget.FrameLayout
 import android.widget.LinearLayout
 import android.widget.TextView
 import android.widget.Toast
@@ -17,6 +20,7 @@ import com.shiyu.app.core.lang.LangId
 import com.shiyu.app.core.lang.LanguageRegistry
 import com.shiyu.app.core.stats.Achievements
 import com.shiyu.app.data.model.DayStat
+import com.shiyu.app.data.store.SettingsRepository
 import com.shiyu.app.databinding.ActivityProfileBinding
 import com.shiyu.app.databinding.ItemBadgeBinding
 import com.shiyu.app.databinding.ItemWeekBarBinding
@@ -59,6 +63,9 @@ class ProfileActivity : BaseActivity() {
             ).show()
         }
         binding.btnClearData.setOnClickListener { confirmClear() }
+        binding.btnEditName.setOnClickListener { editName() }
+        binding.nameBlock.setOnClickListener { editName() }
+        binding.avatar.setOnClickListener { editName() }
         binding.autoPlaySwitch.setOnCheckedChangeListener { _, isChecked ->
             AppGraph.settingsRepository.setAutoPlayTts(isChecked)
         }
@@ -74,7 +81,11 @@ class ProfileActivity : BaseActivity() {
         val active = AppGraph.settingsRepository.activeLang()
         val other = if (active == LangId.JA) LangId.EN else LangId.JA
         val accent = ContextCompat.getColor(this, LangStyle.accentRes(active))
-        binding.avatar.text = active.tag.uppercase()
+        val nickname = AppGraph.settingsRepository.nickname()
+        val shown = nickname.ifBlank { getString(R.string.profile_name_default) }
+        binding.profileName.text = shown
+        // 头像取名字首字（emoji / 代理对也按完整字符取，不会切成乱码）
+        binding.avatar.text = shown.firstOrNull()?.toString().orEmpty()
         binding.avatar.backgroundTintList = ColorStateList.valueOf(accent)
         binding.profileSub.text = "主学${active.displayName} · 辅修${other.displayName}"
 
@@ -153,7 +164,7 @@ class ProfileActivity : BaseActivity() {
                 }
             }
             for (badge in row) {
-                rowView.addView(badgeView(badge))
+                rowView.addView(badgeView(badge, rowView))
             }
             // 补齐空位，保证最后一行也按三等分排布
             repeat(BADGES_PER_ROW - row.size) {
@@ -167,8 +178,12 @@ class ProfileActivity : BaseActivity() {
         }
     }
 
-    private fun badgeView(badge: Achievements.Badge): View {
-        val item = ItemBadgeBinding.inflate(LayoutInflater.from(this), null, false)
+    /**
+     * [parent] 必须传真实的行容器：inflate 时 parent 为 null 会丢掉根节点的
+     * layout_width=0dp / layout_weight=1，三列会挤成按内容宽，徽章名被截成"初次开"。
+     */
+    private fun badgeView(badge: Achievements.Badge, parent: LinearLayout): View {
+        val item = ItemBadgeBinding.inflate(LayoutInflater.from(this), parent, false)
         val meta = BADGE_META.getValue(badge.id)
         item.badgeName.text = getString(meta.nameRes)
         item.badgeDesc.text = getString(meta.descRes)
@@ -218,6 +233,41 @@ class ProfileActivity : BaseActivity() {
                 }
             )
         }
+    }
+
+    /**
+     * 改名字。留空保存 = 恢复默认称呼，不是报错 —— 这是个纯本地的显示名，
+     * 没有唯一性或格式要求，不该为难用户。
+     */
+    private fun editName() {
+        val input = EditText(this).apply {
+            setText(AppGraph.settingsRepository.nickname())
+            setHint(R.string.profile_name_hint)
+            setSingleLine()
+            filters = arrayOf(InputFilter.LengthFilter(SettingsRepository.MAX_NICKNAME_LENGTH))
+            setSelection(text.length)
+        }
+        val pad = (20 * resources.displayMetrics.density).toInt()
+        val wrapper = FrameLayout(this).apply {
+            setPadding(pad, pad / 2, pad, 0)
+            addView(input)
+        }
+        AlertDialog.Builder(this)
+            .setTitle(R.string.profile_edit_name)
+            .setView(wrapper)
+            .setNegativeButton(R.string.cancel, null)
+            .setPositiveButton(R.string.save) { _, _ ->
+                val value = input.text.toString().trim()
+                AppGraph.settingsRepository.setNickname(value)
+                Toast.makeText(
+                    this,
+                    if (value.isEmpty()) getString(R.string.profile_name_cleared)
+                    else getString(R.string.profile_name_saved, value),
+                    Toast.LENGTH_SHORT
+                ).show()
+                render()
+            }
+            .show()
     }
 
     private fun confirmClear() {
