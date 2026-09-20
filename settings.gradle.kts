@@ -13,5 +13,5 @@ dependencyResolutionManagement {
     }
 }
 
-rootProject.name = "LangPartner"
+rootProject.name = "Shiyu"
 include(":app")

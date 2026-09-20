@@ -13,15 +13,15 @@ val keystoreProps = Properties().apply {
 val hasSigning = keystoreProps.getProperty("storeFile") != null
 
 android {
-    namespace = "com.langpartner.app"
+    namespace = "com.shiyu.app"
     compileSdk = 35
     buildToolsVersion = "36.0.0"
 
     defaultConfig {
-        applicationId = "com.langpartner.app"
+        applicationId = "com.shiyu.app"
         minSdk = 26
         targetSdk = 35
-        versionCode = 2
+        versionCode = 1
         versionName = "1.0.0"
     }
 

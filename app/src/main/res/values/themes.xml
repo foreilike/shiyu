@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <style name="Theme.LangPartner" parent="Theme.Material3.Light.NoActionBar">
+    <style name="Theme.Shiyu" parent="Theme.Material3.Light.NoActionBar">
         <item name="colorPrimary">@color/clay</item>
         <item name="colorPrimaryDark">@color/clay_deep</item>
         <item name="colorAccent">@color/gold</item>
