@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- 可用 android:backgroundTint 上色的通用圆角方块（首页快捷入口图标底） -->
+<shape xmlns:android="http://schemas.android.com/apk/res/android"
+    android:shape="rectangle">
+    <solid android:color="@color/card" />
+    <corners android:radius="12dp" />
+</shape>

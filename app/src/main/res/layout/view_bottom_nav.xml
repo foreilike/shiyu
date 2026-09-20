@@ -1,11 +1,154 @@
 <?xml version="1.0" encoding="utf-8"?>
-<com.google.android.material.bottomnavigation.BottomNavigationView xmlns:android="http://schemas.android.com/apk/res/android"
+<!--
+  拾语底部导航：4 个普通 Tab + 中央凸起麦克风。
+  Material 的 BottomNavigationView 做不出中央凸起，所以手搭。
+
+  高度构成：navRow 顶部留 22dp 外边距、自身 62dp，根容器 wrap_content 得到 84dp；
+  麦克风 56dp 贴 top 居中，于是正好比导航条高出 22dp —— 和设计稿 top:-20px 一致，
+  且全程没有负边距，不依赖任何一层 clipChildren=false，换机型不会被裁。
+-->
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:id="@+id/bottomNav"
+    android:id="@+id/navRoot"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:background="@color/paper"
-    app:itemIconTint="@color/clay"
-    app:itemTextColor="@color/mute"
-    app:labelVisibilityMode="labeled"
-    app:menu="@menu/bottom_nav" />
+    android:layout_height="wrap_content">
+
+    <LinearLayout
+        android:id="@+id/navRow"
+        android:layout_width="match_parent"
+        android:layout_height="62dp"
+        android:layout_gravity="bottom"
+        android:layout_marginTop="22dp"
+        android:background="@drawable/bg_nav_bar"
+        android:baselineAligned="false"
+        android:orientation="horizontal">
+
+        <LinearLayout
+            android:id="@+id/navHome"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:gravity="center"
+            android:orientation="vertical">
+            <ImageView
+                android:id="@+id/navHomeIcon"
+                android:layout_width="21dp"
+                android:layout_height="21dp"
+                android:contentDescription="@string/tab_home"
+                android:src="@drawable/ic_nav_home" />
+            <TextView
+                android:id="@+id/navHomeText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="3dp"
+                android:text="@string/tab_home"
+                android:textSize="10.5sp" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/navLangs"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:gravity="center"
+            android:orientation="vertical">
+            <ImageView
+                android:id="@+id/navLangsIcon"
+                android:layout_width="21dp"
+                android:layout_height="21dp"
+                android:contentDescription="@string/tab_langs"
+                android:src="@drawable/ic_nav_langs" />
+            <TextView
+                android:id="@+id/navLangsText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="3dp"
+                android:text="@string/tab_langs"
+                android:textSize="10.5sp" />
+        </LinearLayout>
+
+        <!-- 中间槽位只放标签，圆钮在下面单独浮在上层 -->
+        <FrameLayout
+            android:id="@+id/navTalkSlot"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1">
+            <TextView
+                android:id="@+id/navTalkText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="bottom|center_horizontal"
+                android:layout_marginBottom="7dp"
+                android:text="@string/tab_talk"
+                android:textColor="@color/mute"
+                android:textSize="10.5sp" />
+        </FrameLayout>
+
+        <LinearLayout
+            android:id="@+id/navReview"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:gravity="center"
+            android:orientation="vertical">
+            <ImageView
+                android:id="@+id/navReviewIcon"
+                android:layout_width="21dp"
+                android:layout_height="21dp"
+                android:contentDescription="@string/tab_review"
+                android:src="@drawable/ic_nav_review" />
+            <TextView
+                android:id="@+id/navReviewText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="3dp"
+                android:text="@string/tab_review"
+                android:textSize="10.5sp" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/navProfile"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:gravity="center"
+            android:orientation="vertical">
+            <ImageView
+                android:id="@+id/navProfileIcon"
+                android:layout_width="21dp"
+                android:layout_height="21dp"
+                android:contentDescription="@string/tab_profile"
+                android:src="@drawable/ic_nav_profile" />
+            <TextView
+                android:id="@+id/navProfileText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="3dp"
+                android:text="@string/tab_profile"
+                android:textSize="10.5sp" />
+        </LinearLayout>
+    </LinearLayout>
+
+    <FrameLayout
+        android:id="@+id/navMic"
+        android:layout_width="56dp"
+        android:layout_height="56dp"
+        android:layout_gravity="top|center_horizontal"
+        android:background="@drawable/bg_mic_fab"
+        android:clickable="true"
+        android:contentDescription="@string/tab_talk"
+        android:elevation="8dp"
+        android:focusable="true">
+        <ImageView
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:layout_gravity="center"
+            android:contentDescription="@null"
+            android:src="@drawable/ic_mic"
+            app:tint="@color/cream" />
+    </FrameLayout>
+</FrameLayout>

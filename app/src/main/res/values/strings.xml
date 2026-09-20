@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">语言陪练</string>
+    <string name="app_name">拾语</string>
 
     <!-- 通用 -->
     <string name="lang_ja">日语</string>
@@ -12,15 +12,103 @@
     <string name="settings">设置</string>
     <string name="clear_all_data">清空全部数据</string>
 
-    <!-- 导航 -->
+    <!-- 导航（五 Tab：今日 / 课程 / 对话 / 复习 / 我的） -->
+    <string name="tab_home">今日</string>
+    <string name="tab_langs">课程</string>
+    <string name="tab_talk">对话</string>
+    <string name="tab_review">复习</string>
+    <string name="tab_profile">我的</string>
     <string name="tab_study">今日</string>
     <string name="tab_chat">对话</string>
     <string name="tab_chart">图表</string>
-    <string name="tab_profile">我的</string>
+
+    <!-- 今日（首页仪表盘） -->
+    <string name="home_greet_morning">早上好</string>
+    <string name="home_greet_noon">中午好</string>
+    <string name="home_greet_afternoon">下午好</string>
+    <string name="home_greet_evening">晚上好</string>
+    <string name="home_streak">连续 %1$d 天</string>
+    <string name="home_streak_none">今天还没开始</string>
+    <string name="home_goal_title">今日目标 · %1$d 分钟</string>
+    <string name="home_goal_done">今日目标已完成，继续就是赚到</string>
+    <string name="home_goal_left">还差 %1$d 分钟，睡前再聊一会儿吧</string>
+    <string name="home_goal_start">今天还没开始，先来 5 分钟</string>
+    <string name="home_goal_unit">分钟</string>
+    <string name="home_stat_reviewed">复习 %1$d 张</string>
+    <string name="home_stat_turns">对话 %1$d 轮</string>
+    <string name="home_stat_voice">开口 %1$d 分钟</string>
+    <string name="home_cont_title">今日待复习 %1$d 张</string>
+    <string name="home_cont_sub">%1$s · 共 %2$d 张卡片</string>
+    <string name="home_cont_btn">继续学习</string>
+    <string name="home_cont_progress">已掌握 %1$d%%</string>
+    <string name="home_all_clear">今日卡片已清空</string>
+    <string name="home_all_clear_sub">%1$s · 明天还有新的一批</string>
+    <string name="home_entry_review">单词复习</string>
+    <string name="home_entry_review_sub">%1$d 张卡片待复习</string>
+    <string name="home_entry_chart">发音表</string>
+    <string name="home_entry_chart_sub">点格子即可跟读</string>
+
+    <!-- 课程（语种切换） -->
+    <string name="langs_title">课程</string>
+    <string name="langs_sub">切换语种后，全站内容与进度随之切换</string>
+    <string name="langs_current">当前学习</string>
+    <string name="langs_available">可选语种</string>
+    <string name="langs_coming">即将支持</string>
+    <string name="langs_coming_toast">%1$s 内容还在准备中，暂时不能切换</string>
+    <string name="langs_switched">已切换到%1$s</string>
+    <string name="langs_meta">%1$d 张卡片 · %2$d 个场景</string>
+    <string name="lang_ko">韩语</string>
+    <string name="lang_es">西班牙语</string>
+    <string name="lang_fr">法语</string>
+
+    <!-- 我的（统计 / 周柱状图 / 成就） -->
+    <string name="profile_streak">连续天数</string>
+    <string name="profile_mastered_words">掌握词汇</string>
+    <string name="profile_total_hours">累计小时</string>
+    <string name="profile_week_title">本周学习</string>
+    <string name="profile_week_total">共 %1$d 分钟</string>
+    <string name="profile_badges">成就</string>
+    <string name="profile_badge_progress">%1$d / %2$d</string>
+    <string name="profile_section_data">学习数据</string>
+    <string name="profile_section_prefs">偏好与设置</string>
+    <string name="profile_api_settings">API 设置</string>
+    <string name="profile_api_settings_sub">对话模型与语音服务</string>
+    <string name="profile_about">关于拾语</string>
+    <string name="profile_about_text">拾语 %1$s · 一个安静的语言陪练</string>
+    <string name="profile_lang_stats">%1$s：待复习 %2$d · 已掌握 %3$d · 对话 %4$d 轮</string>
+
+    <string name="badge_first_voice">初次开口</string>
+    <string name="badge_first_voice_d">完成首次语音对话</string>
+    <string name="badge_streak_7">七日之火</string>
+    <string name="badge_streak_7_d">连续打卡 7 天</string>
+    <string name="badge_words_100">百词初成</string>
+    <string name="badge_words_100_d">掌握 100 个词汇</string>
+    <string name="badge_words_200">词海拾贝</string>
+    <string name="badge_words_200_d">掌握 200 个词汇</string>
+    <string name="badge_hours_10">十时之功</string>
+    <string name="badge_hours_10_d">累计学习 10 小时</string>
+    <string name="badge_turns_100">健谈者</string>
+    <string name="badge_turns_100_d">累计对话 100 轮</string>
+
+    <!-- 复习页补充 -->
+    <string name="review_title">复习</string>
+    <string name="review_sub">来自课程与对话场景的记忆卡片</string>
+    <string name="review_tap_hint">输入答案后点「确认」翻面</string>
+    <string name="review_progress">第 %1$d / %2$d 张</string>
+    <string name="review_chart_entry">发音表</string>
+
+    <!-- 对话中心 -->
+    <string name="talk_title">对话</string>
+    <string name="talk_sub">挑一个场景开口，或直接进实时语音</string>
+    <string name="talk_scenarios">场景练习</string>
+
+    <string name="back">返回</string>
+
 
     <!-- 实时语音（拾语设计稿） -->
     <string name="voice_entry_title">实时语音对话</string>
     <string name="voice_entry_sub">AI 语伴在线 · 像朋友一样聊天</string>
+    <string name="voice_partner_online">AI 语伴 %1$s 在线 · 像朋友一样聊天</string>
     <string name="voice_kicker">REALTIME TALK</string>
     <string name="voice_listening">正在聆听…</string>
     <string name="voice_speaking">Yuki 正在说…</string>

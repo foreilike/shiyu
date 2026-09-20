@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="0dp"
+    android:layout_height="match_parent"
+    android:layout_weight="1"
+    android:gravity="bottom|center_horizontal"
+    android:orientation="vertical">
+
+    <TextView
+        android:id="@+id/barValue"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="3dp"
+        android:textColor="@color/mute"
+        android:textSize="9sp"
+        tools:text="34" />
+
+    <View
+        android:id="@+id/bar"
+        android:layout_width="14dp"
+        android:layout_height="4dp"
+        android:background="@drawable/bg_week_bar" />
+
+    <TextView
+        android:id="@+id/barLabel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="6dp"
+        android:textColor="@color/mute"
+        android:textSize="10.5sp"
+        tools:text="一" />
+</LinearLayout>

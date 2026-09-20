@@ -1,109 +1,338 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<!-- 我的（Tab 5）：三项总览 + 本周柱状图 + 成就 + 分语言数据 + 偏好设置 -->
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/paper"
-    android:orientation="vertical">
+    android:background="@color/paper">
 
-    <ScrollView
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1">
+        android:layout_height="match_parent"
+        android:orientation="vertical">
 
+        <!-- 页头：用当前语种徽标当头像，不编造用户名 -->
         <LinearLayout
+            android:id="@+id/header"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:padding="20dp">
+            android:baselineAligned="false"
+            android:gravity="center_vertical"
+            android:orientation="horizontal"
+            android:paddingStart="20dp"
+            android:paddingTop="10dp"
+            android:paddingEnd="20dp"
+            android:paddingBottom="14dp">
 
             <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:fontFamily="serif"
-                android:text="@string/profile_title"
-                android:textColor="@color/ink"
-                android:textSize="24sp"
-                android:textStyle="bold" />
+                android:id="@+id/avatar"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:background="@drawable/bg_circle"
+                android:gravity="center"
+                android:textColor="@color/card"
+                android:textSize="16sp"
+                android:textStyle="bold"
+                tools:backgroundTint="@color/lang_ja"
+                tools:text="JA" />
 
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:paddingTop="2dp"
-                android:paddingBottom="8dp"
-                android:text="主学日语 · 辅修英语"
-                android:textColor="@color/mute"
-                android:textSize="12sp" />
-
-            <!-- 日语统计卡 -->
             <LinearLayout
-                android:id="@+id/statsJa"
-                android:layout_width="match_parent"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:background="@drawable/bg_card"
-                android:orientation="vertical"
-                android:padding="16dp" />
-
-            <!-- 英语统计卡 -->
-            <LinearLayout
-                android:id="@+id/statsEn"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="12dp"
-                android:background="@drawable/bg_card"
-                android:orientation="vertical"
-                android:padding="16dp" />
-
-            <!-- 自动朗读 -->
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="16dp"
-                android:background="@drawable/bg_card"
-                android:gravity="center_vertical"
-                android:orientation="horizontal"
-                android:paddingStart="16dp"
-                android:paddingTop="10dp"
-                android:paddingEnd="16dp"
-                android:paddingBottom="10dp">
-
+                android:layout_marginStart="12dp"
+                android:layout_weight="1"
+                android:orientation="vertical">
                 <TextView
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:text="@string/profile_auto_play"
-                    android:textColor="@color/ink2"
-                    android:textSize="14sp" />
-
-                <Switch
-                    android:id="@+id/autoPlaySwitch"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content" />
+                    style="@style/ShiyuTitle"
+                    android:text="@string/profile_title" />
+                <TextView
+                    android:id="@+id/profileSub"
+                    style="@style/ShiyuSubtitle"
+                    android:layout_marginTop="2dp"
+                    tools:text="主学日语 · 辅修英语" />
             </LinearLayout>
-
-            <Button
-                android:id="@+id/btnSettings"
-                android:layout_width="match_parent"
-                android:layout_height="46dp"
-                android:layout_marginTop="16dp"
-                android:background="@drawable/bg_btn_clay"
-                android:text="@string/settings"
-                android:textColor="@color/cream"
-                android:textSize="14sp" />
-
-            <Button
-                android:id="@+id/btnClearData"
-                android:layout_width="match_parent"
-                android:layout_height="46dp"
-                android:layout_marginTop="12dp"
-                android:layout_marginBottom="16dp"
-                android:background="@drawable/bg_btn_ghost"
-                android:text="@string/clear_all_data"
-                android:textColor="@color/bad_red"
-                android:textSize="14sp" />
         </LinearLayout>
-    </ScrollView>
+
+        <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:clipToPadding="false"
+            android:paddingStart="20dp"
+            android:paddingEnd="20dp"
+            android:paddingBottom="104dp"
+            android:scrollbars="none">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <!-- 三项总览 -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/bg_card"
+                    android:baselineAligned="false"
+                    android:orientation="horizontal"
+                    android:paddingTop="16dp"
+                    android:paddingBottom="16dp">
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:gravity="center"
+                        android:orientation="vertical">
+                        <TextView
+                            android:id="@+id/statStreak"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:fontFamily="serif"
+                            android:textColor="@color/ink"
+                            android:textSize="24sp"
+                            android:textStyle="bold"
+                            tools:text="12" />
+                        <TextView
+                            style="@style/ShiyuSubtitle"
+                            android:layout_marginTop="2dp"
+                            android:text="@string/profile_streak"
+                            android:textSize="11.5sp" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:gravity="center"
+                        android:orientation="vertical">
+                        <TextView
+                            android:id="@+id/statWords"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:fontFamily="serif"
+                            android:textColor="@color/ink"
+                            android:textSize="24sp"
+                            android:textStyle="bold"
+                            tools:text="246" />
+                        <TextView
+                            style="@style/ShiyuSubtitle"
+                            android:layout_marginTop="2dp"
+                            android:text="@string/profile_mastered_words"
+                            android:textSize="11.5sp" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:gravity="center"
+                        android:orientation="vertical">
+                        <TextView
+                            android:id="@+id/statHours"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:fontFamily="serif"
+                            android:textColor="@color/ink"
+                            android:textSize="24sp"
+                            android:textStyle="bold"
+                            tools:text="18.5" />
+                        <TextView
+                            style="@style/ShiyuSubtitle"
+                            android:layout_marginTop="2dp"
+                            android:text="@string/profile_total_hours"
+                            android:textSize="11.5sp" />
+                    </LinearLayout>
+                </LinearLayout>
+
+                <!-- 本周学习 -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="14dp"
+                    android:background="@drawable/bg_card"
+                    android:orientation="vertical"
+                    android:padding="16dp">
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal">
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:text="@string/profile_week_title"
+                            android:textColor="@color/ink"
+                            android:textSize="14sp"
+                            android:textStyle="bold" />
+                        <TextView
+                            android:id="@+id/weekTotal"
+                            style="@style/ShiyuSubtitle"
+                            android:textSize="11.5sp"
+                            tools:text="共 142 分钟" />
+                    </LinearLayout>
+                    <LinearLayout
+                        android:id="@+id/weekBars"
+                        android:layout_width="match_parent"
+                        android:layout_height="108dp"
+                        android:layout_marginTop="12dp"
+                        android:baselineAligned="false"
+                        android:orientation="horizontal" />
+                </LinearLayout>
+
+                <!-- 成就 -->
+                <TextView
+                    style="@style/ShiyuSubtitle"
+                    android:layout_marginTop="22dp"
+                    android:layout_marginBottom="8dp"
+                    android:letterSpacing="0.06"
+                    android:text="@string/profile_badges"
+                    android:textStyle="bold" />
+                <LinearLayout
+                    android:id="@+id/badgeContainer"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/bg_card"
+                    android:orientation="vertical"
+                    android:padding="16dp" />
+
+                <!-- 分语言数据 -->
+                <TextView
+                    style="@style/ShiyuSubtitle"
+                    android:layout_marginTop="22dp"
+                    android:layout_marginBottom="8dp"
+                    android:letterSpacing="0.06"
+                    android:text="@string/profile_section_data"
+                    android:textStyle="bold" />
+                <LinearLayout
+                    android:id="@+id/langStats"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/bg_card"
+                    android:orientation="vertical"
+                    android:paddingStart="16dp"
+                    android:paddingTop="6dp"
+                    android:paddingEnd="16dp"
+                    android:paddingBottom="6dp" />
+
+                <!-- 偏好与设置 -->
+                <TextView
+                    style="@style/ShiyuSubtitle"
+                    android:layout_marginTop="22dp"
+                    android:layout_marginBottom="8dp"
+                    android:letterSpacing="0.06"
+                    android:text="@string/profile_section_prefs"
+                    android:textStyle="bold" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/bg_card"
+                    android:orientation="vertical"
+                    android:paddingStart="16dp"
+                    android:paddingEnd="16dp">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="52dp"
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal">
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:text="@string/profile_auto_play"
+                            android:textColor="@color/ink"
+                            android:textSize="14sp" />
+                        <androidx.appcompat.widget.SwitchCompat
+                            android:id="@+id/autoPlaySwitch"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content" />
+                    </LinearLayout>
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:background="@color/line" />
+
+                    <LinearLayout
+                        android:id="@+id/btnSettings"
+                        android:layout_width="match_parent"
+                        android:layout_height="52dp"
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal">
+                        <LinearLayout
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:orientation="vertical">
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="@string/profile_api_settings"
+                                android:textColor="@color/ink"
+                                android:textSize="14sp" />
+                            <TextView
+                                style="@style/ShiyuSubtitle"
+                                android:text="@string/profile_api_settings_sub"
+                                android:textSize="11sp" />
+                        </LinearLayout>
+                        <ImageView
+                            android:layout_width="14dp"
+                            android:layout_height="14dp"
+                            android:contentDescription="@null"
+                            android:src="@drawable/ic_chevron_right"
+                            app:tint="@color/mute" />
+                    </LinearLayout>
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:background="@color/line" />
+
+                    <LinearLayout
+                        android:id="@+id/btnAbout"
+                        android:layout_width="match_parent"
+                        android:layout_height="52dp"
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal">
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:text="@string/profile_about"
+                            android:textColor="@color/ink"
+                            android:textSize="14sp" />
+                        <TextView
+                            android:id="@+id/versionText"
+                            style="@style/ShiyuSubtitle"
+                            android:textSize="11.5sp"
+                            tools:text="1.0.0" />
+                    </LinearLayout>
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:background="@color/line" />
+
+                    <TextView
+                        android:id="@+id/btnClearData"
+                        android:layout_width="match_parent"
+                        android:layout_height="52dp"
+                        android:gravity="center_vertical"
+                        android:text="@string/clear_all_data"
+                        android:textColor="@color/bad_red"
+                        android:textSize="14sp" />
+                </LinearLayout>
+            </LinearLayout>
+        </ScrollView>
+    </LinearLayout>
 
     <include
         android:id="@+id/bottomNavBar"
-        layout="@layout/view_bottom_nav" />
-</LinearLayout>
+        layout="@layout/view_bottom_nav"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom" />
+</FrameLayout>

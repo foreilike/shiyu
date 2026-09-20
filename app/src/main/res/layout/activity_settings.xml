@@ -1,27 +1,31 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/paper">
+    android:background="@color/paper"
+    android:orientation="vertical">
+
+    <include
+        android:id="@+id/headerBar"
+        layout="@layout/view_sub_header"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
+    <ScrollView
+        android:id="@+id/settingsScroll"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:clipToPadding="false"
+        android:scrollbars="none">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:padding="20dp">
-
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:fontFamily="serif"
-            android:text="@string/settings_title"
-            android:textColor="@color/ink"
-            android:textSize="24sp"
-            android:textStyle="bold" />
-
-        <include
-            android:id="@+id/langBar"
-            layout="@layout/view_lang_bar" />
+        android:paddingStart="20dp"
+        android:paddingEnd="20dp"
+        android:paddingBottom="20dp">
 
         <!-- 对话服务 -->
         <TextView
@@ -407,4 +411,5 @@
             android:textColor="@color/cream"
             android:textSize="14sp" />
     </LinearLayout>
-</ScrollView>
+    </ScrollView>
+</LinearLayout>

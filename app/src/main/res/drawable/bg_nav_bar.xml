@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+    <!-- 顶部 1dp 描边：底部导航与页面内容的分界，比投影更符合"卡片以描边分层"的规范 -->
+    <item>
+        <shape android:shape="rectangle">
+            <solid android:color="@color/line" />
+        </shape>
+    </item>
+    <item android:top="1dp">
+        <shape android:shape="rectangle">
+            <solid android:color="#FFFFFDFA" />
+        </shape>
+    </item>
+</layer-list>

@@ -1,10 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!-- 语音卡：夜幕渐变 + 暖金细边，首页上唯一的重色块 -->
 <shape xmlns:android="http://schemas.android.com/apk/res/android"
     android:shape="rectangle">
     <gradient
-        android:angle="135"
-        android:startColor="#3A2A1D"
-        android:endColor="#17120E"
+        android:angle="300"
+        android:startColor="#FF3A2A1D"
+        android:endColor="#FF17120E"
         android:type="linear" />
     <corners android:radius="20dp" />
 </shape>

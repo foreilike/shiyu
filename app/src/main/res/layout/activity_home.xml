@@ -1,0 +1,433 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  今日（首页仪表盘）。
+  根用 FrameLayout：内容整屏铺满、底部导航浮在最上层，这样滚动内容能从
+  凸起麦克风底下穿过去，和设计稿一致；内容区靠 paddingBottom 让开导航高度。
+-->
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/paper">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <!-- 页头：状态栏高度由 BaseActivity 以 padding 注入到这里 -->
+        <LinearLayout
+            android:id="@+id/header"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:baselineAligned="false"
+            android:gravity="bottom"
+            android:orientation="horizontal"
+            android:paddingStart="20dp"
+            android:paddingTop="10dp"
+            android:paddingEnd="20dp"
+            android:paddingBottom="14dp">
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:orientation="vertical">
+                <TextView
+                    android:id="@+id/homeDate"
+                    style="@style/ShiyuSubtitle"
+                    tools:text="9 月 20 日 · 周日" />
+                <TextView
+                    android:id="@+id/homeGreet"
+                    style="@style/ShiyuTitle"
+                    android:layout_marginTop="2dp"
+                    tools:text="晚上好" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/streakChip"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/bg_pill_white"
+                android:gravity="center_vertical"
+                android:orientation="horizontal"
+                android:paddingStart="12dp"
+                android:paddingTop="6dp"
+                android:paddingEnd="12dp"
+                android:paddingBottom="6dp">
+                <ImageView
+                    android:layout_width="13dp"
+                    android:layout_height="15dp"
+                    android:contentDescription="@null"
+                    android:src="@drawable/ic_flame"
+                    app:tint="@color/clay" />
+                <TextView
+                    android:id="@+id/streakText"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="6dp"
+                    android:textColor="@color/clay"
+                    android:textSize="12.5sp"
+                    android:textStyle="bold"
+                    tools:text="连续 12 天" />
+            </LinearLayout>
+        </LinearLayout>
+
+        <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:clipToPadding="false"
+            android:paddingStart="20dp"
+            android:paddingEnd="20dp"
+            android:paddingBottom="104dp"
+            android:scrollbars="none">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <!-- ① 今日目标 -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/bg_card"
+                    android:orientation="vertical"
+                    android:padding="16dp">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:baselineAligned="false"
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal">
+
+                        <FrameLayout
+                            android:layout_width="64dp"
+                            android:layout_height="64dp">
+                            <com.shiyu.app.ui.widget.GoalRingView
+                                android:id="@+id/goalRing"
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent" />
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:gravity="center"
+                                android:orientation="vertical">
+                                <TextView
+                                    android:id="@+id/goalMinutes"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:textColor="@color/ink"
+                                    android:textSize="13sp"
+                                    android:textStyle="bold"
+                                    tools:text="20" />
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="@string/home_goal_unit"
+                                    android:textColor="@color/mute"
+                                    android:textSize="9sp" />
+                            </LinearLayout>
+                        </FrameLayout>
+
+                        <LinearLayout
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="14dp"
+                            android:layout_weight="1"
+                            android:orientation="vertical">
+                            <TextView
+                                android:id="@+id/goalTitle"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:textColor="@color/ink"
+                                android:textSize="14sp"
+                                android:textStyle="bold"
+                                tools:text="今日目标 · 30 分钟" />
+                            <TextView
+                                android:id="@+id/goalSub"
+                                style="@style/ShiyuSubtitle"
+                                android:layout_marginTop="2dp"
+                                tools:text="还差 10 分钟，睡前再聊一会儿吧" />
+                        </LinearLayout>
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="10dp"
+                        android:orientation="horizontal">
+                        <TextView
+                            android:id="@+id/goalStat1"
+                            style="@style/ShiyuSubtitle"
+                            android:background="@drawable/bg_pill_paper"
+                            android:paddingStart="10dp"
+                            android:paddingTop="4dp"
+                            android:paddingEnd="10dp"
+                            android:paddingBottom="4dp"
+                            android:textColor="@color/ink2"
+                            android:textSize="11.5sp"
+                            tools:text="复习 6 张" />
+                        <TextView
+                            android:id="@+id/goalStat2"
+                            style="@style/ShiyuSubtitle"
+                            android:layout_marginStart="8dp"
+                            android:background="@drawable/bg_pill_paper"
+                            android:paddingStart="10dp"
+                            android:paddingTop="4dp"
+                            android:paddingEnd="10dp"
+                            android:paddingBottom="4dp"
+                            android:textColor="@color/ink2"
+                            android:textSize="11.5sp"
+                            tools:text="对话 3 轮" />
+                        <TextView
+                            android:id="@+id/goalStat3"
+                            style="@style/ShiyuSubtitle"
+                            android:layout_marginStart="8dp"
+                            android:background="@drawable/bg_pill_paper"
+                            android:paddingStart="10dp"
+                            android:paddingTop="4dp"
+                            android:paddingEnd="10dp"
+                            android:paddingBottom="4dp"
+                            android:textColor="@color/ink2"
+                            android:textSize="11.5sp"
+                            tools:text="开口 5 分钟" />
+                    </LinearLayout>
+                </LinearLayout>
+
+                <!-- ② 续学 -->
+                <LinearLayout
+                    android:id="@+id/contCard"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="14dp"
+                    android:background="@drawable/bg_cont_card"
+                    android:orientation="vertical"
+                    android:padding="16dp">
+
+                    <LinearLayout
+                        android:id="@+id/langTag"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:background="@drawable/bg_pill_white"
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal"
+                        android:paddingStart="10dp"
+                        android:paddingTop="4dp"
+                        android:paddingEnd="10dp"
+                        android:paddingBottom="4dp">
+                        <View
+                            android:id="@+id/langDot"
+                            android:layout_width="7dp"
+                            android:layout_height="7dp"
+                            android:background="@drawable/bg_circle"
+                            android:backgroundTint="@color/lang_ja" />
+                        <TextView
+                            android:id="@+id/langTagText"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="6dp"
+                            android:textSize="11sp"
+                            android:textStyle="bold"
+                            tools:text="日语" />
+                    </LinearLayout>
+
+                    <TextView
+                        android:id="@+id/contTitle"
+                        style="@style/ShiyuCardTitle"
+                        android:layout_marginTop="10dp"
+                        tools:text="今日待复习 18 张" />
+
+                    <TextView
+                        android:id="@+id/contSub"
+                        style="@style/ShiyuSubtitle"
+                        android:layout_marginTop="4dp"
+                        android:textColor="@color/ink2"
+                        tools:text="日语 · 共 138 张卡片" />
+
+                    <ProgressBar
+                        android:id="@+id/contProgress"
+                        style="?android:attr/progressBarStyleHorizontal"
+                        android:layout_width="match_parent"
+                        android:layout_height="6dp"
+                        android:layout_marginTop="12dp"
+                        android:max="100"
+                        android:progressDrawable="@drawable/progress_clay"
+                        tools:progress="40" />
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="12dp"
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal">
+                        <TextView
+                            android:id="@+id/contPct"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:textColor="@color/ink2"
+                            android:textSize="12sp"
+                            tools:text="已掌握 40%" />
+                        <TextView
+                            android:id="@+id/btnContinue"
+                            android:layout_width="wrap_content"
+                            android:layout_height="36dp"
+                            android:background="@drawable/bg_btn_clay"
+                            android:gravity="center"
+                            android:paddingStart="18dp"
+                            android:paddingEnd="18dp"
+                            android:text="@string/home_cont_btn"
+                            android:textColor="@color/card"
+                            android:textSize="13sp"
+                            android:textStyle="bold" />
+                    </LinearLayout>
+                </LinearLayout>
+
+                <!-- ③ 实时语音（全屏唯一重色块） -->
+                <RelativeLayout
+                    android:id="@+id/voiceCard"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="14dp"
+                    android:background="@drawable/bg_voice_card"
+                    android:padding="16dp">
+
+                    <LinearLayout
+                        android:id="@+id/voiceTexts"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical">
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:letterSpacing="0.14"
+                            android:text="@string/voice_kicker"
+                            android:textColor="@color/gold"
+                            android:textSize="10sp"
+                            android:textStyle="bold" />
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="6dp"
+                            android:fontFamily="serif"
+                            android:text="@string/voice_entry_title"
+                            android:textColor="@color/cream"
+                            android:textSize="18sp"
+                            android:textStyle="bold" />
+                        <TextView
+                            android:id="@+id/voicePartner"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="4dp"
+                            android:textColor="#FFB9A894"
+                            android:textSize="12sp"
+                            tools:text="AI 语伴 Yuki 在线 · 像朋友一样聊天" />
+                    </LinearLayout>
+
+                    <com.shiyu.app.ui.widget.MiniWaveView
+                        android:layout_width="match_parent"
+                        android:layout_height="26dp"
+                        android:layout_below="@id/voiceTexts"
+                        android:layout_marginTop="14dp"
+                        android:layout_marginEnd="44dp" />
+
+                    <ImageView
+                        android:layout_width="30dp"
+                        android:layout_height="30dp"
+                        android:layout_alignParentEnd="true"
+                        android:layout_alignParentBottom="true"
+                        android:background="@drawable/bg_circle_on_dark"
+                        android:contentDescription="@null"
+                        android:padding="7dp"
+                        android:src="@drawable/ic_arrow_right"
+                        app:tint="@color/cream" />
+                </RelativeLayout>
+
+                <!-- ④ 两个快捷入口 -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="14dp"
+                    android:baselineAligned="false"
+                    android:orientation="horizontal">
+
+                    <LinearLayout
+                        android:id="@+id/entryReview"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:background="@drawable/bg_card"
+                        android:orientation="vertical"
+                        android:padding="16dp">
+                        <ImageView
+                            android:layout_width="34dp"
+                            android:layout_height="34dp"
+                            android:background="@drawable/bg_round12"
+                            android:backgroundTint="@color/clay_soft"
+                            android:contentDescription="@null"
+                            android:padding="7dp"
+                            android:src="@drawable/ic_nav_review"
+                            app:tint="@color/clay" />
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="10dp"
+                            android:text="@string/home_entry_review"
+                            android:textColor="@color/ink"
+                            android:textSize="14sp"
+                            android:textStyle="bold" />
+                        <TextView
+                            android:id="@+id/entryReviewSub"
+                            style="@style/ShiyuSubtitle"
+                            android:layout_marginTop="2dp"
+                            tools:text="18 张卡片待复习" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:id="@+id/entryChart"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="14dp"
+                        android:layout_weight="1"
+                        android:background="@drawable/bg_card"
+                        android:orientation="vertical"
+                        android:padding="16dp">
+                        <ImageView
+                            android:layout_width="34dp"
+                            android:layout_height="34dp"
+                            android:background="@drawable/bg_round12"
+                            android:backgroundTint="@color/ok_green_soft"
+                            android:contentDescription="@null"
+                            android:padding="7dp"
+                            android:src="@drawable/ic_chart"
+                            app:tint="@color/ok_green" />
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="10dp"
+                            android:text="@string/home_entry_chart"
+                            android:textColor="@color/ink"
+                            android:textSize="14sp"
+                            android:textStyle="bold" />
+                        <TextView
+                            android:id="@+id/entryChartSub"
+                            style="@style/ShiyuSubtitle"
+                            android:layout_marginTop="2dp"
+                            android:text="@string/home_entry_chart_sub" />
+                    </LinearLayout>
+                </LinearLayout>
+            </LinearLayout>
+        </ScrollView>
+    </LinearLayout>
+
+    <include
+        android:id="@+id/bottomNavBar"
+        layout="@layout/view_bottom_nav"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom" />
+</FrameLayout>

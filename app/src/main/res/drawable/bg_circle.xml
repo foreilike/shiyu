@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- 可用 android:backgroundTint 上色的通用圆形底（徽章图标、头像、语种色点） -->
+<shape xmlns:android="http://schemas.android.com/apk/res/android"
+    android:shape="oval">
+    <solid android:color="@color/card" />
+</shape>

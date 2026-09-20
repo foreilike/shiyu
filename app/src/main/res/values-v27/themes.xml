@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  API 27+ 才有 windowLightNavigationBar。导航栏是透明的、底下是近白色的导航条，
+  所以手势条/三键图标必须转成深色，否则在浅色背景上看不见。
+  minSdk 是 26，所以单独放 v27，26 上退化为系统默认（浅色图标），不影响可用性。
+-->
+<resources>
+    <style name="Theme.Shiyu" parent="Theme.Material3.Light.NoActionBar">
+        <item name="colorPrimary">@color/clay</item>
+        <item name="colorPrimaryDark">@color/clay_deep</item>
+        <item name="colorAccent">@color/gold</item>
+        <item name="colorControlActivated">@color/clay</item>
+        <item name="android:windowBackground">@color/paper</item>
+        <item name="android:statusBarColor">@android:color/transparent</item>
+        <item name="android:navigationBarColor">@android:color/transparent</item>
+        <item name="android:windowLightStatusBar">true</item>
+        <item name="android:windowLightNavigationBar">true</item>
+        <item name="android:textColorPrimary">@color/ink</item>
+        <item name="android:textColorSecondary">@color/ink2</item>
+        <item name="android:textColorHint">@color/mute</item>
+    </style>
+
+    <style name="Theme.Shiyu.Voice" parent="Theme.Material3.Dark.NoActionBar">
+        <item name="colorPrimary">@color/clay_light</item>
+        <item name="colorAccent">@color/gold</item>
+        <item name="android:windowBackground">@color/dark</item>
+        <item name="android:statusBarColor">@android:color/transparent</item>
+        <item name="android:navigationBarColor">@android:color/transparent</item>
+        <item name="android:windowLightStatusBar">false</item>
+        <item name="android:windowLightNavigationBar">false</item>
+    </style>
+</resources>

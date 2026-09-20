@@ -1,12 +1,37 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+
+    <!--
+      拾语主题。
+      关键点（对应「UI 与上标题栏冲突」）：
+      - NoActionBar：设计稿每屏自带页头，系统 ActionBar 会和它打架，直接关掉；
+      - 状态栏/导航栏透明 + windowLightStatusBar：内容 edge-to-edge 铺到顶，
+        由 BaseActivity 把系统栏高度以 padding 的形式还给页头和底部导航，
+        这样暖纸底色能一直延伸到屏幕最上沿，不会出现一条对不上色的横条；
+      - enforceNavigationBarContrast 关掉：否则系统会在透明导航栏上盖一层半透明灰。
+    -->
     <style name="Theme.Shiyu" parent="Theme.Material3.Light.NoActionBar">
         <item name="colorPrimary">@color/clay</item>
         <item name="colorPrimaryDark">@color/clay_deep</item>
         <item name="colorAccent">@color/gold</item>
+        <item name="colorControlActivated">@color/clay</item>
         <item name="android:windowBackground">@color/paper</item>
-        <item name="android:statusBarColor">@color/paper</item>
+        <item name="android:statusBarColor">@android:color/transparent</item>
+        <item name="android:navigationBarColor">@android:color/transparent</item>
         <item name="android:windowLightStatusBar">true</item>
+        <item name="android:textColorPrimary">@color/ink</item>
+        <item name="android:textColorSecondary">@color/ink2</item>
+        <item name="android:textColorHint">@color/mute</item>
+    </style>
+
+    <!-- 实时语音沉浸页：夜幕底，系统栏图标翻成浅色 -->
+    <style name="Theme.Shiyu.Voice" parent="Theme.Material3.Dark.NoActionBar">
+        <item name="colorPrimary">@color/clay_light</item>
+        <item name="colorAccent">@color/gold</item>
+        <item name="android:windowBackground">@color/dark</item>
+        <item name="android:statusBarColor">@android:color/transparent</item>
+        <item name="android:navigationBarColor">@android:color/transparent</item>
+        <item name="android:windowLightStatusBar">false</item>
     </style>
 
     <!-- 设置页输入框（拾语：白底细描边小圆角） -->
@@ -35,5 +60,33 @@
         <item name="android:textSize">12sp</item>
         <item name="android:minWidth">0dp</item>
         <item name="android:minHeight">0dp</item>
+    </style>
+
+    <!-- 屏幕大标题（衬线 24） -->
+    <style name="ShiyuTitle">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textSize">24sp</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:textColor">@color/ink</item>
+        <item name="android:fontFamily">serif</item>
+    </style>
+
+    <!-- 卡片标题（衬线 17） -->
+    <style name="ShiyuCardTitle">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textSize">17sp</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:textColor">@color/ink</item>
+        <item name="android:fontFamily">serif</item>
+    </style>
+
+    <!-- 屏幕副标题 / 注释 -->
+    <style name="ShiyuSubtitle">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textSize">12sp</item>
+        <item name="android:textColor">@color/mute</item>
     </style>
 </resources>

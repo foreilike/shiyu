@@ -38,6 +38,12 @@ class RealtimeAudioController(
 
     // ---------- 采集 ----------
 
+    /**
+     * 开始采集。调用方必须已经拿到 RECORD_AUDIO 授权
+     * （VoiceChatActivity 在进入前申请，拒绝则直接 finish）。
+     * 这里显式标注契约，让 lint 不再把它误报为漏检权限。
+     */
+    @androidx.annotation.RequiresPermission(android.Manifest.permission.RECORD_AUDIO)
     fun startCapture() {
         if (capturing.get()) return
         val minBuf = android.media.AudioRecord.getMinBufferSize(

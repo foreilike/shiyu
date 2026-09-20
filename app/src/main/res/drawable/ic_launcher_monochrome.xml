@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  Android 13+ 主题化图标的单色层：系统自行上色，这里只定形。
+  声波用反向绕行（sweep 0）在同一条 path 里挖空，保证 even-odd 之外的填充规则也能镂空。
+-->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="108dp"
+    android:height="108dp"
+    android:viewportWidth="108"
+    android:viewportHeight="108">
+    <path
+        android:fillColor="#FF000000"
+        android:pathData="M40,24 H68 A17,17 0 0 1 85,41 V55 A17,17 0 0 1 68,72 H60 L47,84 L52,72 H40 A17,17 0 0 1 23,55 V41 A17,17 0 0 1 40,24 Z M41,41 a3.75,3.75 0 0 0 -3.75,3.75 v7.5 a3.75,3.75 0 0 0 7.5,0 v-7.5 A3.75,3.75 0 0 0 41,41 Z M54,35 a3.75,3.75 0 0 0 -3.75,3.75 v19.5 a3.75,3.75 0 0 0 7.5,0 v-19.5 A3.75,3.75 0 0 0 54,35 Z M67,39 a3.75,3.75 0 0 0 -3.75,3.75 v11.5 a3.75,3.75 0 0 0 7.5,0 v-11.5 A3.75,3.75 0 0 0 67,39 Z" />
+</vector>

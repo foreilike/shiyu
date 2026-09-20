@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@drawable/bg_voice_card">
@@ -12,12 +13,13 @@
 
         <!-- 顶部：返回 + 语伴 + 计时 -->
         <LinearLayout
+            android:id="@+id/voiceTopBar"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center_vertical"
             android:orientation="horizontal"
             android:paddingStart="16dp"
-            android:paddingTop="48dp"
+            android:paddingTop="8dp"
             android:paddingEnd="16dp">
 
             <ImageButton
@@ -27,7 +29,7 @@
                 android:background="?attr/selectableItemBackgroundBorderless"
                 android:contentDescription="@string/voice_back_home"
                 android:src="@drawable/ic_nav_chat"
-                android:tint="@color/cream" />
+                app:tint="@color/cream" />
 
             <LinearLayout
                 android:layout_width="0dp"
@@ -119,12 +121,13 @@
 
         <!-- 控制区 -->
         <LinearLayout
+            android:id="@+id/voiceControls"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center"
             android:orientation="horizontal"
             android:paddingTop="8dp"
-            android:paddingBottom="36dp">
+            android:paddingBottom="24dp">
 
             <ImageButton
                 android:id="@+id/btnCc"
@@ -133,7 +136,7 @@
                 android:background="?attr/selectableItemBackgroundBorderless"
                 android:contentDescription="字幕"
                 android:src="@drawable/ic_chart"
-                android:tint="@color/cream" />
+                app:tint="@color/cream" />
 
             <ImageButton
                 android:id="@+id/btnMic"
@@ -145,7 +148,7 @@
                 android:contentDescription="@string/voice_listening"
                 android:padding="22dp"
                 android:src="@drawable/ic_nav_chat"
-                android:tint="@color/cream" />
+                app:tint="@color/cream" />
 
             <ImageButton
                 android:id="@+id/btnHint"
@@ -154,7 +157,7 @@
                 android:background="?attr/selectableItemBackgroundBorderless"
                 android:contentDescription="提示"
                 android:src="@drawable/ic_nav_study"
-                android:tint="@color/cream" />
+                app:tint="@color/cream" />
         </LinearLayout>
     </LinearLayout>
 

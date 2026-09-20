@@ -6,38 +6,60 @@
 
     <application
         android:allowBackup="false"
-        android:icon="@drawable/ic_launcher"
+        android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
+        android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.Shiyu">
+
+        <!-- Tab 1：今日（启动页） -->
         <activity
-            android:name=".ui.study.StudyActivity"
+            android:name=".ui.home.HomeActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
+        <!-- Tab 2：课程 -->
+        <activity
+            android:name=".ui.langs.LanguagesActivity"
+            android:exported="false" />
+
+        <!-- Tab 3：对话中心 -->
+        <activity
+            android:name=".ui.chat.ChatListActivity"
+            android:exported="false" />
+
+        <!-- Tab 4：复习 -->
+        <activity
+            android:name=".ui.review.ReviewActivity"
+            android:exported="false"
+            android:windowSoftInputMode="adjustResize" />
+
+        <!-- Tab 5：我的 -->
+        <activity
+            android:name=".ui.profile.ProfileActivity"
+            android:exported="false" />
+
+        <!-- 二级页 -->
         <activity
             android:name=".ui.chart.ChartActivity"
             android:exported="false" />
         <activity
-            android:name=".ui.chat.ChatListActivity"
-            android:exported="false" />
-        <activity
             android:name=".ui.chat.ChatActivity"
-            android:exported="false" />
+            android:exported="false"
+            android:windowSoftInputMode="adjustResize" />
+        <activity
+            android:name=".ui.settings.SettingsActivity"
+            android:exported="false"
+            android:windowSoftInputMode="adjustResize" />
         <activity
             android:name=".ui.voice.VoiceChatActivity"
             android:exported="false"
             android:screenOrientation="portrait"
-            android:theme="@style/Theme.Shiyu" />
-        <activity
-            android:name=".ui.profile.ProfileActivity"
-            android:exported="false" />
-        <activity
-            android:name=".ui.settings.SettingsActivity"
-            android:exported="false" />
+            android:theme="@style/Theme.Shiyu.Voice" />
     </application>
 
 </manifest>

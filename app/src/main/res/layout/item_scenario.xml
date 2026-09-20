@@ -1,33 +1,54 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:layout_marginBottom="12dp"
     android:background="@drawable/bg_card"
-    android:orientation="vertical"
+    android:baselineAligned="false"
+    android:gravity="center_vertical"
+    android:orientation="horizontal"
     android:padding="16dp">
 
-    <TextView
-        android:id="@+id/scenarioTitle"
-        android:layout_width="match_parent"
+    <LinearLayout
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:fontFamily="serif"
-        android:textColor="@color/ink"
-        android:textSize="17sp"
-        android:textStyle="bold" />
+        android:layout_weight="1"
+        android:orientation="vertical">
 
-    <TextView
-        android:id="@+id/scenarioTitleZh"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:paddingTop="2dp"
-        android:textColor="@color/mute"
-        android:textSize="13sp" />
+        <TextView
+            android:id="@+id/scenarioTitle"
+            style="@style/ShiyuCardTitle"
+            tools:text="居酒屋で注文する" />
 
-    <TextView
-        android:id="@+id/scenarioTurns"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:paddingTop="6dp"
-        android:textColor="@color/clay"
-        android:textSize="12sp" />
+        <TextView
+            android:id="@+id/scenarioTitleZh"
+            style="@style/ShiyuSubtitle"
+            android:layout_marginTop="2dp"
+            android:textSize="13sp"
+            tools:text="在居酒屋点单" />
+
+        <TextView
+            android:id="@+id/scenarioTurns"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:background="@drawable/bg_pill_paper"
+            android:paddingStart="9dp"
+            android:paddingTop="3dp"
+            android:paddingEnd="9dp"
+            android:paddingBottom="3dp"
+            android:textColor="@color/clay"
+            android:textSize="11.5sp"
+            tools:text="已完成 3 轮" />
+    </LinearLayout>
+
+    <ImageView
+        android:layout_width="14dp"
+        android:layout_height="14dp"
+        android:layout_marginStart="10dp"
+        android:contentDescription="@null"
+        android:src="@drawable/ic_chevron_right"
+        app:tint="@color/mute" />
 </LinearLayout>

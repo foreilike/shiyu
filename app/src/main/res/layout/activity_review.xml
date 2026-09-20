@@ -1,0 +1,328 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  复习（Tab 4）。原「今日」页的卡片训练搬到这里，视觉换成设计稿的翻转卡。
+  假名 / 音素表从原来的一级 Tab 降为这里页头右上角的二级入口，功能没丢。
+-->
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/paper">
+
+    <LinearLayout
+        android:id="@+id/contentColumn"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:paddingBottom="92dp">
+
+        <LinearLayout
+            android:id="@+id/header"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:baselineAligned="false"
+            android:gravity="center_vertical"
+            android:orientation="horizontal"
+            android:paddingStart="20dp"
+            android:paddingTop="10dp"
+            android:paddingEnd="12dp"
+            android:paddingBottom="10dp">
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:orientation="vertical">
+                <TextView
+                    style="@style/ShiyuTitle"
+                    android:text="@string/review_title" />
+                <TextView
+                    style="@style/ShiyuSubtitle"
+                    android:layout_marginTop="2dp"
+                    android:text="@string/review_sub" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/btnChart"
+                android:layout_width="wrap_content"
+                android:layout_height="34dp"
+                android:background="@drawable/bg_pill_white"
+                android:gravity="center_vertical"
+                android:orientation="horizontal"
+                android:paddingStart="12dp"
+                android:paddingEnd="12dp">
+                <ImageView
+                    android:layout_width="15dp"
+                    android:layout_height="15dp"
+                    android:contentDescription="@null"
+                    android:src="@drawable/ic_chart"
+                    app:tint="@color/clay" />
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="6dp"
+                    android:text="@string/review_chart_entry"
+                    android:textColor="@color/clay"
+                    android:textSize="12sp" />
+            </LinearLayout>
+        </LinearLayout>
+
+        <!-- 两枚统计胶囊 -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:paddingStart="20dp"
+            android:paddingEnd="20dp">
+            <TextView
+                android:id="@+id/chipDue"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/bg_pill_white"
+                android:paddingStart="12dp"
+                android:paddingTop="6dp"
+                android:paddingEnd="12dp"
+                android:paddingBottom="6dp"
+                android:textColor="@color/ink2"
+                android:textSize="12sp"
+                tools:text="今日待复习 18" />
+            <TextView
+                android:id="@+id/chipMastered"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:background="@drawable/bg_pill_white"
+                android:paddingStart="12dp"
+                android:paddingTop="6dp"
+                android:paddingEnd="12dp"
+                android:paddingBottom="6dp"
+                android:textColor="@color/ink2"
+                android:textSize="12sp"
+                tools:text="已掌握 24" />
+            <View
+                android:layout_width="0dp"
+                android:layout_height="1dp"
+                android:layout_weight="1" />
+            <TextView
+                android:id="@+id/chipIndex"
+                style="@style/ShiyuSubtitle"
+                android:layout_gravity="center_vertical"
+                tools:text="第 3 / 18 张" />
+        </LinearLayout>
+
+        <!-- 卡片（翻转动画由 ReviewActivity 驱动 rotationY） -->
+        <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:fillViewport="true"
+            android:paddingStart="20dp"
+            android:paddingTop="12dp"
+            android:paddingEnd="20dp"
+            android:scrollbars="none">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical"
+                android:orientation="vertical">
+
+                <LinearLayout
+                    android:id="@+id/flipCard"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/bg_card"
+                    android:minHeight="230dp"
+                    android:orientation="vertical"
+                    android:padding="24dp">
+
+                    <TextView
+                        android:id="@+id/cardSource"
+                        style="@style/ShiyuSubtitle"
+                        android:layout_gravity="center_horizontal"
+                        android:background="@drawable/bg_pill_paper"
+                        android:paddingStart="10dp"
+                        android:paddingTop="3dp"
+                        android:paddingEnd="10dp"
+                        android:paddingBottom="3dp"
+                        android:textSize="11sp"
+                        tools:text="日语 · 第 3 张" />
+
+                    <TextView
+                        android:id="@+id/cardFront"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="serif"
+                        android:gravity="center"
+                        android:paddingTop="18dp"
+                        android:textColor="@color/ink"
+                        android:textSize="38sp"
+                        android:textStyle="bold"
+                        tools:text="おすすめ" />
+
+                    <TextView
+                        android:id="@+id/cardFrontSub"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="center"
+                        android:paddingTop="6dp"
+                        android:textColor="@color/clay"
+                        android:textSize="14sp" />
+
+                    <TextView
+                        android:id="@+id/cardMeaning"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="center"
+                        android:paddingTop="16dp"
+                        android:textColor="@color/ink2"
+                        android:textSize="19sp"
+                        tools:text="推荐" />
+
+                    <TextView
+                        android:id="@+id/cardBack"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="center"
+                        android:paddingTop="18dp"
+                        android:textColor="@color/ink"
+                        android:textSize="26sp"
+                        android:textStyle="bold"
+                        android:visibility="gone" />
+
+                    <TextView
+                        android:id="@+id/cardBackSub"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="center"
+                        android:paddingTop="4dp"
+                        android:textColor="@color/mute"
+                        android:textSize="13sp"
+                        android:visibility="gone" />
+
+                    <TextView
+                        android:id="@+id/judgeResult"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="center"
+                        android:paddingTop="14dp"
+                        android:textSize="14sp"
+                        android:textStyle="bold"
+                        android:visibility="gone" />
+
+                    <TextView
+                        android:id="@+id/tapHint"
+                        style="@style/ShiyuSubtitle"
+                        android:layout_gravity="center_horizontal"
+                        android:paddingTop="16dp"
+                        android:text="@string/review_tap_hint"
+                        android:textSize="11sp" />
+                </LinearLayout>
+
+                <!-- 四级评分（SM-2 quality 2/3/4/5） -->
+                <LinearLayout
+                    android:id="@+id/ratingRow"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:paddingTop="14dp"
+                    android:visibility="gone">
+                    <TextView
+                        android:id="@+id/btnQ2"
+                        android:layout_width="0dp"
+                        android:layout_height="44dp"
+                        android:layout_weight="1"
+                        android:background="@drawable/bg_btn_ghost"
+                        android:gravity="center"
+                        android:text="@string/quality_forgot"
+                        android:textColor="@color/bad_red"
+                        android:textSize="12sp" />
+                    <TextView
+                        android:id="@+id/btnQ3"
+                        android:layout_width="0dp"
+                        android:layout_height="44dp"
+                        android:layout_marginStart="8dp"
+                        android:layout_weight="1"
+                        android:background="@drawable/bg_btn_ghost"
+                        android:gravity="center"
+                        android:text="@string/quality_vague"
+                        android:textColor="@color/clay"
+                        android:textSize="12sp" />
+                    <TextView
+                        android:id="@+id/btnQ4"
+                        android:layout_width="0dp"
+                        android:layout_height="44dp"
+                        android:layout_marginStart="8dp"
+                        android:layout_weight="1"
+                        android:background="@drawable/bg_btn_ghost"
+                        android:gravity="center"
+                        android:text="@string/quality_recalled"
+                        android:textColor="@color/lang_en"
+                        android:textSize="12sp" />
+                    <TextView
+                        android:id="@+id/btnQ5"
+                        android:layout_width="0dp"
+                        android:layout_height="44dp"
+                        android:layout_marginStart="8dp"
+                        android:layout_weight="1"
+                        android:background="@drawable/bg_btn_clay"
+                        android:gravity="center"
+                        android:text="@string/quality_easy"
+                        android:textColor="@color/cream"
+                        android:textSize="12sp" />
+                </LinearLayout>
+            </LinearLayout>
+        </ScrollView>
+
+        <!-- 作答 -->
+        <LinearLayout
+            android:id="@+id/inputRow"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical"
+            android:orientation="horizontal"
+            android:paddingStart="20dp"
+            android:paddingTop="10dp"
+            android:paddingEnd="20dp">
+
+            <EditText
+                android:id="@+id/answerInput"
+                android:layout_width="0dp"
+                android:layout_height="46dp"
+                android:layout_weight="1"
+                android:background="@drawable/bg_input"
+                android:hint="@string/answer_input"
+                android:imeOptions="actionDone"
+                android:importantForAutofill="no"
+                android:inputType="text"
+                android:maxLines="1"
+                android:paddingStart="14dp"
+                android:paddingEnd="14dp"
+                android:textColor="@color/ink"
+                android:textColorHint="@color/mute"
+                android:textSize="15sp" />
+
+            <TextView
+                android:id="@+id/btnConfirm"
+                android:layout_width="wrap_content"
+                android:layout_height="46dp"
+                android:layout_marginStart="10dp"
+                android:background="@drawable/bg_btn_clay"
+                android:gravity="center"
+                android:paddingStart="22dp"
+                android:paddingEnd="22dp"
+                android:text="@string/confirm_answer"
+                android:textColor="@color/cream"
+                android:textSize="14sp"
+                android:textStyle="bold" />
+        </LinearLayout>
+    </LinearLayout>
+
+    <include
+        android:id="@+id/bottomNavBar"
+        layout="@layout/view_bottom_nav"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom" />
+</FrameLayout>

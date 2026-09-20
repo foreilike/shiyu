@@ -1,13 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!-- ===== 拾语设计稿色板（Warm Editorial） ===== -->
-    <color name="paper">#FAF7F2</color>          <!-- 页面暖纸底 -->
+    <color name="paper">#FFFAF7F2</color>        <!-- 页面暖纸底 -->
+    <color name="paper_deep">#FFF3EDE4</color>   <!-- 暖纸加深（分段底） -->
     <color name="card">#FFFFFFFF</color>          <!-- 卡片 -->
     <color name="ink">#FF211B16</color>           <!-- 主文字 墨色 -->
     <color name="ink2">#FF57493D</color>          <!-- 次文字 -->
     <color name="mute">#FF9A8C7D</color>          <!-- 辅助文字 -->
     <color name="line">#FFECE4D8</color>          <!-- 描边 -->
     <color name="clay">#FFA34E28</color>          <!-- 陶土主色 -->
+    <color name="clay_light">#FFB85C31</color>    <!-- 陶土亮（渐变起点） -->
     <color name="clay_deep">#FF7E3A1B</color>     <!-- 陶土深 -->
     <color name="clay_soft">#FFF5E7DC</color>     <!-- 陶土浅底 -->
     <color name="dark">#FF17120E</color>          <!-- 夜幕（语音页） -->
@@ -16,8 +18,15 @@
     <color name="gold">#FFC89B72</color>          <!-- 暖金 -->
     <color name="lang_ja">#FFC4586B</color>       <!-- 日语点缀 -->
     <color name="lang_en">#FF4A5D9E</color>       <!-- 英语点缀 -->
+    <color name="lang_ko">#FF3E7C74</color>       <!-- 韩语点缀（即将支持） -->
+    <color name="lang_es">#FFC06B2E</color>       <!-- 西语点缀（即将支持） -->
+    <color name="lang_fr">#FF6E5AA0</color>       <!-- 法语点缀（即将支持） -->
     <color name="ok_green">#FF3E6B54</color>      <!-- 正确（柔和绿） -->
+    <color name="ok_green_soft">#FFEAF0EC</color> <!-- 柔和绿浅底 -->
     <color name="bad_red">#FFB3261E</color>       <!-- 错误（柔和红） -->
+    <color name="violet_soft">#FFECEAF4</color>   <!-- 徽章浅底 -->
+    <color name="track">#FFECE4D8</color>         <!-- 进度条轨道 -->
+    <color name="scrim_40">#66000000</color>
 
     <!-- ===== 兼容旧引用（代码/布局里的历史名，指向新色板） ===== -->
     <color name="purple_500">#FFA34E28</color>

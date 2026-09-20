@@ -10,7 +10,6 @@ import android.os.Looper
 import android.view.View
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -29,6 +28,8 @@ import com.shiyu.app.data.model.Scenario
 import com.shiyu.app.data.store.SettingsRepository
 import com.shiyu.app.databinding.ActivityChatBinding
 import com.shiyu.app.ui.AiErrorMessages
+import com.shiyu.app.ui.BaseActivity
+import java.time.LocalDate
 import com.shiyu.app.ui.Speaker
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -41,7 +42,7 @@ import java.io.IOException
  * 必须具备的降级：麦克风权限被拒 / 未配置识别 / 识别失败 → 文字输入照常可用；
  * 三个 Provider 都未配置 → Mock 跑完整一轮。
  */
-class ChatActivity : AppCompatActivity() {
+class ChatActivity : BaseActivity() {
 
     private lateinit var binding: ActivityChatBinding
     private lateinit var module: LanguageModule
@@ -75,9 +76,12 @@ class ChatActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        AppGraph.init(this)
         binding = ActivityChatBinding.inflate(layoutInflater)
         setContentView(binding.root)
+
+        // 页头吃状态栏、输入区吃导航栏/键盘（设计稿每屏自带页头，没有系统 ActionBar）
+        fitTopInset(binding.scenarioHeader)
+        fitBottomInsetWithIme(binding.inputRow)
 
         speaker = Speaker(this)
 
@@ -137,6 +141,7 @@ class ChatActivity : AppCompatActivity() {
         binding.messageInput.setText("")
         appendUserText(text)
         AppGraph.sessionStore.appendTurn(sessionId, "user", text)
+        AppGraph.dailyStatsStore.record(LocalDate.now().toEpochDay(), chatTurns = 1)
         runTurn()
     }
 

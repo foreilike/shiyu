@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- 二级页统一页头：返回 + 标题 + 右侧可选槽位。状态栏高度由 BaseActivity 注入 -->
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/subHeader"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/paper"
+    android:baselineAligned="false"
+    android:gravity="center_vertical"
+    android:orientation="horizontal"
+    android:paddingStart="6dp"
+    android:paddingTop="6dp"
+    android:paddingEnd="16dp"
+    android:paddingBottom="6dp">
+
+    <ImageView
+        android:id="@+id/btnBack"
+        android:layout_width="42dp"
+        android:layout_height="42dp"
+        android:background="?attr/selectableItemBackgroundBorderless"
+        android:contentDescription="@string/back"
+        android:padding="13dp"
+        android:src="@drawable/ic_chevron_left"
+        app:tint="@color/ink" />
+
+    <TextView
+        android:id="@+id/subTitle"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="2dp"
+        android:layout_weight="1"
+        android:fontFamily="serif"
+        android:textColor="@color/ink"
+        android:textSize="19sp"
+        android:textStyle="bold"
+        tools:text="发音表" />
+
+    <FrameLayout
+        android:id="@+id/subAction"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+</LinearLayout>

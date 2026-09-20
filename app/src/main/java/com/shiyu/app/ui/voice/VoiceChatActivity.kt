@@ -10,7 +10,6 @@ import android.view.View
 import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import com.shiyu.app.AppGraph
 import com.shiyu.app.R
@@ -23,6 +22,9 @@ import com.shiyu.app.core.lang.LanguageRegistry
 import com.shiyu.app.data.model.Scenario
 import com.shiyu.app.databinding.ActivityVoiceChatBinding
 import com.shiyu.app.ui.AiErrorMessages
+import com.shiyu.app.ui.BaseActivity
+import com.shiyu.app.ui.LangStyle
+import java.time.LocalDate
 
 /**
  * 实时语音对话页（拾语设计稿：全屏深色沉浸）。
@@ -32,7 +34,7 @@ import com.shiyu.app.ui.AiErrorMessages
  *   → response.audio.delta → AudioTrack 播放；audio_transcript.delta → 字幕流。
  * barge-in：服务端 speech_started → interrupt() 立即停播，避免录到自己的声音。
  */
-class VoiceChatActivity : AppCompatActivity() {
+class VoiceChatActivity : BaseActivity() {
 
     private lateinit var binding: ActivityVoiceChatBinding
     private lateinit var module: LanguageModule
@@ -45,6 +47,7 @@ class VoiceChatActivity : AppCompatActivity() {
     private val handler = Handler(Looper.getMainLooper())
     private var startElapsed = 0L
     private var turns = 0
+    private var recorded = false
 
     private val bars = arrayOfNulls<View>(21)
     private var aiBubble: TextView? = null
@@ -68,7 +71,6 @@ class VoiceChatActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        AppGraph.init(this)
         binding = ActivityVoiceChatBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
@@ -83,7 +85,10 @@ class VoiceChatActivity : AppCompatActivity() {
         }
         scenario = loaded
 
-        binding.voicePartnerName.text = if (lang == LangId.JA) "Yuki" else "Emma"
+        fitTopInset(binding.voiceTopBar)
+        fitBottomInset(binding.voiceControls)
+
+        binding.voicePartnerName.text = LangStyle.partnerName(lang)
         binding.voicePartnerSub.text = "AI 语伴 · " + lang.displayName
 
         buildWave()
@@ -159,11 +164,20 @@ class VoiceChatActivity : AppCompatActivity() {
     }
 
     private fun startSession() {
+        // 二次确认麦克风授权：用户可能在后台把权限撤回来了，
+        // 不加这道闸会在 startCapture 处抛 SecurityException 直接崩。
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.RECORD_AUDIO)
+            != PackageManager.PERMISSION_GRANTED
+        ) {
+            requestMicAndStart()
+            return
+        }
         binding.readyOverlay.visibility = View.GONE
         binding.summaryOverlay.visibility = View.GONE
         running = true
         startElapsed = System.currentTimeMillis()
         turns = 0
+        recorded = false
         aiBuffer.clear()
         userBuffer.clear()
         aiBubble = null
@@ -212,12 +226,30 @@ class VoiceChatActivity : AppCompatActivity() {
         audio = null
         resetWave()
         val secs = (System.currentTimeMillis() - startElapsed) / 1000
+        recordSession(secs)
         binding.sumTime.text = "%02d:%02d".format(secs / 60, secs % 60)
         binding.sumTurns.text = turns.toString()
         binding.summaryOverlay.visibility = View.VISIBLE
     }
 
+    /**
+     * 把这一轮实时语音计入当日统计（首页目标环 / 我的页周柱状图 / 「初次开口」成就）。
+     * 幂等靠 [recorded] 标记：endSession 与 onDestroy 都会调，只算一次。
+     */
+    private fun recordSession(seconds: Long) {
+        if (recorded || seconds <= 0L) return
+        recorded = true
+        AppGraph.dailyStatsStore.record(
+            LocalDate.now().toEpochDay(),
+            voiceSeconds = seconds,
+            chatTurns = turns
+        )
+    }
+
     override fun onDestroy() {
+        if (running) {
+            recordSession((System.currentTimeMillis() - startElapsed) / 1000)
+        }
         running = false
         handler.removeCallbacks(ticker)
         provider?.close()

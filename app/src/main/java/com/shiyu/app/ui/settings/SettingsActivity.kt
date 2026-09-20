@@ -5,7 +5,6 @@ import android.text.InputType
 import android.widget.EditText
 import android.widget.Switch
 import android.widget.Toast
-import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
 import com.shiyu.app.AppGraph
 import com.shiyu.app.R
@@ -26,6 +25,7 @@ import com.shiyu.app.data.model.RealtimeOptions
 import com.shiyu.app.data.store.SettingsRepository
 import com.shiyu.app.databinding.ActivitySettingsBinding
 import com.shiyu.app.ui.AiErrorMessages
+import com.shiyu.app.ui.BaseActivity
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.suspendCancellableCoroutine
@@ -34,11 +34,13 @@ import java.io.File
 import kotlin.coroutines.resume
 
 /**
- * 设置页（M3 / M5-3）：按语言分别配置 8 组 Provider（对话/识别/合成/实时语音 × 2 语言）。
+ * 设置页（M3 / M5-3，二级页）：按语言分别配置 8 组 Provider（对话/识别/合成/实时语音 × 2 语言）。
  * apiKey 默认掩码，点击「显示」才明文；离开/切语言回到掩码。
  * 「测试连接」按 §5.5 映射中文提示；REALTIME 组的测试 = WebSocket 握手等 session.created。
+ *
+ * 改造后语言切换条移到「课程」Tab，这里只配置当前语言，标题上标明是哪一门。
  */
-class SettingsActivity : AppCompatActivity() {
+class SettingsActivity : BaseActivity() {
 
     private lateinit var binding: ActivitySettingsBinding
 
@@ -48,17 +50,13 @@ class SettingsActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        AppGraph.init(this)
         binding = ActivitySettingsBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        binding.langBar.langGroup.setOnCheckedChangeListener { _, _ ->
-            val lang = selectedLang()
-            if (lang != AppGraph.settingsRepository.activeLang()) {
-                AppGraph.settingsRepository.setActiveLang(lang)
-                loadForm()
-            }
-        }
+        fitTopInset(binding.headerBar.subHeader)
+        fitBottomInsetWithIme(binding.settingsScroll)
+        binding.headerBar.btnBack.setOnClickListener { finish() }
+
         binding.btnSave.setOnClickListener { saveForm() }
 
         setupKeyToggle(SettingsRepository.Group.CHAT, binding.chatApiKey, binding.chatKeyToggle)
@@ -74,25 +72,10 @@ class SettingsActivity : AppCompatActivity() {
 
     override fun onResume() {
         super.onResume()
-        syncLangBar()
-        loadForm()
-    }
-
-    private fun selectedLang(): LangId =
-        if (binding.langBar.radioEn.isChecked) LangId.EN else LangId.JA
-
-    private fun syncLangBar() {
         val lang = AppGraph.settingsRepository.activeLang()
-        binding.langBar.langGroup.setOnCheckedChangeListener(null)
-        binding.langBar.radioJa.isChecked = lang == LangId.JA
-        binding.langBar.radioEn.isChecked = lang == LangId.EN
-        binding.langBar.langGroup.setOnCheckedChangeListener { _, _ ->
-            val selected = selectedLang()
-            if (selected != AppGraph.settingsRepository.activeLang()) {
-                AppGraph.settingsRepository.setActiveLang(selected)
-                loadForm()
-            }
-        }
+        binding.headerBar.subTitle.text =
+            "${getString(R.string.settings_title)} · ${lang.displayName}"
+        loadForm()
     }
 
     // ---------- 表单 ----------
@@ -373,5 +356,6 @@ class SettingsActivity : AppCompatActivity() {
         }
 
     private fun langStt(): String =
-        com.shiyu.app.core.lang.LanguageRegistry.module(selectedLang()).id.sttLanguage
+        com.shiyu.app.core.lang.LanguageRegistry
+            .module(AppGraph.settingsRepository.activeLang()).id.sttLanguage
 }
