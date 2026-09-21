@@ -75,6 +75,8 @@
     <string name="history_detail_title">对话详情</string>
     <string name="history_role_me">我</string>
     <string name="history_role_ai">AI 语伴</string>
+    <string name="translate_need_chat">中文翻译走的是「对话服务」，请先在 API 设置里配好那一组</string>
+    <string name="voice_translate_unavailable">（未配置「对话服务」，中文翻译暂不可用）</string>
     <string name="profile_history">历史对话</string>
     <string name="profile_history_sub">回看以前的练习记录</string>
     <string name="profile_daily_goal">每日目标</string>

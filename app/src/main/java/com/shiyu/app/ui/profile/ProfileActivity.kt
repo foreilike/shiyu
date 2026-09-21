@@ -72,6 +72,13 @@ class ProfileActivity : BaseActivity() {
         binding.btnDailyGoal.setOnClickListener { editDailyGoal() }
         binding.translateSwitch.setOnCheckedChangeListener { _, isChecked ->
             AppGraph.settingsRepository.setRealtimeTranslate(isChecked)
+            // 翻译是旁路调「对话服务」做的，跟实时语音是**两组独立配置**。
+            // 没配的话功能会静默不生效 —— 与其让用户自己猜，不如打开开关时就说清楚。
+            if (isChecked &&
+                !AppGraph.providerRegistry.isChatEnabled(AppGraph.settingsRepository.activeLang())
+            ) {
+                Toast.makeText(this, R.string.translate_need_chat, Toast.LENGTH_LONG).show()
+            }
         }
         binding.btnHistory.setOnClickListener {
             startActivity(Intent(this, HistoryActivity::class.java))

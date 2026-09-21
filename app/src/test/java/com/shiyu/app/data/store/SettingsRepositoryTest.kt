@@ -234,7 +234,7 @@ class SettingsRepositoryTest {
         assertEquals(100, opts.silenceDurationMs)
         // 刻意不是官方默认的 2500：那个值对手机麦克风偏高，
         // 服务端会永远判定「没人说话」，详见 RealtimeOptions 的注释
-        assertEquals(500, opts.energyAwakenessThreshold)
+        assertEquals(1200, opts.energyAwakenessThreshold)
         assertEquals(500, opts.prefixPaddingMs)
     }
 

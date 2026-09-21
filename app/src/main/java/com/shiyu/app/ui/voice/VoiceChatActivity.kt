@@ -132,6 +132,12 @@ class VoiceChatActivity : BaseActivity() {
             finish()
         }
 
+        if (AppGraph.settingsRepository.realtimeTranslate() &&
+            !AppGraph.providerRegistry.isChatEnabled(module.id)
+        ) {
+            appendAiLine(getString(R.string.voice_translate_unavailable))
+        }
+
         if (!AppGraph.providerRegistry.isRealtimeEnabled(module.id)) {
             binding.voiceState.text = getString(R.string.voice_mock_note)
         }
@@ -326,6 +332,11 @@ class VoiceChatActivity : BaseActivity() {
      * 另外单次封顶 [MAX_SESSION_SECONDS]，防止用户开着页面睡着导致时长虚高。
      */
     private fun recordSession(seconds: Long) {
+        val users = recordedTurns.count { it.role == "user" }
+        android.util.Log.i(
+            TAG,
+            "recordSession seconds=$seconds recorded=$recorded users=$users"
+        )
         if (recorded || startElapsed == 0L || seconds <= 0L) return
         recorded = true
         val capped = seconds.coerceAtMost(MAX_SESSION_SECONDS)
@@ -342,36 +353,30 @@ class VoiceChatActivity : BaseActivity() {
     }
 
     /**
-     * 切到后台：暂停采集与外放，但**保留 WebSocket**。
+     * 切到后台：**直接结算这一轮**（落盘 + 释放连接）。
      *
-     * 之前只在 onDestroy 里释放，等于后台期间麦克风一直在采、音频一直在放；
-     * 而进程真被回收时整轮对话又直接没了。现在停采集、留连接，回到前台接着聊。
+     * 这里返工过一次，记下为什么：
+     * 起初的做法是「只暂停采集、保留 WebSocket，回前台接着聊」，假设用户会回来。
+     * **实测这个假设不成立** —— `HomeActivity` 是启动页，从桌面点图标回来会带
+     * `FLAG_ACTIVITY_RESET_TASK_IF_NEEDED`，任务栈被重置回根节点，语音页被弹掉；
+     * 而 Activity 并没有销毁（没有 onDestroy），于是：
+     *   · 连接成了僵尸，服务端会话一直挂着（很可能还在计费）；
+     *   · 这一轮永远等不到结算路径，**整段对话直接丢失**（历史里什么都没有）。
+     *
+     * 与其留一个用户回不去的连接，不如老实结束：数据落盘、连接释放。
+     * 要接着聊就重新开一轮，历史里能看到上一轮。
      */
     override fun onStop() {
-        if (running) {
-            audio?.stopCapture()
-            audio?.stopPlayback()
-        }
+        android.util.Log.i(TAG, "onStop running=$running")
+        if (running) endSession()
         super.onStop()
     }
 
-    override fun onStart() {
-        super.onStart()
-        if (running) {
-            requestMicAndStartSilently()
-        }
-    }
-
-    private fun requestMicAndStartSilently() {
-        if (ContextCompat.checkSelfPermission(this, Manifest.permission.RECORD_AUDIO)
-            != PackageManager.PERMISSION_GRANTED
-        ) {
-            return
-        }
-        audio?.startCapture()
-    }
-
     override fun onDestroy() {
+        android.util.Log.i(
+            TAG,
+            "onDestroy running=$running recorded=$recorded turns=${recordedTurns.size}"
+        )
         if (running) {
             recordSession((System.currentTimeMillis() - startElapsed) / 1000)
         }
@@ -529,6 +534,8 @@ class VoiceChatActivity : BaseActivity() {
     }
 
     companion object {
+        private const val TAG = "ShiyuVoice"
+
         const val EXTRA_SCENARIO_ID = "extra_scenario_id"
 
         /** 单次实时会话最多计 2 小时，防止挂着页面不管导致统计虚高 */
