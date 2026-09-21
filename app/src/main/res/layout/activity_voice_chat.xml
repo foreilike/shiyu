@@ -120,46 +120,207 @@
                 android:orientation="vertical" />
         </ScrollView>
 
-        <!-- 控制区 -->
+        <!--
+          打字输入：平时隐藏，点「打字」才出现。
+          走协议的 conversation.item.create（input_text），和语音共用同一条会话 ——
+          AI 的回复照样带语音和字幕，不需要另开链路。
+        -->
+        <LinearLayout
+            android:id="@+id/typeRow"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical"
+            android:orientation="horizontal"
+            android:paddingStart="16dp"
+            android:paddingEnd="16dp"
+            android:paddingBottom="12dp"
+            android:visibility="gone">
+
+            <EditText
+                android:id="@+id/typeInput"
+                android:layout_width="0dp"
+                android:layout_height="46dp"
+                android:layout_weight="1"
+                android:background="@drawable/bg_input"
+                android:hint="@string/voice_type_hint"
+                android:imeOptions="actionSend"
+                android:importantForAutofill="no"
+                android:inputType="text"
+                android:maxLines="1"
+                android:paddingStart="14dp"
+                android:paddingEnd="14dp"
+                android:textColor="@color/ink"
+                android:textColorHint="@color/mute"
+                android:textSize="15sp" />
+
+            <TextView
+                android:id="@+id/btnTypeSend"
+                android:layout_width="wrap_content"
+                android:layout_height="46dp"
+                android:layout_marginStart="10dp"
+                android:background="@drawable/bg_btn_clay"
+                android:gravity="center"
+                android:paddingStart="22dp"
+                android:paddingEnd="22dp"
+                android:text="@string/voice_type_send"
+                android:textColor="@color/cream"
+                android:textSize="14sp"
+                android:textStyle="bold" />
+        </LinearLayout>
+
+        <!--
+          控制区。每个按钮都是「图标 + 文字」。
+          之前只有裸图标，而且图标是错配的：麦克风画的是对话气泡、字幕画的是图表三横线、
+          提示画的是学士帽 —— 等于让人猜。加文字标签是最省事的可懂性提升。
+        -->
         <LinearLayout
             android:id="@+id/voiceControls"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:gravity="center"
+            android:gravity="center_vertical"
             android:orientation="horizontal"
+            android:paddingStart="4dp"
             android:paddingTop="8dp"
-            android:paddingBottom="24dp">
+            android:paddingEnd="4dp"
+            android:paddingBottom="20dp">
 
-            <ImageButton
+            <LinearLayout
                 android:id="@+id/btnCc"
-                android:layout_width="44dp"
-                android:layout_height="44dp"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
                 android:background="?attr/selectableItemBackgroundBorderless"
-                android:contentDescription="字幕"
-                android:src="@drawable/ic_chart"
-                app:tint="@color/cream" />
+                android:clickable="true"
+                android:focusable="true"
+                android:gravity="center"
+                android:orientation="vertical"
+                android:paddingTop="8dp"
+                android:paddingBottom="8dp">
+                <ImageView
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
+                    android:contentDescription="@null"
+                    android:src="@drawable/ic_subtitles"
+                    app:tint="@color/cream" />
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="4dp"
+                    android:text="@string/voice_btn_cc"
+                    android:textColor="@color/cream"
+                    android:textSize="11sp" />
+            </LinearLayout>
 
-            <ImageButton
-                android:id="@+id/btnMic"
-                android:layout_width="76dp"
-                android:layout_height="76dp"
-                android:layout_marginStart="28dp"
-                android:layout_marginEnd="28dp"
-                android:background="@drawable/bg_mic_clay"
-                android:contentDescription="@string/voice_listening"
-                android:padding="22dp"
-                android:src="@drawable/ic_nav_chat"
-                app:tint="@color/cream" />
-
-            <ImageButton
+            <LinearLayout
                 android:id="@+id/btnHint"
-                android:layout_width="44dp"
-                android:layout_height="44dp"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
                 android:background="?attr/selectableItemBackgroundBorderless"
-                android:contentDescription="提示"
-                android:src="@drawable/ic_nav_study"
-                app:tint="@color/cream" />
+                android:clickable="true"
+                android:focusable="true"
+                android:gravity="center"
+                android:orientation="vertical"
+                android:paddingTop="8dp"
+                android:paddingBottom="8dp">
+                <ImageView
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
+                    android:contentDescription="@null"
+                    android:src="@drawable/ic_hint"
+                    app:tint="@color/cream" />
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="4dp"
+                    android:text="@string/voice_btn_hint"
+                    android:textColor="@color/cream"
+                    android:textSize="11sp" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/btnMic"
+                android:layout_width="82dp"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:orientation="vertical">
+                <FrameLayout
+                    android:layout_width="68dp"
+                    android:layout_height="68dp"
+                    android:background="@drawable/bg_mic_clay">
+                    <ImageView
+                        android:layout_width="30dp"
+                        android:layout_height="30dp"
+                        android:layout_gravity="center"
+                        android:contentDescription="@string/voice_btn_interrupt"
+                        android:src="@drawable/ic_mic"
+                        app:tint="@color/cream" />
+                </FrameLayout>
+                <TextView
+                    android:id="@+id/micLabel"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="4dp"
+                    android:text="@string/voice_btn_interrupt"
+                    android:textColor="@color/cream"
+                    android:textSize="11sp" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/btnType"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                android:clickable="true"
+                android:focusable="true"
+                android:gravity="center"
+                android:orientation="vertical"
+                android:paddingTop="8dp"
+                android:paddingBottom="8dp">
+                <ImageView
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
+                    android:contentDescription="@null"
+                    android:src="@drawable/ic_keyboard"
+                    app:tint="@color/cream" />
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="4dp"
+                    android:text="@string/voice_btn_type"
+                    android:textColor="@color/cream"
+                    android:textSize="11sp" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/btnHangup"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                android:clickable="true"
+                android:focusable="true"
+                android:gravity="center"
+                android:orientation="vertical"
+                android:paddingTop="8dp"
+                android:paddingBottom="8dp">
+                <ImageView
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
+                    android:contentDescription="@null"
+                    android:src="@drawable/ic_end_call"
+                    app:tint="@color/cream" />
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="4dp"
+                    android:text="@string/voice_btn_end"
+                    android:textColor="@color/cream"
+                    android:textSize="11sp" />
+            </LinearLayout>
         </LinearLayout>
+
     </LinearLayout>
 
     <!-- 准备层 -->

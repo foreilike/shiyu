@@ -224,6 +224,14 @@ class StepfunRealtimeProvider(
         )
     }
 
+    override fun sendUserText(text: String) {
+        if (!connected || text.isBlank()) return
+        android.util.Log.i(TAG, "-> 打字输入 ${text.take(40)}")
+        // 先建消息，再显式让模型回应 —— server_vad 只管语音，文字得自己触发
+        socket?.send(RealtimeProtocol.createUserTextItem(text))
+        socket?.send(RealtimeProtocol.responseCreate())
+    }
+
     override fun sendAudio(pcm: ByteArray) {
         if (!connected) return
         socket?.send(RealtimeProtocol.appendAudio(pcm))

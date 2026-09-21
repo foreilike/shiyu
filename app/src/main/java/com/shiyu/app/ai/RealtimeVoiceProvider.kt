@@ -20,6 +20,9 @@ interface RealtimeVoiceProvider {
      */
     fun updateInstructions(instructions: String) {}
 
+    /** 打断后到新一轮响应开始之间丢弃残留音频（由实现方决定是否需要） */
+    fun sendUserText(text: String) {}
+
     fun sendAudio(pcm: ByteArray)
 
     /** 非 server_vad 模式下手动提交音频缓冲 */

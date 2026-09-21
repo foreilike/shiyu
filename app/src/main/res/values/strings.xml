@@ -181,6 +181,14 @@
     <string name="voice_reconnecting">连接中断，正在重连（第 %1$d 次）…</string>
     <string name="voice_reconnect_failed">重连失败，请返回后重新开始对话</string>
     <string name="voice_mock_note">未配置实时语音服务，当前为本地模拟</string>
+    <string name="voice_btn_cc">字幕</string>
+    <string name="voice_btn_hint">提示</string>
+    <string name="voice_btn_type">打字</string>
+    <string name="voice_btn_end">结束</string>
+    <string name="voice_btn_interrupt">打断</string>
+    <string name="voice_btn_hold">按住说</string>
+    <string name="voice_type_hint">输入想说的话…</string>
+    <string name="voice_type_send">发送</string>
     <string name="voice_state_idle">待开始</string>
 
     <!-- 学习页 -->

@@ -114,6 +114,13 @@ class VoiceChatActivity : BaseActivity() {
 
         buildWave()
 
+        // 中间大圆按钮的语义随模式变，标签必须跟着变 —— 否则「按住说话」模式下
+        // 按钮还写着"打断"，用户按下去发现是在说话，只会更困惑
+        val pushToTalk = AppGraph.settingsRepository.voicePushToTalk()
+        binding.micLabel.text = getString(
+            if (pushToTalk) R.string.voice_btn_hold else R.string.voice_btn_interrupt
+        )
+
         binding.btnBack.setOnClickListener { endSession() }
         binding.btnStartVoice.setOnClickListener { requestMicAndStart() }
         // 麦克风按钮两种语义：
@@ -150,6 +157,17 @@ class VoiceChatActivity : BaseActivity() {
             appendAiLine("提示：" + scenario.goalExpressions.firstOrNull().orEmpty())
         }
         binding.btnAgain.setOnClickListener { resetSession() }
+        binding.btnHangup.setOnClickListener { endSession() }
+        binding.btnType.setOnClickListener { toggleTypeRow() }
+        binding.btnTypeSend.setOnClickListener { sendTypedText() }
+        binding.typeInput.setOnEditorActionListener { _, actionId, _ ->
+            if (actionId == android.view.inputmethod.EditorInfo.IME_ACTION_SEND) {
+                sendTypedText()
+                true
+            } else {
+                false
+            }
+        }
         // 总结层里的「返回首页」：这一轮已经结算过了，直接退出并回到「今日」。
         // 两个坑都踩过：原先接 endSession() 会重算时长、把总结层再弹一次，按钮像失灵；
         // 只 finish() 则会退到进入语音页的那一层（「对话」Tab），和按钮写着的"首页"对不上。
@@ -189,6 +207,45 @@ class VoiceChatActivity : BaseActivity() {
         if (wanted == languageMode) return
         languageMode = wanted
         provider?.updateInstructions(VoicePrompts.withLanguageMode(basePrompt, wanted))
+    }
+
+    // ---------- 打字输入 ----------
+
+    /**
+     * 打字输入：走协议的 `conversation.item.create`（input_text）+ `response.create`。
+     *
+     * 和语音**共用同一条会话** —— 所以 AI 的回复照样带语音和字幕，历史记录里也是同一条，
+     * 不需要另开一条纯文字链路。适合不方便出声的场合（地铁、开会、周围太吵）。
+     */
+    private fun toggleTypeRow() {
+        val show = binding.typeRow.visibility != View.VISIBLE
+        binding.typeRow.visibility = if (show) View.VISIBLE else View.GONE
+        if (show) binding.typeInput.requestFocus()
+        else {
+            binding.typeInput.clearFocus()
+            hideKeyboard()
+        }
+    }
+
+    private fun hideKeyboard() {
+        val imm = getSystemService(android.content.Context.INPUT_METHOD_SERVICE)
+            as? android.view.inputmethod.InputMethodManager ?: return
+        imm.hideSoftInputFromWindow(binding.typeInput.windowToken, 0)
+    }
+
+    private fun sendTypedText() {
+        val text = binding.typeInput.text.toString().trim()
+        if (text.isEmpty()) return
+        binding.typeInput.setText("")
+
+        // 本地先把这条显示出来，别等服务端回声 —— 打字本来就该立刻看到自己说了什么
+        val bubble = newUserBubble()
+        bubble.text = text
+        recordedTurns.add(SessionTurn("user", text))
+        turns++
+        applyLanguageSwitchIfRequested(text)
+
+        provider?.sendUserText(text)
     }
 
     // ---------- 中文翻译 ----------

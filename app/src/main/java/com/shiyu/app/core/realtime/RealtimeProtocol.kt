@@ -98,6 +98,26 @@ object RealtimeProtocol {
         return envelope("input_audio_buffer.append") { it.put("audio", audio) }
     }
 
+    /**
+     * 以**文字**提交一条用户消息（打字输入用）。
+     *
+     * 官方协议的 `conversation.item.create` 支持 `input_text` 内容块，
+     * 发完再补一个 `response.create` 触发模型回应 —— 这样打字和说话走的是同一条会话，
+     * AI 回复照样带语音和字幕，不需要另开一条纯文字链路。
+     */
+    fun createUserTextItem(text: String): String = envelope("conversation.item.create") { root ->
+        val content = JSONArray().put(
+            JSONObject().put("type", "input_text").put("text", text)
+        )
+        root.put(
+            "item",
+            JSONObject()
+                .put("type", "message")
+                .put("role", "user")
+                .put("content", content)
+        )
+    }
+
     fun commit(): String = envelope("input_audio_buffer.commit") { }
 
     fun clear(): String = envelope("input_audio_buffer.clear") { }

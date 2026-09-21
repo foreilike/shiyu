@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- 字幕开关：圆角字幕框 + 两条字幕线，一眼能认出是"字幕"而不是"列表/图表" -->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="22dp"
+    android:height="22dp"
+    android:viewportWidth="24"
+    android:viewportHeight="24">
+    <path
+        android:pathData="M4,5.5 h16 a2,2 0 0 1 2,2 v9 a2,2 0 0 1 -2,2 H4 a2,2 0 0 1 -2,-2 v-9 A2,2 0 0 1 4,5.5 z"
+        android:strokeColor="#FF000000"
+        android:strokeWidth="1.7"
+        android:strokeLineJoin="round" />
+    <path
+        android:pathData="M6.5,12 h5 M13.5,12 h4 M6.5,15.5 h11"
+        android:strokeColor="#FF000000"
+        android:strokeWidth="1.7"
+        android:strokeLineCap="round" />
+</vector>
