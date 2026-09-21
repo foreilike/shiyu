@@ -241,6 +241,12 @@
     <!-- 设置页 -->
     <string name="settings_title">设置</string>
     <string name="settings_config_lang">配置语言</string>
+    <string name="settings_copy_to_other">把当前语言的配置复制到%1$s</string>
+    <string name="settings_copy_confirm">把「%1$s」的 4 组配置（地址、Key、模型名、音色、开关）整体复制到「%2$s」？
+
+会覆盖目标语言已有的同名配置。</string>
+    <string name="settings_copy_done">已复制 %1$d 组到%2$s</string>
+    <string name="settings_copy_empty">当前语言的 4 组都还是空的，先填一组再复制</string>
     <string name="settings_sync_all">把对话组的地址和 Key 同步到其它</string>
     <string name="settings_sync_hint">4 组能力通常共用同一个网关。同步会把「对话」组的接口地址与 API Key 复制到语音识别、语音合成和另一门语言；实时语音走 wss 协议，只同步 Key、不动地址。各组的模型名、音色、启用开关都不会被改。</string>
     <string name="settings_sync_confirm">将用「对话」组的地址与 Key 覆盖其它组（模型名和开关不变），确定吗？</string>

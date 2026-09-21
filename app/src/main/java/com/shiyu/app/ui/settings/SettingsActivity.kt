@@ -6,6 +6,7 @@ import android.widget.EditText
 import android.widget.Switch
 import android.widget.Toast
 import androidx.lifecycle.lifecycleScope
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.shiyu.app.AppGraph
 import com.shiyu.app.R
 import com.shiyu.app.ai.AiResult
@@ -59,6 +60,7 @@ class SettingsActivity : BaseActivity() {
 
         binding.btnSave.setOnClickListener { saveForm() }
         binding.btnSyncAll.setOnClickListener { confirmSyncAll() }
+        binding.btnCopyLang.setOnClickListener { confirmCopyToOtherLang() }
         binding.langChipJa.setOnClickListener { switchConfigLang(LangId.JA) }
         binding.langChipEn.setOnClickListener { switchConfigLang(LangId.EN) }
 
@@ -106,6 +108,10 @@ class SettingsActivity : BaseActivity() {
     private fun renderLangChips(active: LangId) {
         paintChip(binding.langChipJa, active == LangId.JA)
         paintChip(binding.langChipEn, active == LangId.EN)
+        // 按钮文案跟着当前语言走。放在这里而不是 onResume —— 切换语言芯片也要刷新，
+        // 否则会出现「当前是英语，按钮却写着复制到英语」这种自相矛盾（实际发生过）。
+        val other = if (active == LangId.JA) LangId.EN else LangId.JA
+        binding.btnCopyLang.text = getString(R.string.settings_copy_to_other, other.displayName)
     }
 
     private fun paintChip(chip: android.widget.TextView, selected: Boolean) {
@@ -150,6 +156,58 @@ class SettingsActivity : BaseActivity() {
             .setNegativeButton(R.string.cancel, null)
             .setPositiveButton(R.string.confirm) { _, _ -> applySyncAll(normalized ?: "", chatKey) }
             .show()
+    }
+
+    /**
+     * 把**当前语言**的 4 组配置整体复制到另一门语言。
+     *
+     * 为什么需要这个：配置是「4 能力 × 2 语言」共 8 组。多数人只用一套网关，
+     * 在「日语」页把实时语音填好后切到英语，那边还是空的、直接退回 Mock ——
+     * 用户完全无从察觉（设置页只显示当前语言那一套）。这个按钮就是补这个断层。
+     *
+     * 与「同步到其它」的分工：
+     * · 「同步到其它」= 同一门语言内，把「对话」组的地址和 Key 铺开到另外三组；
+     * · 这个 = 跨语言，整组（含模型名、音色、开关）照搬。
+     */
+    private fun confirmCopyToOtherLang() {
+        val from = AppGraph.settingsRepository.activeLang()
+        val to = if (from == LangId.JA) LangId.EN else LangId.JA
+        val fromConfig = AppGraph.settingsRepository.configFor(from)
+        val hasAny = listOf(fromConfig.chat, fromConfig.asr, fromConfig.tts, fromConfig.realtime)
+            .any { it.baseUrl.isNotBlank() || it.apiKey.isNotBlank() }
+        if (!hasAny) {
+            Toast.makeText(this, R.string.settings_copy_empty, Toast.LENGTH_LONG).show()
+            return
+        }
+        MaterialAlertDialogBuilder(this)
+            .setTitle(getString(R.string.settings_copy_to_other, to.displayName))
+            .setMessage(
+                getString(R.string.settings_copy_confirm, from.displayName, to.displayName)
+            )
+            .setNegativeButton(R.string.cancel, null)
+            .setPositiveButton(R.string.confirm) { _, _ -> copyToOtherLang(from, to) }
+            .show()
+    }
+
+    private fun copyToOtherLang(from: LangId, to: LangId) {
+        val src = AppGraph.settingsRepository.configFor(from)
+        var n = 0
+        for (group in SettingsRepository.Group.entries) {
+            val config = when (group) {
+                SettingsRepository.Group.CHAT -> src.chat
+                SettingsRepository.Group.ASR -> src.asr
+                SettingsRepository.Group.TTS -> src.tts
+                SettingsRepository.Group.REALTIME -> src.realtime
+            }
+            AppGraph.settingsRepository.update(to, group, config)
+            n++
+        }
+        AppGraph.settingsRepository.updateRealtimeOptions(to, src.realtimeOptions)
+        Toast.makeText(
+            this,
+            getString(R.string.settings_copy_done, n, to.displayName),
+            Toast.LENGTH_SHORT
+        ).show()
     }
 
     private fun applySyncAll(baseUrl: String, apiKey: String) {

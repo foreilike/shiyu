@@ -64,6 +64,9 @@ class VoiceChatActivity : BaseActivity() {
     private var basePrompt = ""
     private var languageMode = VoicePrompts.LanguageMode.TARGET
 
+    /** 字幕当前是否显示（默认开） */
+    private var subtitlesOn = true
+
     private val bars = arrayOfNulls<View>(21)
     private var aiBubble: TextView? = null
     private val aiBuffer = StringBuilder()
@@ -101,7 +104,9 @@ class VoiceChatActivity : BaseActivity() {
         scenario = loaded
 
         fitTopInset(binding.voiceTopBar)
-        fitBottomInset(binding.voiceControls)
+        // 底部容器整体吃「导航栏 / 键盘」两者较大的那个：edge-to-edge 下
+        // adjustResize 不生效，不手动吃 inset 键盘会盖住打字输入框
+        fitBottomInsetWithIme(binding.bottomBar)
 
         // 语伴名/头像一律从 LangStyle 取，不要写回布局。
         // 之前准备层的「和 Yuki 聊聊天」和「ゆ」头像是硬编码在 XML 里的，
@@ -149,10 +154,9 @@ class VoiceChatActivity : BaseActivity() {
         } else {
             binding.btnMic.setOnClickListener { toggleListening() }
         }
-        binding.btnCc.setOnClickListener {
-            binding.transcriptScroll.visibility =
-                if (binding.transcriptScroll.visibility == View.VISIBLE) View.GONE else View.VISIBLE
-        }
+        // 字幕开关：关掉字幕 = 纯听不看，适合练听力。按钮要能看出当前状态，
+        // 否则用户点完发现"什么都没发生"（其实只是字幕区没了，而它本来就可能是空的）
+        binding.btnCc.setOnClickListener { toggleSubtitles() }
         binding.btnHint.setOnClickListener {
             appendAiLine("提示：" + scenario.goalExpressions.firstOrNull().orEmpty())
         }
@@ -209,6 +213,14 @@ class VoiceChatActivity : BaseActivity() {
         provider?.updateInstructions(VoicePrompts.withLanguageMode(basePrompt, wanted))
     }
 
+    /** 字幕开关：关掉后转写区整块隐藏，图标变暗表示已关 */
+    private fun toggleSubtitles() {
+        subtitlesOn = !subtitlesOn
+        binding.transcriptScroll.visibility = if (subtitlesOn) View.VISIBLE else View.GONE
+        binding.ccIcon.alpha = if (subtitlesOn) 1f else 0.35f
+        binding.ccLabel.alpha = if (subtitlesOn) 1f else 0.35f
+    }
+
     // ---------- 打字输入 ----------
 
     /**
@@ -220,6 +232,8 @@ class VoiceChatActivity : BaseActivity() {
     private fun toggleTypeRow() {
         val show = binding.typeRow.visibility != View.VISIBLE
         binding.typeRow.visibility = if (show) View.VISIBLE else View.GONE
+        // 打字时收起控制栏：键盘已经占了下半屏，再摞一排按钮既挤又容易误触
+        binding.voiceControls.visibility = if (show) View.GONE else View.VISIBLE
         if (show) binding.typeInput.requestFocus()
         else {
             binding.typeInput.clearFocus()

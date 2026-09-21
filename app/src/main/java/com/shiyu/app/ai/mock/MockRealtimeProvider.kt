@@ -29,6 +29,20 @@ class MockRealtimeProvider(private val lang: LangId) : RealtimeVoiceProvider {
         // Mock 不推流：静音门控已在上游，这里无操作
     }
 
+    /**
+     * 打字输入在 Mock 下也要有回应。
+     *
+     * 这条一开始漏了：接口里 `sendUserText` 有空的默认实现，Mock 没覆写，
+     * 于是「没配凭证时打字发出去石沉大海」—— 而 Mock 模式的整个意义就是
+     * 让没配凭证的人也能把流程走完（V3）。音频那边 Mock 是有回应的，
+     * 文字这边不能例外，否则同一个页面两种输入行为不一致，很莫名其妙。
+     */
+    override fun sendUserText(text: String) {
+        listener?.onUserSpeechStopped()
+        listener?.onTranscriptDelta(MockReplies.stt(lang))
+        listener?.onResponseDone()
+    }
+
     override fun commit() {}
     override fun cancelResponse() {}
 

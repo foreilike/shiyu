@@ -121,6 +121,17 @@
         </ScrollView>
 
         <!--
+          底部区：打字输入行 + 控制栏。
+          包一层是为了让 BaseActivity 把「导航栏/键盘」的高度统一还给这里 ——
+          edge-to-edge 下 adjustResize 不生效，不手动吃 inset 的话键盘会直接盖住输入框。
+        -->
+        <LinearLayout
+            android:id="@+id/bottomBar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+        <!--
           打字输入：平时隐藏，点「打字」才出现。
           走协议的 conversation.item.create（input_text），和语音共用同一条会话 ——
           AI 的回复照样带语音和字幕，不需要另开链路。
@@ -197,12 +208,14 @@
                 android:paddingTop="8dp"
                 android:paddingBottom="8dp">
                 <ImageView
+                    android:id="@+id/ccIcon"
                     android:layout_width="24dp"
                     android:layout_height="24dp"
                     android:contentDescription="@null"
                     android:src="@drawable/ic_subtitles"
                     app:tint="@color/cream" />
                 <TextView
+                    android:id="@+id/ccLabel"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="4dp"
@@ -319,6 +332,7 @@
                     android:textColor="@color/cream"
                     android:textSize="11sp" />
             </LinearLayout>
+        </LinearLayout>
         </LinearLayout>
 
     </LinearLayout>

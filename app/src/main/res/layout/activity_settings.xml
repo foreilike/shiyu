@@ -76,6 +76,18 @@
                 android:layout_marginTop="12dp"
                 android:text="@string/settings_sync_all" />
 
+            <!--
+              跨语言复制。8 组配置是「4 能力 × 2 语言」，很多人只用一套网关，
+              在「日语」页填完发现切到英语又回到 Mock —— 这个按钮解决的就是这件事。
+            -->
+            <Button
+                android:id="@+id/btnCopyLang"
+                style="@style/MiniButton"
+                android:layout_width="match_parent"
+                android:layout_marginStart="0dp"
+                android:layout_marginTop="8dp"
+                android:text="@string/settings_sync_all" />
+
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
