@@ -52,7 +52,7 @@
                     android:id="@+id/voicePartnerSub"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="AI 语伴 · 日语"
+                    tools:text="AI 语伴 · 日语"
                     android:textColor="#A79684"
                     android:textSize="11sp" />
             </LinearLayout>

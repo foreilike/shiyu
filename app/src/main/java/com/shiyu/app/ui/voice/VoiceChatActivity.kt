@@ -11,20 +11,27 @@ import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.content.ContextCompat
+import androidx.lifecycle.lifecycleScope
 import com.shiyu.app.AppGraph
 import com.shiyu.app.R
 import com.shiyu.app.ai.AiResult
+import com.shiyu.app.ai.ChatMessage
+import com.shiyu.app.ai.ChatRequest
 import com.shiyu.app.ai.RealtimeVoiceProvider
 import com.shiyu.app.audio.RealtimeAudioController
 import com.shiyu.app.core.lang.LangId
 import com.shiyu.app.core.lang.LanguageModule
 import com.shiyu.app.core.lang.LanguageRegistry
+import com.shiyu.app.core.lang.VoicePrompts
 import com.shiyu.app.data.model.Scenario
+import com.shiyu.app.data.store.SettingsRepository
+import com.shiyu.app.data.model.SessionTurn
 import com.shiyu.app.databinding.ActivityVoiceChatBinding
 import com.shiyu.app.ui.AiErrorMessages
 import com.shiyu.app.ui.BaseActivity
 import com.shiyu.app.ui.LangStyle
 import com.shiyu.app.ui.home.HomeActivity
+import kotlinx.coroutines.launch
 import java.time.LocalDate
 
 /**
@@ -49,6 +56,9 @@ class VoiceChatActivity : BaseActivity() {
     private var startElapsed = 0L
     private var turns = 0
     private var recorded = false
+
+    /** 本轮的完整往返，结束时整条写入 SessionStore（实时语音不逐轮落盘） */
+    private val recordedTurns = mutableListOf<SessionTurn>()
 
     private val bars = arrayOfNulls<View>(21)
     private var aiBubble: TextView? = null
@@ -127,6 +137,53 @@ class VoiceChatActivity : BaseActivity() {
         }
     }
 
+    // ---------- 中文翻译 ----------
+
+    /**
+     * 给刚说完的一句配一条中文小字。
+     *
+     * **为什么另起一次调用，而不是让实时模型自己带翻译**：实时协议的 modalities 固定为
+     * ["text","audio"]，模型输出的文字和语音是同一份 —— 让它说中文，它就一定会把中文念出来
+     * （这正是之前「开口先说一声 JA」的成因）。所以翻译只能走旁路：
+     * 复用设置页里已经配好的「对话服务」，悄悄译一遍挂上去，实时语音链路完全不参与。
+     *
+     * 未开启开关、没配对话服务、或翻译失败时都静默跳过 —— 字幕是锦上添花，不该打断对话。
+     */
+    private fun translateInto(bubble: TextView?, original: String) {
+        if (bubble == null) return
+        if (!AppGraph.settingsRepository.realtimeTranslate()) return
+        if (original.isBlank()) return
+        if (!AppGraph.providerRegistry.isChatEnabled(module.id)) return
+
+        val target = module.id.displayName
+        lifecycleScope.launch {
+            val provider = AppGraph.providerRegistry.factory(module.id).chat()
+            val request = ChatRequest(
+                model = AppGraph.settingsRepository.groupFor(
+                    module.id, SettingsRepository.Group.CHAT
+                ).model,
+                messages = listOf(
+                    ChatMessage(
+                        role = "system",
+                        content = "你是翻译。把用户给的$target 句子翻译成简体中文。只输出译文本身，不要解释、不要加引号、不要重复原文。"
+                    ),
+                    ChatMessage(role = "user", content = original)
+                ),
+                temperature = 0.2
+            )
+            when (val result = provider.chat(request)) {
+                is AiResult.Ok -> {
+                    val zh = result.value.trim()
+                    if (zh.isNotEmpty()) {
+                        bubble.text = bubble.text.toString() + "\n\n" + zh
+                    }
+                }
+                // 翻译失败不打扰用户：对话本身是正常的
+                is AiResult.Err -> Unit
+            }
+        }
+    }
+
     // ---------- 波形 ----------
 
     private fun buildWave() {
@@ -196,13 +253,19 @@ class VoiceChatActivity : BaseActivity() {
         recorded = false
         aiBuffer.clear()
         userBuffer.clear()
+        recordedTurns.clear()
         aiBubble = null
         userBubble = null
         binding.transcriptContainer.removeAllViews()
         binding.voiceState.text = getString(R.string.voice_listening)
         handler.post(ticker)
 
-        val p = AppGraph.providerRegistry.factory(module.id).realtime(scenario.systemPrompt)
+        // 语音模式必须用专门的提示词：场景自带的 systemPrompt 是给文字对话写的，
+        // 要求输出 [JA]/[ZH]/[FIX] 三段式，语音下会被整个念出来（见 VoicePrompts 注释）
+        val voicePrompt = VoicePrompts.forScenario(
+            module.id, scenario.titleZh, scenario.goalExpressions
+        )
+        val p = AppGraph.providerRegistry.factory(module.id).realtime(voicePrompt)
         provider = p
         p.setListener(listener)
 
@@ -215,7 +278,7 @@ class VoiceChatActivity : BaseActivity() {
             },
             onAmplitude = { amp -> runOnUiThread { pushAmplitude(amp) } }
         )
-        p.connect(scenario.systemPrompt)
+        p.connect(voicePrompt)
         audio?.startCapture()
     }
 
@@ -265,10 +328,16 @@ class VoiceChatActivity : BaseActivity() {
     private fun recordSession(seconds: Long) {
         if (recorded || startElapsed == 0L || seconds <= 0L) return
         recorded = true
+        val capped = seconds.coerceAtMost(MAX_SESSION_SECONDS)
         AppGraph.dailyStatsStore.record(
             LocalDate.now().toEpochDay(),
-            voiceSeconds = seconds.coerceAtMost(MAX_SESSION_SECONDS),
+            voiceSeconds = capped,
             chatTurns = turns
+        )
+        // 实时语音以前完全不落盘，聊完即消失；现在写进会话记录，
+        // 「历史对话」里能看到，也让「累计对话轮数」覆盖到实时语音。
+        AppGraph.sessionStore.saveRealtimeSession(
+            module.id, scenario.id, recordedTurns.toList(), capped
         )
     }
 
@@ -288,13 +357,21 @@ class VoiceChatActivity : BaseActivity() {
     // ---------- Provider 事件 → UI ----------
 
     private val listener = object : RealtimeVoiceProvider.Listener {
+        /** 新一轮响应开始 → 关闭打断丢弃窗口，正常播放 */
+        override fun onResponseStarted() {
+            audio?.resumeAudio()
+        }
+
         override fun onConnected() {
             runOnUiThread { binding.voiceState.text = getString(R.string.voice_listening) }
         }
 
         override fun onUserSpeechStarted() {
-            // barge-in：用户一开口就停播，杜绝回环
+            // barge-in：用户一开口就停播，并让服务端也停掉当前这轮生成。
+            // 只调 interrupt() 是不够的 —— 服务端还在往下推流，
+            // 残留的音频包会立刻把播放重新拉起来（这就是"打断没反应"）。
             audio?.interrupt()
+            provider?.cancelResponse()
             runOnUiThread { binding.voiceState.text = getString(R.string.voice_listening) }
         }
 
@@ -318,6 +395,7 @@ class VoiceChatActivity : BaseActivity() {
         }
 
         override fun onUserTranscript(text: String) {
+            if (text.isNotBlank()) recordedTurns.add(SessionTurn("user", text))
             runOnUiThread {
                 turns++
                 val bubble = newUserBubble()
@@ -330,6 +408,14 @@ class VoiceChatActivity : BaseActivity() {
         }
 
         override fun onResponseDone() {
+            // 一轮 AI 回复结束，把攒下的字幕整句记下来（增量是逐字来的，只有 done 时才是完整句）
+            val said = aiBuffer.toString().trim()
+            if (said.isNotEmpty()) {
+                recordedTurns.add(SessionTurn("assistant", said))
+                translateInto(aiBubble, said)
+                aiBubble = null
+            }
+            aiBuffer.clear()
             runOnUiThread {
                 aiBuffer.clear()
                 aiBubble = null

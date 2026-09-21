@@ -16,6 +16,8 @@ data class AppSettings(
     val autoPlayTts: Boolean = true,
     val nickname: String = "",
     val dailyGoalMinutes: Int = DEFAULT_DAILY_GOAL_MINUTES,
+    /** 实时语音是否显示中文翻译（默认关：中文字幕会占掉沉浸页的视线） */
+    val realtimeTranslate: Boolean = false,
     val langs: Map<LangId, LanguageConfig> = mapOf(
         LangId.JA to LanguageConfig(),
         LangId.EN to LanguageConfig()

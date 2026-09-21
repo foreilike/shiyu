@@ -1,6 +1,7 @@
 package com.shiyu.app.data.store
 
 import com.shiyu.app.core.lang.LangId
+import com.shiyu.app.data.model.MODE_CHAT
 import com.shiyu.app.data.model.SessionRecord
 import com.shiyu.app.data.model.SessionTurn
 import org.json.JSONArray
@@ -15,18 +16,54 @@ import java.io.File
  */
 class SessionStore(private val sessionsDir: File) {
 
-    fun createSession(lang: LangId, scenarioId: String): SessionRecord {
+    fun createSession(
+        lang: LangId,
+        scenarioId: String,
+        mode: String = MODE_CHAT
+    ): SessionRecord {
         val now = System.currentTimeMillis()
         val record = SessionRecord(
             sessionId = "s_$now",
             langId = lang.tag,
             scenarioId = scenarioId,
             startedAt = now,
+            mode = mode,
             turns = emptyList()
         )
         save(record)
         return record
     }
+
+    /**
+     * 实时语音用：一次性写入整轮对话与时长。
+     *
+     * 实时语音没有「逐轮落盘」的必要（中途崩了也没法续），
+     * 所以攒到结束再写一条，比每轮 IO 更划算。
+     */
+    fun saveRealtimeSession(
+        lang: LangId,
+        scenarioId: String,
+        turns: List<SessionTurn>,
+        durationSeconds: Long
+    ): SessionRecord? {
+        if (turns.none { it.role == "user" }) return null // 一句话没说就别留记录
+        val now = System.currentTimeMillis()
+        val record = SessionRecord(
+            sessionId = "s_$now",
+            langId = lang.tag,
+            scenarioId = scenarioId,
+            startedAt = now,
+            mode = com.shiyu.app.data.model.MODE_REALTIME,
+            durationSeconds = durationSeconds,
+            turns = turns
+        )
+        save(record)
+        return record
+    }
+
+    /** 全部会话，按开始时间倒序（历史对话列表用） */
+    fun allSessionsNewestFirst(): List<SessionRecord> =
+        allSessions().sortedByDescending { it.startedAt }
 
     fun appendTurn(sessionId: String, role: String, text: String): SessionRecord? {
         val record = load(sessionId) ?: return null
@@ -98,6 +135,8 @@ class SessionStore(private val sessionsDir: File) {
             },
             scenarioId = root.optString("scenarioId"),
             startedAt = root.optLong("startedAt", 0L),
+            mode = root.optString("mode", MODE_CHAT).ifEmpty { MODE_CHAT },
+            durationSeconds = root.optLong("durationSeconds", 0L),
             turns = turns
         )
     }
@@ -110,6 +149,8 @@ class SessionStore(private val sessionsDir: File) {
         root.put("langId", record.langId)
         root.put("scenarioId", record.scenarioId)
         root.put("startedAt", record.startedAt)
+        root.put("mode", record.mode)
+        root.put("durationSeconds", record.durationSeconds)
         val turnsArr = JSONArray()
         for (turn in record.turns) {
             val o = JSONObject()

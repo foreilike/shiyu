@@ -13,6 +13,7 @@ import java.io.File
 /**
  * 简易服务定位器：UI 层通过它拿各仓库/注册表，不直接 new。
  */
+@Suppress("StaticFieldLeak") // 只存 applicationContext，不会泄漏 Activity
 object AppGraph {
 
     lateinit var settingsRepository: SettingsRepository

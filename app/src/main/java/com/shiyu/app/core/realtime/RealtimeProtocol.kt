@@ -134,6 +134,8 @@ object RealtimeProtocol {
         data class TextDelta(val text: String) : ServerEvent()
         /** 用户语音转写完成 */
         data class UserTranscript(val text: String) : ServerEvent()
+        /** 新一轮响应开始（用于关闭打断后的音频丢弃窗口） */
+        object ResponseStarted : ServerEvent()
         object ResponseDone : ServerEvent()
         data class ErrorEvent(val message: String, val code: String?) : ServerEvent()
         data class Unknown(val type: String) : ServerEvent()
@@ -165,6 +167,7 @@ object RealtimeProtocol {
             "response.text.delta" -> ServerEvent.TextDelta(root.optString("delta"))
             "conversation.item.input_audio_transcription.completed" ->
                 ServerEvent.UserTranscript(root.optString("transcript"))
+            "response.created" -> ServerEvent.ResponseStarted
             "response.done" -> ServerEvent.ResponseDone
             "error" -> {
                 val err = root.optJSONObject("error")

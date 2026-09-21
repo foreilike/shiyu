@@ -18,7 +18,11 @@ object AiErrorMessages {
             error.retryAfterSeconds?.let { context.getString(R.string.err_rate_limited_seconds, it.toInt()) }
                 ?: context.getString(R.string.err_rate_limited)
         is AiError.ServerError -> context.getString(R.string.err_server, error.code)
-        is AiError.BadResponse -> context.getString(R.string.err_bad_response)
+        // 带上了服务端原文就显示原文 —— 实时语音连上后服务端报错时，
+        // 只显示"响应格式异常"等于什么也没说，排不了障。
+        is AiError.BadResponse -> error.detail.takeIf { it.isNotBlank() }
+            ?.let { context.getString(R.string.err_bad_response_detail, it) }
+            ?: context.getString(R.string.err_bad_response)
         is AiError.Unknown -> context.getString(R.string.err_unknown, error.code)
     }
 

@@ -45,6 +45,12 @@
 
         <!-- 二级页 -->
         <activity
+            android:name=".ui.history.HistoryActivity"
+            android:exported="false" />
+        <activity
+            android:name=".ui.history.HistoryDetailActivity"
+            android:exported="false" />
+        <activity
             android:name=".ui.chart.ChartActivity"
             android:exported="false" />
         <activity

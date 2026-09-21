@@ -232,7 +232,9 @@ class SettingsRepositoryTest {
         val opts = repo.realtimeOptionsFor(LangId.JA)
         assertTrue(opts.serverVad)            // 默认开服务端 VAD
         assertEquals(100, opts.silenceDurationMs)
-        assertEquals(2500, opts.energyAwakenessThreshold)
+        // 刻意不是官方默认的 2500：那个值对手机麦克风偏高，
+        // 服务端会永远判定「没人说话」，详见 RealtimeOptions 的注释
+        assertEquals(200, opts.energyAwakenessThreshold)
         assertEquals(500, opts.prefixPaddingMs)
     }
 

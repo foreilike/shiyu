@@ -94,6 +94,13 @@ class SettingsRepository(private val store: SecretStore) {
         save(settings.copy(dailyGoalMinutes = clampGoalMinutes(minutes)))
     }
 
+    /** 实时语音是否显示中文翻译 */
+    fun realtimeTranslate(): Boolean = load().realtimeTranslate
+
+    fun setRealtimeTranslate(value: Boolean) {
+        save(load().copy(realtimeTranslate = value))
+    }
+
     /** 昵称，未设置时为空串 */
     fun nickname(): String = load().nickname
 
@@ -137,6 +144,7 @@ class SettingsRepository(private val store: SecretStore) {
         val autoPlayTts = if (root.has("autoPlayTts")) root.optBoolean("autoPlayTts", true) else true
         // 后加字段：老文件没有 nickname，按空串处理（UI 会用占位名兜底）
         val nickname = root.optString("nickname", "").trim().take(MAX_NICKNAME_LENGTH)
+        val realtimeTranslate = root.optBoolean("realtimeTranslate", false)
         val dailyGoalMinutes = clampGoalMinutes(
             if (root.has("dailyGoalMinutes")) {
                 root.optInt("dailyGoalMinutes", AppSettings.DEFAULT_DAILY_GOAL_MINUTES)
@@ -167,6 +175,7 @@ class SettingsRepository(private val store: SecretStore) {
             autoPlayTts = autoPlayTts,
             nickname = nickname,
             dailyGoalMinutes = dailyGoalMinutes,
+            realtimeTranslate = realtimeTranslate,
             langs = langs
         )
     }
@@ -200,6 +209,7 @@ class SettingsRepository(private val store: SecretStore) {
         root.put("autoPlayTts", settings.autoPlayTts)
         root.put("nickname", settings.nickname)
         root.put("dailyGoalMinutes", settings.dailyGoalMinutes)
+        root.put("realtimeTranslate", settings.realtimeTranslate)
         val langs = JSONObject()
         for ((lang, langConfig) in settings.langs) {
             val langObj = JSONObject()

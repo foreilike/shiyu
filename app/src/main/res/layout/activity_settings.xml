@@ -113,7 +113,7 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:text="OpenAI 兼容"
+                    android:text="@string/provider_chat_card"
                     android:textColor="@color/ink"
                     android:textSize="15sp"
                     android:textStyle="bold" />
@@ -196,7 +196,7 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:text="Whisper 兼容"
+                    android:text="@string/provider_asr_card"
                     android:textColor="@color/ink"
                     android:textSize="15sp"
                     android:textStyle="bold" />
@@ -279,7 +279,7 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:text="OpenAI TTS"
+                    android:text="@string/provider_tts_card"
                     android:textColor="@color/ink"
                     android:textSize="15sp"
                     android:textStyle="bold" />
@@ -368,7 +368,7 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:text="stepfun realtime"
+                    android:text="@string/provider_realtime_card"
                     android:textColor="@color/ink"
                     android:textSize="15sp"
                     android:textStyle="bold" />

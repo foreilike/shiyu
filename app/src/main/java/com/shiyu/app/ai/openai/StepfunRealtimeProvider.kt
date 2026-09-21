@@ -27,6 +27,8 @@ class StepfunRealtimeProvider(
     private val options: RealtimeOptions
 ) : RealtimeVoiceProvider {
 
+    private val TAG = "ShiyuRealtime"
+
     private var listener: RealtimeVoiceProvider.Listener? = null
     private var socket: WebSocket? = null
     private var connected = false
@@ -60,8 +62,10 @@ class StepfunRealtimeProvider(
         socket = client.newWebSocket(request, object : WebSocketListener() {
             override fun onOpen(webSocket: WebSocket, response: Response) {
                 connected = true
+                android.util.Log.i(TAG, "realtime connected: $endpoint")
                 // 默认用女声：语伴形象是 yoyo / Emma，而另一个可选音色是男声
                 val voice = config.voice.ifBlank { RealtimeProtocol.VOICE_FEMALE }
+                android.util.Log.i(TAG, "-> session.update voice=$voice instructions=${instructions.take(120)}")
                 webSocket.send(
                     RealtimeProtocol.sessionUpdate(
                         // step-audio-2-mini 要求在 instructions 末尾追加性别提示
@@ -77,6 +81,27 @@ class StepfunRealtimeProvider(
             }
 
             override fun onMessage(webSocket: WebSocket, text: String) {
+                // 全量记录服务端事件类型：排「连上了但没反应」时，
+                // 「服务端到底说没说话」是第一要问的问题
+                val type = try {
+                    org.json.JSONObject(text).optString("type")
+                } catch (e: Exception) {
+                    "unparsable"
+                }
+                if (type == "error") {
+                    android.util.Log.e(TAG, "<- ERROR $text")
+                } else if (type == "session.updated" || type == "session.created") {
+                    // 这条最关键：它回显服务端实际接受的会话配置。
+                    // 如果没有 turn_detection，说明 server_vad 压根没生效。
+                    android.util.Log.i(TAG, "<- $type ${text.take(700)}")
+                } else if (type == "response.created") {
+                    responseInFlight = true
+                    android.util.Log.i(TAG, "<- $type")
+                } else if (type.startsWith("response.audio.delta")) {
+                    // 音频增量太密，不逐条打
+                } else {
+                    android.util.Log.i(TAG, "<- $type")
+                }
                 when (val event = RealtimeProtocol.parse(text)) {
                     is RealtimeProtocol.ServerEvent.SpeechStarted -> listener?.onUserSpeechStarted()
                     is RealtimeProtocol.ServerEvent.SpeechStopped -> listener?.onUserSpeechStopped()
@@ -87,9 +112,19 @@ class StepfunRealtimeProvider(
                         listener?.onTranscriptDelta(event.text)
                     is RealtimeProtocol.ServerEvent.UserTranscript ->
                         listener?.onUserTranscript(event.text)
-                    is RealtimeProtocol.ServerEvent.ResponseDone -> listener?.onResponseDone()
+                    is RealtimeProtocol.ServerEvent.ResponseStarted ->
+                        listener?.onResponseStarted()
+                    is RealtimeProtocol.ServerEvent.ResponseDone -> {
+                        responseInFlight = false
+                        listener?.onResponseDone()
+                    }
                     is RealtimeProtocol.ServerEvent.ErrorEvent ->
-                        listener?.onError(AiError.BadResponse(event.message))
+                        // 带上服务端原文：笼统的"响应格式异常"没法排障
+                        listener?.onError(
+                            AiError.BadResponse(
+                                listOfNotNull(event.message, event.code).joinToString(" / ")
+                            )
+                        )
                     else -> Unit // session.created / audio.done / unknown 等忽略
                 }
             }
@@ -97,6 +132,7 @@ class StepfunRealtimeProvider(
             override fun onFailure(webSocket: WebSocket, t: Throwable, response: Response?) {
                 connected = false
                 val code = response?.code ?: 0
+                android.util.Log.e(TAG, "realtime failure code=$code msg=${t.message}", t)
                 listener?.onError(
                     when (code) {
                         401, 403 -> AiError.Unauthorized(code)
@@ -110,21 +146,43 @@ class StepfunRealtimeProvider(
 
             override fun onClosed(webSocket: WebSocket, code: Int, reason: String) {
                 connected = false
+                android.util.Log.w(TAG, "realtime closed code=$code reason=$reason")
                 listener?.onClosed()
             }
         })
     }
 
+    private var framesSent = 0L
+
+    /** 是否有响应正在生成（response.created → response.done 之间） */
+    @Volatile private var responseInFlight = false
+
     override fun sendAudio(pcm: ByteArray) {
-        if (connected) socket?.send(RealtimeProtocol.appendAudio(pcm))
+        if (!connected) return
+        socket?.send(RealtimeProtocol.appendAudio(pcm))
+        framesSent++
+        // 每 600 帧（约 12 秒）报一次心跳。原先每秒一条，排查完就变成了噪音，
+        // 会把真正要紧的服务端事件淹掉。
+        if (framesSent % 600L == 0L) {
+            android.util.Log.i(TAG, "-> ${framesSent} frames sent (${pcm.size}B each)")
+        }
     }
 
     override fun commit() {
         if (connected) socket?.send(RealtimeProtocol.commit())
     }
 
+    /**
+     * 只有在真的有响应在飞时才发 cancel。
+     * 少了这道判断，用户每次点「打断」都会让服务端回一条
+     * `no ongoing response to cancel` 错误，界面上就浮现一句莫名其妙的
+     * 「响应格式异常」——排查时极易被误当成连接问题。
+     */
     override fun cancelResponse() {
-        if (connected) socket?.send(RealtimeProtocol.responseCancel())
+        if (connected && responseInFlight) {
+            responseInFlight = false
+            socket?.send(RealtimeProtocol.responseCancel())
+        }
     }
 
     override fun close() {

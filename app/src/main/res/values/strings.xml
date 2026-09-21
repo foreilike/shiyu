@@ -63,6 +63,21 @@
     <string name="lang_fr">法语</string>
 
     <!-- 我的（统计 / 周柱状图 / 成就） -->
+    <string name="profile_realtime_translate">实时语音显示中文翻译</string>
+    <string name="profile_realtime_translate_sub">AI 说完后附一条中文小字，需配好对话服务</string>
+    <string name="history_title">历史对话</string>
+    <string name="history_sub">场景对话与实时语音都会留在这里</string>
+    <string name="history_empty">还没有对话记录
+去「对话」里挑个场景开口吧</string>
+    <string name="history_mode_chat">场景对话</string>
+    <string name="history_mode_realtime">实时语音</string>
+    <string name="history_turns">%1$d 轮</string>
+    <string name="history_duration">%1$d 分 %2$d 秒</string>
+    <string name="history_detail_title">对话详情</string>
+    <string name="history_role_me">我</string>
+    <string name="history_role_ai">AI 语伴</string>
+    <string name="profile_history">历史对话</string>
+    <string name="profile_history_sub">回看以前的练习记录</string>
     <string name="profile_daily_goal">每日目标</string>
     <string name="profile_daily_goal_value">%1$d 分钟</string>
     <string name="profile_daily_goal_title">每日目标时长</string>
@@ -118,6 +133,8 @@
 
 
     <!-- 实时语音（拾语设计稿） -->
+    <string name="voice_ready_sub">实时语音对话 · 说完自动断句
+AI 语伴会先开口，轮到你时说话即可</string>
     <string name="voice_entry_title">实时语音对话</string>
     <string name="voice_entry_sub">AI 语伴在线 · 像朋友一样聊天</string>
     <string name="voice_partner_online">AI 语伴 %1$s 在线 · 像朋友一样聊天</string>
@@ -194,6 +211,11 @@
     <string name="provider_asr">语音识别</string>
     <string name="provider_tts">语音合成</string>
     <string name="provider_realtime">实时语音</string>
+    <!-- 各配置卡片的标题：说明这一组说的是哪种协议，与上方分区标题不同 -->
+    <string name="provider_chat_card">OpenAI 兼容</string>
+    <string name="provider_asr_card">Whisper 兼容</string>
+    <string name="provider_tts_card">OpenAI TTS</string>
+    <string name="provider_realtime_card">StepFun Realtime</string>
     <string name="field_server_vad">服务端 VAD（server_vad）</string>
     <string name="field_silence_ms">静音断句时长（ms）</string>
     <string name="field_energy_threshold">唤醒能量阈值（0–5000）</string>
@@ -240,5 +262,6 @@
     <string name="err_rate_limited">请求过于频繁，请稍后重试</string>
     <string name="err_server">服务端错误（%1$d），请稍后重试</string>
     <string name="err_bad_response">响应格式异常，无法解析</string>
+    <string name="err_bad_response_detail">服务返回异常：%1$s</string>
     <string name="err_unknown">请求失败（%1$d）</string>
 </resources>

@@ -303,6 +303,76 @@
                         android:background="@color/line" />
 
                     <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:minHeight="52dp"
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal">
+                        <LinearLayout
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:orientation="vertical"
+                            android:paddingTop="8dp"
+                            android:paddingBottom="8dp">
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="@string/profile_realtime_translate"
+                                android:textColor="@color/ink"
+                                android:textSize="14sp" />
+                            <TextView
+                                style="@style/ShiyuSubtitle"
+                                android:text="@string/profile_realtime_translate_sub"
+                                android:textSize="11sp" />
+                        </LinearLayout>
+                        <androidx.appcompat.widget.SwitchCompat
+                            android:id="@+id/translateSwitch"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content" />
+                    </LinearLayout>
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:background="@color/line" />
+
+                    <LinearLayout
+                        android:id="@+id/btnHistory"
+                        android:layout_width="match_parent"
+                        android:layout_height="52dp"
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal">
+                        <LinearLayout
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:orientation="vertical">
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="@string/profile_history"
+                                android:textColor="@color/ink"
+                                android:textSize="14sp" />
+                            <TextView
+                                style="@style/ShiyuSubtitle"
+                                android:text="@string/profile_history_sub"
+                                android:textSize="11sp" />
+                        </LinearLayout>
+                        <ImageView
+                            android:layout_width="14dp"
+                            android:layout_height="14dp"
+                            android:contentDescription="@null"
+                            android:src="@drawable/ic_chevron_right"
+                            app:tint="@color/mute" />
+                    </LinearLayout>
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:background="@color/line" />
+
+                    <LinearLayout
                         android:id="@+id/btnSettings"
                         android:layout_width="match_parent"
                         android:layout_height="52dp"

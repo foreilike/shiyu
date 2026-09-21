@@ -19,8 +19,21 @@ class RealtimeAudioController(
 ) {
 
     companion object {
-        const val SAMPLE_RATE = 16000
-        private const val FRAME_SAMPLES = 320 // 20ms @16k
+        /**
+         * **24000 Hz —— 这个值踩过坑，别改回 16000。**
+         *
+         * StepFun 的实时接口对 `pcm16` 约定的是 24kHz/单声道/小端（官方文档的「实时对话开发指南」
+         * 里 PCM 推流示例写死了 mono + 24000）。注意别被模型内部结构误导：
+         * Step-Audio 的 S3Tokenizer 确实在 **16kHz** 上工作，但那是**模型内部**的事；
+         * 走 WebSocket 送进 `input_audio_buffer.append` 的必须是 24kHz。
+         *
+         * 按 16kHz 推流时服务端不报错、也不回任何事件 —— 它拿到的是半速音频，
+         * VAD 永远判定为「没人说话」，表现为「连上了、麦克风在采集、但 AI 一声不吭」。
+         */
+        const val SAMPLE_RATE = 24000
+
+        /** 20ms 一帧；官方建议 20–30ms 一包，太小会碎、太大增加延迟 */
+        private const val FRAME_SAMPLES = 480 // 20ms @24k
         private const val FRAME_BYTES = FRAME_SAMPLES * 2
         private const val SILENCE_GATE_MS = 800
         private const val SILENCE_GATE_FRAMES = SILENCE_GATE_MS / 20
@@ -35,6 +48,9 @@ class RealtimeAudioController(
 
     @Volatile var speechActive: Boolean = false
         private set
+
+    /** 打断后到新一轮响应开始之间，丢弃下行的残留音频 */
+    @Volatile private var droppingAudio = false
 
     // ---------- 采集 ----------
 
@@ -78,6 +94,7 @@ class RealtimeAudioController(
         val buf = ByteArray(FRAME_BYTES)
         val shorts = ShortArray(FRAME_SAMPLES)
         var silenceFrames = 0
+        var lastLoud = false
         while (capturing.get()) {
             val rec = recorder ?: break
             var read = 0
@@ -110,6 +127,15 @@ class RealtimeAudioController(
                 }
             }
             if (speechActive) onAudioFrame(buf.copyOf())
+            // 只在「响/静」翻转时记一笔。之前每秒一条，排「服务端听不见」时有用，
+            // 但平时就是噪音；翻转日志已经足够回答「麦克风到底有没有在收声音」。
+            if (loud != lastLoud) {
+                android.util.Log.i(
+                    "ShiyuRealtime",
+                    "mic ${if (loud) "speech" else "silence"} db=${"%.1f".format(db)} active=$speechActive"
+                )
+                lastLoud = loud
+            }
             val amp = if (db <= -100) 0 else ((db + 60.0) / 60.0 * 100).toInt().coerceIn(0, 100)
             onAmplitude(amp)
         }
@@ -133,12 +159,27 @@ class RealtimeAudioController(
     @Synchronized
     fun playPcm(bytes: ByteArray) {
         if (bytes.isEmpty()) return
+        // 打断之后、服务端真正停下之前，还会飘来几百毫秒的音频包。
+        // 不过滤的话，下一个包就会把刚暂停的播放重新拉起来 —— 表现就是
+        // 「按了打断没反应，它停一下又接着说」。
+        if (droppingAudio) return
         val track = player ?: newTrack().also { player = it }
         if (!playing.get()) {
             track.play()
             playing.set(true)
         }
         track.write(bytes, 0, bytes.size)
+    }
+
+    /**
+     * 打断：立即停播，并开启丢弃窗口。
+     *
+     * 窗口在 [resumeAudio] 时关闭 —— 调用方应当在服务端开始**新一轮**响应
+     * （`response.created`）时调用它，而不是在打断那一刻。
+     */
+    @Synchronized
+    fun resumeAudio() {
+        droppingAudio = false
     }
 
     private fun newTrack(): android.media.AudioTrack =
@@ -154,9 +195,10 @@ class RealtimeAudioController(
             .setTransferMode(android.media.AudioTrack.MODE_STREAM)
             .build()
 
-    /** barge-in：丢弃已排队音频，立即静音 */
+    /** barge-in：丢弃已排队音频，立即静音，并挡住后续残留的音频包 */
     @Synchronized
     fun interrupt() {
+        droppingAudio = true
         val track = player ?: return
         try {
             track.pause()
@@ -180,6 +222,7 @@ class RealtimeAudioController(
     }
 
     fun release() {
+        droppingAudio = false
         stopCapture()
         stopPlayback()
         try {

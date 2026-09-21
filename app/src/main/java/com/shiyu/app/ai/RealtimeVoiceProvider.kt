@@ -34,6 +34,9 @@ interface RealtimeVoiceProvider {
         fun onTranscriptDelta(text: String)
         /** 用户语音转写完成 */
         fun onUserTranscript(text: String)
+        /** 服务端开始新一轮响应（response.created）——用于关闭打断后的音频丢弃窗口 */
+        fun onResponseStarted() {}
+
         fun onResponseDone()
         fun onError(error: AiError)
         fun onClosed()

@@ -28,6 +28,7 @@ import com.shiyu.app.databinding.ItemBadgeBinding
 import com.shiyu.app.databinding.ItemWeekBarBinding
 import com.shiyu.app.ui.BaseActivity
 import com.shiyu.app.ui.LangStyle
+import com.shiyu.app.ui.history.HistoryActivity
 import com.shiyu.app.ui.nav.BottomNav
 import com.shiyu.app.ui.settings.SettingsActivity
 import java.time.LocalDate
@@ -69,6 +70,12 @@ class ProfileActivity : BaseActivity() {
         binding.nameBlock.setOnClickListener { editName() }
         binding.avatar.setOnClickListener { editName() }
         binding.btnDailyGoal.setOnClickListener { editDailyGoal() }
+        binding.translateSwitch.setOnCheckedChangeListener { _, isChecked ->
+            AppGraph.settingsRepository.setRealtimeTranslate(isChecked)
+        }
+        binding.btnHistory.setOnClickListener {
+            startActivity(Intent(this, HistoryActivity::class.java))
+        }
         binding.autoPlaySwitch.setOnCheckedChangeListener { _, isChecked ->
             AppGraph.settingsRepository.setAutoPlayTts(isChecked)
         }
@@ -77,6 +84,7 @@ class ProfileActivity : BaseActivity() {
     override fun onResume() {
         super.onResume()
         binding.autoPlaySwitch.isChecked = AppGraph.settingsRepository.autoPlayTts()
+        binding.translateSwitch.isChecked = AppGraph.settingsRepository.realtimeTranslate()
         render()
     }
 
@@ -106,7 +114,7 @@ class ProfileActivity : BaseActivity() {
         )
         binding.statStreak.text = streak.toString()
         binding.statWords.text = mastered.toString()
-        binding.statHours.text = String.format("%.1f", totalSeconds / 3600.0)
+        binding.statHours.text = String.format(java.util.Locale.US, "%.1f", totalSeconds / 3600.0)
 
         renderWeek(AppGraph.dailyStatsStore.currentWeek(epochDay, stats), epochDay)
         renderBadges(
