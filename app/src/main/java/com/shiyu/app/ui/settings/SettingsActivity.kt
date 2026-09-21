@@ -59,7 +59,6 @@ class SettingsActivity : BaseActivity() {
         binding.headerBar.btnBack.setOnClickListener { finish() }
 
         binding.btnSave.setOnClickListener { saveForm() }
-        binding.btnSyncAll.setOnClickListener { confirmSyncAll() }
         binding.btnCopyLang.setOnClickListener { confirmCopyToOtherLang() }
         binding.langChipJa.setOnClickListener { switchConfigLang(LangId.JA) }
         binding.langChipEn.setOnClickListener { switchConfigLang(LangId.EN) }
@@ -137,38 +136,6 @@ class SettingsActivity : BaseActivity() {
      * - **model / voice / enabled 一律不动** —— 各能力的模型名本来就不同，
      *   开关状态更应该由用户自己决定。
      */
-    private fun confirmSyncAll() {
-        val rawUrl = binding.chatBaseUrl.text.toString().trim()
-        val normalized = if (rawUrl.isEmpty()) "" else BaseUrlNormalizer.normalize(rawUrl)
-        if (rawUrl.isNotEmpty() && normalized == null) {
-            Toast.makeText(this, R.string.settings_https_only, Toast.LENGTH_LONG).show()
-            return
-        }
-        // 与保存/测试连接同一套判定，别再自己写一遍
-        val chatKey = currentKey(SettingsRepository.Group.CHAT)
-        if (normalized.isNullOrEmpty() && chatKey.isEmpty()) {
-            Toast.makeText(this, R.string.settings_sync_empty, Toast.LENGTH_LONG).show()
-            return
-        }
-        com.google.android.material.dialog.MaterialAlertDialogBuilder(this)
-            .setTitle(R.string.settings_sync_all)
-            .setMessage(R.string.settings_sync_confirm)
-            .setNegativeButton(R.string.cancel, null)
-            .setPositiveButton(R.string.confirm) { _, _ -> applySyncAll(normalized ?: "", chatKey) }
-            .show()
-    }
-
-    /**
-     * 把**当前语言**的 4 组配置整体复制到另一门语言。
-     *
-     * 为什么需要这个：配置是「4 能力 × 2 语言」共 8 组。多数人只用一套网关，
-     * 在「日语」页把实时语音填好后切到英语，那边还是空的、直接退回 Mock ——
-     * 用户完全无从察觉（设置页只显示当前语言那一套）。这个按钮就是补这个断层。
-     *
-     * 与「同步到其它」的分工：
-     * · 「同步到其它」= 同一门语言内，把「对话」组的地址和 Key 铺开到另外三组；
-     * · 这个 = 跨语言，整组（含模型名、音色、开关）照搬。
-     */
     private fun confirmCopyToOtherLang() {
         val from = AppGraph.settingsRepository.activeLang()
         val to = if (from == LangId.JA) LangId.EN else LangId.JA
@@ -206,29 +173,6 @@ class SettingsActivity : BaseActivity() {
         Toast.makeText(
             this,
             getString(R.string.settings_copy_done, n, to.displayName),
-            Toast.LENGTH_SHORT
-        ).show()
-    }
-
-    private fun applySyncAll(baseUrl: String, apiKey: String) {
-        var touched = 0
-        for (lang in LangId.entries) {
-            for (group in SettingsRepository.Group.entries) {
-                val existing = AppGraph.settingsRepository.groupFor(lang, group)
-                val isRealtime = group == SettingsRepository.Group.REALTIME
-                val updated = existing.copy(
-                    baseUrl = if (isRealtime) existing.baseUrl else baseUrl.ifEmpty { existing.baseUrl },
-                    apiKey = apiKey.ifEmpty { existing.apiKey }
-                )
-                if (updated == existing) continue
-                AppGraph.settingsRepository.update(lang, group, updated)
-                touched++
-            }
-        }
-        loadForm()
-        Toast.makeText(
-            this,
-            getString(R.string.settings_sync_done, touched),
             Toast.LENGTH_SHORT
         ).show()
     }

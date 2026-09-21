@@ -227,13 +227,13 @@
     <string name="settings_copy_confirm">把「%1$s」的 4 组配置（地址、Key、模型名、音色、开关）整体复制到「%2$s」？</string>
     <string name="settings_copy_done">已复制 %1$d 组到%2$s</string>
     <string name="settings_copy_empty">当前语言的 4 组都还是空的，先填一组再复制</string>
-    <string name="settings_sync_all">把对话组的地址和 Key 同步到其它</string>
     
     
-    <string name="settings_sync_hint">上面两个按钮都是省事用的，不是必做。四组能力各用一家的模型也完全正常，那就分别填。两个按钮都会覆盖目标已有的同名配置。</string>
-    <string name="settings_sync_confirm">将用「对话」组的地址与 Key 覆盖其它三组（模型名和开关不变）。</string>
-    <string name="settings_sync_done">已同步到其它 %1$d 组</string>
-    <string name="settings_sync_empty">请先填好「对话」组的接口地址或 API Key</string>
+    
+    <string name="settings_sync_hint">这个按钮是省事用的，不是必做。四组能力各用一家的模型也完全正常，那就分别填。复制会覆盖目标语言已有的同名配置。</string>
+    
+    
+    
     <string name="settings_switch_lang_hint">已切换到%1$s 的配置</string>
     <string name="provider_chat">对话服务</string>
     <string name="provider_asr">语音识别</string>
