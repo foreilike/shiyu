@@ -58,6 +58,9 @@ class SettingsActivity : BaseActivity() {
         binding.headerBar.btnBack.setOnClickListener { finish() }
 
         binding.btnSave.setOnClickListener { saveForm() }
+        binding.btnSyncAll.setOnClickListener { confirmSyncAll() }
+        binding.langChipJa.setOnClickListener { switchConfigLang(LangId.JA) }
+        binding.langChipEn.setOnClickListener { switchConfigLang(LangId.EN) }
 
         setupKeyToggle(SettingsRepository.Group.CHAT, binding.chatApiKey, binding.chatKeyToggle)
         setupKeyToggle(SettingsRepository.Group.ASR, binding.asrApiKey, binding.asrKeyToggle)
@@ -75,7 +78,104 @@ class SettingsActivity : BaseActivity() {
         val lang = AppGraph.settingsRepository.activeLang()
         binding.headerBar.subTitle.text =
             "${getString(R.string.settings_title)} · ${lang.displayName}"
+        renderLangChips(lang)
         loadForm()
+    }
+
+    // ---------- 配置语言切换 ----------
+
+    /**
+     * 设置页里也放一组语言芯片：8 组配置是「4 能力 × 2 语言」，
+     * 只在「课程」Tab 能切语言的话，用户在这页会看到「设置 · 日语」却切不了，体验是断的。
+     * 这里切的就是全局 activeLang，与课程页同一个状态。
+     */
+    private fun switchConfigLang(lang: LangId) {
+        if (lang == AppGraph.settingsRepository.activeLang()) return
+        AppGraph.settingsRepository.setActiveLang(lang)
+        binding.headerBar.subTitle.text =
+            "${getString(R.string.settings_title)} · ${lang.displayName}"
+        renderLangChips(lang)
+        loadForm()
+        Toast.makeText(
+            this,
+            getString(R.string.settings_switch_lang_hint, lang.displayName),
+            Toast.LENGTH_SHORT
+        ).show()
+    }
+
+    private fun renderLangChips(active: LangId) {
+        paintChip(binding.langChipJa, active == LangId.JA)
+        paintChip(binding.langChipEn, active == LangId.EN)
+    }
+
+    private fun paintChip(chip: android.widget.TextView, selected: Boolean) {
+        chip.setBackgroundResource(
+            if (selected) R.drawable.bg_btn_clay else R.drawable.bg_btn_ghost
+        )
+        chip.setTextColor(
+            androidx.core.content.ContextCompat.getColor(
+                this,
+                if (selected) R.color.cream else R.color.ink2
+            )
+        )
+    }
+
+    // ---------- 一键同步 ----------
+
+    /**
+     * 把「对话」组当前表单里的接口地址与 API Key 复制到其它组。
+     *
+     * 刻意的两条边界：
+     * - **实时语音只同步 Key、不同步地址** —— 它走 wss，地址形如
+     *   `wss://api.stepfun.com/v1/realtime`，把 https 的网关地址盖上去必然连不上；
+     * - **model / voice / enabled 一律不动** —— 各能力的模型名本来就不同，
+     *   开关状态更应该由用户自己决定。
+     */
+    private fun confirmSyncAll() {
+        val rawUrl = binding.chatBaseUrl.text.toString().trim()
+        val normalized = if (rawUrl.isEmpty()) "" else BaseUrlNormalizer.normalize(rawUrl)
+        if (rawUrl.isNotEmpty() && normalized == null) {
+            Toast.makeText(this, R.string.settings_https_only, Toast.LENGTH_LONG).show()
+            return
+        }
+        val chatKey = if (isMasked(SettingsRepository.Group.CHAT)) {
+            realKeys[SettingsRepository.Group.CHAT] ?: ""
+        } else {
+            binding.chatApiKey.text.toString().trim()
+        }
+        if (normalized.isNullOrEmpty() && chatKey.isEmpty()) {
+            Toast.makeText(this, R.string.settings_sync_empty, Toast.LENGTH_LONG).show()
+            return
+        }
+        androidx.appcompat.app.AlertDialog.Builder(this)
+            .setTitle(R.string.settings_sync_all)
+            .setMessage(R.string.settings_sync_confirm)
+            .setNegativeButton(R.string.cancel, null)
+            .setPositiveButton(R.string.confirm) { _, _ -> applySyncAll(normalized ?: "", chatKey) }
+            .show()
+    }
+
+    private fun applySyncAll(baseUrl: String, apiKey: String) {
+        var touched = 0
+        for (lang in LangId.entries) {
+            for (group in SettingsRepository.Group.entries) {
+                val existing = AppGraph.settingsRepository.groupFor(lang, group)
+                val isRealtime = group == SettingsRepository.Group.REALTIME
+                val updated = existing.copy(
+                    baseUrl = if (isRealtime) existing.baseUrl else baseUrl.ifEmpty { existing.baseUrl },
+                    apiKey = apiKey.ifEmpty { existing.apiKey }
+                )
+                if (updated == existing) continue
+                AppGraph.settingsRepository.update(lang, group, updated)
+                touched++
+            }
+        }
+        loadForm()
+        Toast.makeText(
+            this,
+            getString(R.string.settings_sync_done, touched),
+            Toast.LENGTH_SHORT
+        ).show()
     }
 
     // ---------- 表单 ----------
@@ -141,18 +241,20 @@ class SettingsActivity : BaseActivity() {
         if (keyVisible[group] == true) {
             keyField.inputType = InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD
             keyField.setText(key)
-            setEditable(keyField, true)
             keyToggle.setText(R.string.settings_key_hide)
         } else {
             keyField.inputType = InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_VARIATION_PASSWORD
             keyField.setText(if (key.isEmpty()) "" else LogRedactor.mask(key))
-            // 只有「已经存了 Key、当前显示的是掩码」才锁编辑 —— 锁的目的是防止把
-            // 掩码文本当成真 Key 存回去。Key 为空时没有掩码可言，必须能直接输入，
-            // 否则全新安装的用户会发现这个框永远点不进去。
-            setEditable(keyField, key.isEmpty())
             keyToggle.setText(R.string.settings_key_show)
         }
+        // 只有「已存 Key 且正显示掩码」才锁编辑 —— 锁的目的是防止把掩码文本当成
+        // 真 Key 存回去。Key 为空时没有掩码可言，必须能直接输入。
+        setEditable(keyField, !isMasked(group))
     }
+
+    /** 当前这一组的输入框里显示的是不是掩码（而不是可编辑的真值/空值） */
+    private fun isMasked(group: SettingsRepository.Group): Boolean =
+        keyVisible[group] != true && (realKeys[group] ?: "").isNotEmpty()
 
     private fun setEditable(field: EditText, editable: Boolean) {
         field.isFocusable = editable
@@ -241,11 +343,9 @@ class SettingsActivity : BaseActivity() {
     ) {
         val lang = AppGraph.settingsRepository.activeLang()
         val existing = AppGraph.settingsRepository.groupFor(lang, group)
-        val key = if (keyVisible[group] == true) {
-            keyField.text.toString().trim()
-        } else {
-            existing.apiKey // 掩码状态不允许编辑，保持原值
-        }
+        // 显示掩码时保持原值，其余情况（明文态 / 原本为空刚输入）一律以输入框为准。
+        // 只看 keyVisible 会把"空 Key 首次手输"的内容丢掉。
+        val key = if (isMasked(group)) existing.apiKey else keyField.text.toString().trim()
         val config = ProviderConfig(
             baseUrl = normalizedUrls[group] ?: existing.baseUrl,
             apiKey = key,

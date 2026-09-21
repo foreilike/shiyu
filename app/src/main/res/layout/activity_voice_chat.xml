@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -42,7 +43,7 @@
                     android:id="@+id/voicePartnerName"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Yuki"
+                    tools:text="yoyo"
                     android:textColor="@color/cream"
                     android:textSize="15sp"
                     android:textStyle="bold" />
@@ -173,24 +174,26 @@
         android:paddingEnd="40dp">
 
         <TextView
+            android:id="@+id/readyAvatar"
             android:layout_width="72dp"
             android:layout_height="72dp"
             android:background="@drawable/bg_soft"
             android:gravity="center"
-            android:text="ゆ"
             android:textColor="@color/clay"
-            android:textSize="30sp"
-            android:textStyle="bold" />
+            android:textSize="28sp"
+            android:textStyle="bold"
+            tools:text="y" />
 
         <TextView
+            android:id="@+id/readyTitle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:fontFamily="serif"
             android:paddingTop="14dp"
-            android:text="和 Yuki 聊聊天"
             android:textColor="@color/cream"
             android:textSize="21sp"
-            android:textStyle="bold" />
+            android:textStyle="bold"
+            tools:text="和 yoyo 聊聊天" />
 
         <TextView
             android:layout_width="wrap_content"

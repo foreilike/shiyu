@@ -27,6 +27,64 @@
         android:paddingEnd="20dp"
         android:paddingBottom="20dp">
 
+        <!-- 配置语言 + 一键同步（8 组配置里通常只有模型名不同，地址和 Key 都一样） -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:background="@drawable/bg_card"
+            android:orientation="vertical"
+            android:padding="16dp">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/settings_config_lang"
+                android:textColor="@color/ink"
+                android:textSize="15sp"
+                android:textStyle="bold" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:orientation="horizontal">
+                <TextView
+                    android:id="@+id/langChipJa"
+                    android:layout_width="0dp"
+                    android:layout_height="38dp"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:text="@string/lang_ja"
+                    android:textSize="13sp" />
+                <TextView
+                    android:id="@+id/langChipEn"
+                    android:layout_width="0dp"
+                    android:layout_height="38dp"
+                    android:layout_marginStart="8dp"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:text="@string/lang_en"
+                    android:textSize="13sp" />
+            </LinearLayout>
+
+            <Button
+                android:id="@+id/btnSyncAll"
+                style="@style/MiniButton"
+                android:layout_width="match_parent"
+                android:layout_marginStart="0dp"
+                android:layout_marginTop="12dp"
+                android:text="@string/settings_sync_all" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:text="@string/settings_sync_hint"
+                android:textColor="@color/mute"
+                android:textSize="11.5sp" />
+        </LinearLayout>
+
         <!-- 对话服务 -->
         <TextView
             android:layout_width="match_parent"
@@ -75,13 +133,15 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:gravity="center_vertical"
+                android:layout_marginTop="10dp"
+                android:gravity="bottom"
                 android:orientation="horizontal">
 
                 <EditText
                     android:id="@+id/chatApiKey"
                     style="@style/FieldInput"
                     android:layout_width="0dp"
+                    android:layout_marginTop="0dp"
                     android:layout_weight="1"
                     android:hint="@string/field_api_key"
                     android:inputType="textPassword" />
@@ -89,6 +149,7 @@
                 <Button
                     android:id="@+id/chatKeyToggle"
                     style="@style/MiniButton"
+                    android:layout_height="44dp"
                     android:text="@string/settings_key_show" />
             </LinearLayout>
 
@@ -102,6 +163,8 @@
                 android:id="@+id/chatTest"
                 style="@style/MiniButton"
                 android:layout_width="match_parent"
+                android:layout_marginStart="0dp"
+                android:layout_marginTop="14dp"
                 android:text="@string/test_connection" />
         </LinearLayout>
 
@@ -153,13 +216,15 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:gravity="center_vertical"
+                android:layout_marginTop="10dp"
+                android:gravity="bottom"
                 android:orientation="horizontal">
 
                 <EditText
                     android:id="@+id/asrApiKey"
                     style="@style/FieldInput"
                     android:layout_width="0dp"
+                    android:layout_marginTop="0dp"
                     android:layout_weight="1"
                     android:hint="@string/field_api_key"
                     android:inputType="textPassword" />
@@ -167,6 +232,7 @@
                 <Button
                     android:id="@+id/asrKeyToggle"
                     style="@style/MiniButton"
+                    android:layout_height="44dp"
                     android:text="@string/settings_key_show" />
             </LinearLayout>
 
@@ -180,6 +246,8 @@
                 android:id="@+id/asrTest"
                 style="@style/MiniButton"
                 android:layout_width="match_parent"
+                android:layout_marginStart="0dp"
+                android:layout_marginTop="14dp"
                 android:text="@string/test_connection" />
         </LinearLayout>
 
@@ -231,13 +299,15 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:gravity="center_vertical"
+                android:layout_marginTop="10dp"
+                android:gravity="bottom"
                 android:orientation="horizontal">
 
                 <EditText
                     android:id="@+id/ttsApiKey"
                     style="@style/FieldInput"
                     android:layout_width="0dp"
+                    android:layout_marginTop="0dp"
                     android:layout_weight="1"
                     android:hint="@string/field_api_key"
                     android:inputType="textPassword" />
@@ -245,6 +315,7 @@
                 <Button
                     android:id="@+id/ttsKeyToggle"
                     style="@style/MiniButton"
+                    android:layout_height="44dp"
                     android:text="@string/settings_key_show" />
             </LinearLayout>
 
@@ -264,6 +335,8 @@
                 android:id="@+id/ttsTest"
                 style="@style/MiniButton"
                 android:layout_width="match_parent"
+                android:layout_marginStart="0dp"
+                android:layout_marginTop="14dp"
                 android:text="@string/test_connection" />
         </LinearLayout>
 
@@ -315,13 +388,15 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:gravity="center_vertical"
+                android:layout_marginTop="10dp"
+                android:gravity="bottom"
                 android:orientation="horizontal">
 
                 <EditText
                     android:id="@+id/realtimeApiKey"
                     style="@style/FieldInput"
                     android:layout_width="0dp"
+                    android:layout_marginTop="0dp"
                     android:layout_weight="1"
                     android:hint="@string/field_api_key"
                     android:inputType="textPassword" />
@@ -329,6 +404,7 @@
                 <Button
                     android:id="@+id/realtimeKeyToggle"
                     style="@style/MiniButton"
+                    android:layout_height="44dp"
                     android:text="@string/settings_key_show" />
             </LinearLayout>
 
@@ -396,7 +472,8 @@
                 android:id="@+id/realtimeTest"
                 style="@style/MiniButton"
                 android:layout_width="match_parent"
-                android:layout_marginTop="8dp"
+                android:layout_marginStart="0dp"
+                android:layout_marginTop="14dp"
                 android:text="@string/test_connection" />
         </LinearLayout>
 

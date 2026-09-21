@@ -88,8 +88,14 @@ class VoiceChatActivity : BaseActivity() {
         fitTopInset(binding.voiceTopBar)
         fitBottomInset(binding.voiceControls)
 
-        binding.voicePartnerName.text = LangStyle.partnerName(lang)
+        // 语伴名/头像一律从 LangStyle 取，不要写回布局。
+        // 之前准备层的「和 Yuki 聊聊天」和「ゆ」头像是硬编码在 XML 里的，
+        // 切到英语后仍然显示日语语伴，和首页对不上。
+        val partner = LangStyle.partnerName(lang)
+        binding.voicePartnerName.text = partner
         binding.voicePartnerSub.text = "AI 语伴 · " + lang.displayName
+        binding.readyTitle.text = getString(R.string.voice_ready_title, partner)
+        binding.readyAvatar.text = partner.firstOrNull()?.uppercase().orEmpty()
 
         buildWave()
 

@@ -116,7 +116,8 @@
     <string name="voice_partner_online">AI 语伴 %1$s 在线 · 像朋友一样聊天</string>
     <string name="voice_kicker">REALTIME TALK</string>
     <string name="voice_listening">正在聆听…</string>
-    <string name="voice_speaking">Yuki 正在说…</string>
+    <string name="voice_speaking">%1$s 正在说…</string>
+    <string name="voice_ready_title">和 %1$s 聊聊天</string>
     <string name="voice_gated">已静默暂停推流 · 省流量计费</string>
     <string name="voice_start">开始对话</string>
     <string name="voice_hangup">结束对话</string>
@@ -175,6 +176,13 @@
 
     <!-- 设置页 -->
     <string name="settings_title">设置</string>
+    <string name="settings_config_lang">配置语言</string>
+    <string name="settings_sync_all">把对话组的地址和 Key 同步到其它</string>
+    <string name="settings_sync_hint">4 组能力通常共用同一个网关。同步会把「对话」组的接口地址与 API Key 复制到语音识别、语音合成和另一门语言；实时语音走 wss 协议，只同步 Key、不动地址。各组的模型名、音色、启用开关都不会被改。</string>
+    <string name="settings_sync_confirm">将用「对话」组的地址与 Key 覆盖其它组（模型名和开关不变），确定吗？</string>
+    <string name="settings_sync_done">已同步到其它 %1$d 组</string>
+    <string name="settings_sync_empty">请先填好「对话」组的接口地址或 API Key</string>
+    <string name="settings_switch_lang_hint">已切换到%1$s 的配置</string>
     <string name="provider_chat">对话服务</string>
     <string name="provider_asr">语音识别</string>
     <string name="provider_tts">语音合成</string>

@@ -13,7 +13,7 @@ import com.shiyu.app.core.lang.LangId
 object LangStyle {
 
     fun partnerName(lang: LangId): String = when (lang) {
-        LangId.JA -> "Yuki"
+        LangId.JA -> "yoyo"
         LangId.EN -> "Emma"
     }
 
