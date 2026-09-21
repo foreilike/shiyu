@@ -37,6 +37,12 @@ interface RealtimeVoiceProvider {
         /** 服务端开始新一轮响应（response.created）——用于关闭打断后的音频丢弃窗口 */
         fun onResponseStarted() {}
 
+        /** 连接断了，正在第 [attempt] 次重连（1 起） */
+        fun onReconnecting(attempt: Int) {}
+
+        /** 重连次数用尽，本轮对话到此为止 */
+        fun onReconnectFailed() {}
+
         fun onResponseDone()
         fun onError(error: AiError)
         fun onClosed()

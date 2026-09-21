@@ -52,6 +52,10 @@ class RealtimeAudioController(
     /** 打断后到新一轮响应开始之间，丢弃下行的残留音频 */
     @Volatile private var droppingAudio = false
 
+    /** 端上音频效果器（回声消除 / 降噪），best-effort，设备不支持时为 null */
+    private var echoCanceler: android.media.audiofx.AcousticEchoCanceler? = null
+    private var noiseSuppressor: android.media.audiofx.NoiseSuppressor? = null
+
     // ---------- 采集 ----------
 
     /**
@@ -85,9 +89,49 @@ class RealtimeAudioController(
             return
         }
         recorder = rec
+        attachAudioEffects(rec.audioSessionId)
         rec.startRecording()
         capturing.set(true)
         captureThread = Thread({ captureLoop() }, "rt-capture").apply { start() }
+    }
+
+    /**
+     * 挂上系统自带的回声消除与降噪。
+     *
+     * 免提外放时麦克风会收到自己的声音，服务端 VAD 会把它当成「用户在说话」，
+     * 于是一直自己跟自己对话。之前的策略只是「录音时切断外放 + 用户开口就停播」，
+     * 那是逻辑规避；这里补上真正的端上处理。
+     *
+     * **刻意不开 AutomaticGainControl**：它会改变采集电平，而端上门控的 -45 dBFS 与
+     * 服务端 VAD 的 200 都是按当前电平标定的，开了就得重新标定一遍（见交接文档 §13.2）。
+     *
+     * 全部是 best-effort：设备/ROM 不支持时静默跳过，绝不影响主链路。
+     */
+    private fun attachAudioEffects(sessionId: Int) {
+        if (sessionId == 0) return
+        try {
+            if (android.media.audiofx.AcousticEchoCanceler.isAvailable()) {
+                echoCanceler = android.media.audiofx.AcousticEchoCanceler
+                    .create(sessionId)?.also { it.enabled = true }
+            }
+        } catch (e: Exception) {
+            echoCanceler = null
+        }
+        try {
+            if (android.media.audiofx.NoiseSuppressor.isAvailable()) {
+                noiseSuppressor = android.media.audiofx.NoiseSuppressor
+                    .create(sessionId)?.also { it.enabled = true }
+            }
+        } catch (e: Exception) {
+            noiseSuppressor = null
+        }
+    }
+
+    private fun releaseAudioEffects() {
+        try { echoCanceler?.release() } catch (e: Exception) { /* 忽略 */ }
+        try { noiseSuppressor?.release() } catch (e: Exception) { /* 忽略 */ }
+        echoCanceler = null
+        noiseSuppressor = null
     }
 
     private fun captureLoop() {
@@ -143,6 +187,7 @@ class RealtimeAudioController(
 
     fun stopCapture() {
         capturing.set(false)
+        releaseAudioEffects()
         try {
             recorder?.stop()
         } catch (e: Exception) {

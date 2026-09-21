@@ -189,7 +189,10 @@ class ChatActivity : BaseActivity() {
             recording = false
             recorder = null
             speaker?.setSuppressed(false)
-            showHint(getString(R.string.chat_no_mic_permission))
+            // 这里失败绝大多数不是权限问题（权限在函数开头已经查过），
+            // 而是麦克风被别的 App 占用 / 机型不支持该参数组合。
+            // 一律提示"未获得麦克风权限"会让用户去改权限却永远修不好。
+            showHint(getString(R.string.chat_recorder_failed))
             null
         }
     }
@@ -209,7 +212,8 @@ class ChatActivity : BaseActivity() {
         binding.hintText.visibility = View.GONE
 
         if (file == null || !file.exists() || file.length() == 0L) {
-            showHint(getString(R.string.chat_no_mic_permission))
+            // 同上：录到空文件通常是按得太快、录音时长过短，跟权限无关
+            showHint(getString(R.string.chat_recording_too_short))
             return
         }
         if (!AppGraph.providerRegistry.isSttEnabled(module.id)) {

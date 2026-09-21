@@ -31,6 +31,12 @@ object AudioVadTrimmer {
     /** 最长处理的音频秒数，防异常长文件吃内存（与录音上限一致）。 */
     private const val MAX_SECONDS = 60
 
+    /** 解码缓冲上限。按 48kHz 估（最高常见采样率），16kHz 的手机录音远低于此。 */
+    private const val MAX_SAMPLES = MAX_SECONDS * 48_000
+
+    /** 解码缓冲初始容量：64K 采样 = 128KB，短录音不必一上来就吃几 MB */
+    private const val INITIAL_SAMPLES = 1 shl 16
+
     /**
      * @param input 录音文件（m4a/AAC）
      * @param cacheDir 输出目录
@@ -76,8 +82,12 @@ object AudioVadTrimmer {
             codec.configure(format, null, null, 0)
             codec.start()
 
-            val maxSamples = MAX_SECONDS * 48000
-            val acc = ArrayList<Short>(1 shl 18)
+            // 用可增长的基本类型数组累积，**不要用 ArrayList<Short>**：
+            // 每加一个采样就装箱一次，60 秒录音近三百万个临时对象（几十 MB 垃圾），
+            // 会引发 GC 卡顿甚至在低端机上 OOM。这条路径从没真机跑过，纸上翻不出来。
+            var samples = ShortArray(INITIAL_SAMPLES)
+            var count = 0
+
             val info = MediaCodec.BufferInfo()
             var sawInputEos = false
             var sawOutputEos = false
@@ -100,10 +110,23 @@ object AudioVadTrimmer {
                 }
                 val outIndex = codec.dequeueOutputBuffer(info, 10_000)
                 if (outIndex >= 0) {
-                    val outBuf = codec.getOutputBuffer(outIndex)!!
-                    val chunk = ShortArray(info.size / 2)
-                    outBuf.order(ByteOrder.LITTLE_ENDIAN).asShortBuffer().get(chunk)
-                    for (s in chunk) acc.add(s)
+                    val outBuf = codec.getOutputBuffer(outIndex)
+                    if (outBuf != null && info.size >= 2) {
+                        // 必须按 info.offset/size 框出有效区间：asShortBuffer() 是从 position 开始读的，
+                        // 而解码器给出的数据不一定从 0 开始（多数设备恰好是 0，所以很容易蒙混过关）。
+                        outBuf.position(info.offset)
+                        outBuf.limit(info.offset + info.size)
+                        val shortBuf = outBuf.order(ByteOrder.LITTLE_ENDIAN).asShortBuffer()
+                        val n = shortBuf.remaining()
+                        if (count + n > MAX_SAMPLES) return null // 超长，放弃裁剪
+                        if (count + n > samples.size) {
+                            var newSize = samples.size
+                            while (newSize < count + n) newSize *= 2
+                            samples = samples.copyOf(minOf(newSize, MAX_SAMPLES))
+                        }
+                        shortBuf.get(samples, count, n)
+                        count += n
+                    }
                     // 采样率以 decoder 实际输出为准（部分设备与容器声明不一致）
                     val outFormat = codec.outputFormat
                     if (outFormat.containsKey(MediaFormat.KEY_SAMPLE_RATE)) {
@@ -113,7 +136,6 @@ object AudioVadTrimmer {
                     if (info.flags and MediaCodec.BUFFER_FLAG_END_OF_STREAM != 0) {
                         sawOutputEos = true
                     }
-                    if (acc.size > maxSamples) return null // 超长，放弃裁剪
                 } else if (outIndex == MediaCodec.INFO_OUTPUT_FORMAT_CHANGED) {
                     val f = codec.outputFormat
                     if (f.containsKey(MediaFormat.KEY_SAMPLE_RATE)) {
@@ -121,7 +143,8 @@ object AudioVadTrimmer {
                     }
                 }
             }
-            return Pcm16(acc.toShortArray(), sampleRate)
+            if (count == 0) return null
+            return Pcm16(samples.copyOf(count), sampleRate)
         } finally {
             try { codec?.stop() } catch (_: Exception) {}
             try { codec?.release() } catch (_: Exception) {}

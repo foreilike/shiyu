@@ -33,6 +33,17 @@ class StepfunRealtimeProvider(
     private var socket: WebSocket? = null
     private var connected = false
 
+    /** 重连用：记住最后一次的 instructions；用户主动关闭后不再重连 */
+    private var lastInstructions: String? = null
+    private var closedByUser = false
+    private var retryCount = 0
+    private val mainHandler = android.os.Handler(android.os.Looper.getMainLooper())
+    private val reconnectTask = Runnable {
+        val text = lastInstructions ?: return@Runnable
+        android.util.Log.i(TAG, "reconnecting attempt=${retryCount}")
+        openSocket(text)
+    }
+
     private val client = OkHttpClient.Builder()
         .connectTimeout(10, TimeUnit.SECONDS)
         .readTimeout(0, TimeUnit.MILLISECONDS) // WebSocket 长连接
@@ -44,6 +55,11 @@ class StepfunRealtimeProvider(
     }
 
     override fun connect(instructions: String) {
+        lastInstructions = instructions
+        openSocket(instructions)
+    }
+
+    private fun openSocket(instructions: String) {
         val url = BaseUrlNormalizer.normalize(config.baseUrl) ?: run {
             listener?.onError(AiError.BadResponse("invalid realtime baseUrl"))
             return
@@ -62,6 +78,7 @@ class StepfunRealtimeProvider(
         socket = client.newWebSocket(request, object : WebSocketListener() {
             override fun onOpen(webSocket: WebSocket, response: Response) {
                 connected = true
+                retryCount = 0
                 android.util.Log.i(TAG, "realtime connected: $endpoint")
                 // 默认用女声：语伴形象是 yoyo / Emma，而另一个可选音色是男声
                 val voice = config.voice.ifBlank { RealtimeProtocol.VOICE_FEMALE }
@@ -133,6 +150,17 @@ class StepfunRealtimeProvider(
                 connected = false
                 val code = response?.code ?: 0
                 android.util.Log.e(TAG, "realtime failure code=$code msg=${t.message}", t)
+                // 认证类错误重试也没用，直接报错退出，别让用户等三次退避
+                if (code == 401 || code == 403 || code == 404) {
+                    listener?.onError(
+                        when (code) {
+                            404 -> AiError.NotFound(code)
+                            else -> AiError.Unauthorized(code)
+                        }
+                    )
+                    return
+                }
+                scheduleReconnect()
                 listener?.onError(
                     when (code) {
                         401, 403 -> AiError.Unauthorized(code)
@@ -147,7 +175,12 @@ class StepfunRealtimeProvider(
             override fun onClosed(webSocket: WebSocket, code: Int, reason: String) {
                 connected = false
                 android.util.Log.w(TAG, "realtime closed code=$code reason=$reason")
-                listener?.onClosed()
+                // 服务端正常挂断（用户结束对话时是我们自己关的，closedByUser 已置位）
+                if (closedByUser) {
+                    listener?.onClosed()
+                } else {
+                    scheduleReconnect()
+                }
             }
         })
     }
@@ -185,7 +218,28 @@ class StepfunRealtimeProvider(
         }
     }
 
+    /**
+     * 指数退避重连（1s / 2s / 4s）。
+     *
+     * 之前断开只回调 onClosed 就结束了，网络抖一下整轮对话就废了 ——
+     * 而实时对话中途断掉，用户通常只想继续说，不想重开一轮。
+     */
+    private fun scheduleReconnect() {
+        if (closedByUser) return
+        if (retryCount >= MAX_RETRIES) {
+            android.util.Log.w(TAG, "reconnect gave up after $retryCount attempts")
+            listener?.onReconnectFailed()
+            return
+        }
+        retryCount++
+        listener?.onReconnecting(retryCount)
+        mainHandler.removeCallbacks(reconnectTask)
+        mainHandler.postDelayed(reconnectTask, BASE_RETRY_MS shl (retryCount - 1))
+    }
+
     override fun close() {
+        closedByUser = true
+        mainHandler.removeCallbacks(reconnectTask)
         connected = false
         try {
             socket?.close(1000, "bye")
@@ -193,5 +247,11 @@ class StepfunRealtimeProvider(
             // 忽略
         }
         socket = null
+    }
+
+    private companion object {
+        /** 重连退避：1s → 2s → 4s，最多三次 */
+        const val MAX_RETRIES = 3
+        const val BASE_RETRY_MS = 1000L
     }
 }

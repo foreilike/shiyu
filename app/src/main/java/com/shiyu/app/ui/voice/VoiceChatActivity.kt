@@ -341,6 +341,36 @@ class VoiceChatActivity : BaseActivity() {
         )
     }
 
+    /**
+     * 切到后台：暂停采集与外放，但**保留 WebSocket**。
+     *
+     * 之前只在 onDestroy 里释放，等于后台期间麦克风一直在采、音频一直在放；
+     * 而进程真被回收时整轮对话又直接没了。现在停采集、留连接，回到前台接着聊。
+     */
+    override fun onStop() {
+        if (running) {
+            audio?.stopCapture()
+            audio?.stopPlayback()
+        }
+        super.onStop()
+    }
+
+    override fun onStart() {
+        super.onStart()
+        if (running) {
+            requestMicAndStartSilently()
+        }
+    }
+
+    private fun requestMicAndStartSilently() {
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.RECORD_AUDIO)
+            != PackageManager.PERMISSION_GRANTED
+        ) {
+            return
+        }
+        audio?.startCapture()
+    }
+
     override fun onDestroy() {
         if (running) {
             recordSession((System.currentTimeMillis() - startElapsed) / 1000)
@@ -360,6 +390,18 @@ class VoiceChatActivity : BaseActivity() {
         /** 新一轮响应开始 → 关闭打断丢弃窗口，正常播放 */
         override fun onResponseStarted() {
             audio?.resumeAudio()
+        }
+
+        override fun onReconnecting(attempt: Int) {
+            runOnUiThread {
+                binding.voiceState.text = getString(R.string.voice_reconnecting, attempt)
+            }
+        }
+
+        override fun onReconnectFailed() {
+            runOnUiThread {
+                binding.voiceState.text = getString(R.string.voice_reconnect_failed)
+            }
         }
 
         override fun onConnected() {
