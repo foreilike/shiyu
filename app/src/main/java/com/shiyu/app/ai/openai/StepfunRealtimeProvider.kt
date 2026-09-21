@@ -150,7 +150,7 @@ class StepfunRealtimeProvider(
                 connected = false
                 val code = response?.code ?: 0
                 android.util.Log.e(TAG, "realtime failure code=$code msg=${t.message}", t)
-                // 认证类错误重试也没用，直接报错退出，别让用户等三次退避
+                // 认证/地址类错误重试也没用，立刻报错，别让用户白等三次退避
                 if (code == 401 || code == 403 || code == 404) {
                     listener?.onError(
                         when (code) {
@@ -160,16 +160,11 @@ class StepfunRealtimeProvider(
                     )
                     return
                 }
+                // 其余错误一律交给重连处理，**这里不要再报错**：
+                // 报了的话，重连期间界面会先弹「网络连接失败」，
+                // 等重试彻底放弃时又被「重连失败」覆盖 —— 两条提示互相打架，
+                // 而且用户会以为要自己去修网络，不知道 App 已经自动试过三次。
                 scheduleReconnect()
-                listener?.onError(
-                    when (code) {
-                        401, 403 -> AiError.Unauthorized(code)
-                        404 -> AiError.NotFound(code)
-                        429 -> AiError.RateLimited(code, null)
-                        in 500..599 -> AiError.ServerError(code, "")
-                        else -> AiError.Network
-                    }
-                )
             }
 
             override fun onClosed(webSocket: WebSocket, code: Int, reason: String) {

@@ -44,7 +44,11 @@ class HistoryActivity : BaseActivity() {
 
     override fun onResume() {
         super.onResume()
+        // 只列有用户发言的会话：模型开场白之后一次都没接话的空会话
+        // （比如进错场景就退出、或早先版本在绑定阶段崩溃留下的）留在磁盘上没问题，
+        // 但不该出现在历史列表里冒充一条记录。
         val records = AppGraph.sessionStore.allSessionsNewestFirst()
+            .filter { record -> record.turns.any { it.role == "user" } }
         binding.emptyHint.visibility = if (records.isEmpty()) android.view.View.VISIBLE
         else android.view.View.GONE
         binding.historyList.adapter = HistoryAdapter(records, buildScenarioTitles(records)) { record ->

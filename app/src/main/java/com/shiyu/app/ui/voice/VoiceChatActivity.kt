@@ -399,6 +399,11 @@ class VoiceChatActivity : BaseActivity() {
         }
 
         override fun onReconnectFailed() {
+            // 重连彻底失败：连接已经没了，**必须把采集也停掉**。
+            // 否则麦克风会一直开着往一个死掉的 socket 里推（sendAudio 会 no-op，
+            // 但麦克风本身是热的），既费电又让人不放心。
+            audio?.stopCapture()
+            audio?.stopPlayback()
             runOnUiThread {
                 binding.voiceState.text = getString(R.string.voice_reconnect_failed)
             }

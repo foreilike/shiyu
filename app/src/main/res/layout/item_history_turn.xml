@@ -13,14 +13,43 @@
         android:textSize="11sp"
         tools:text="我" />
 
-    <TextView
-        android:id="@+id/turnText"
+    <LinearLayout
+        android:id="@+id/turnBubble"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="4dp"
         android:background="@drawable/bubble_ai"
-        android:padding="12dp"
-        android:textColor="@color/ink"
-        android:textSize="15sp"
-        tools:text="こんにちは" />
+        android:orientation="vertical"
+        android:padding="12dp">
+
+        <TextView
+            android:id="@+id/turnText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/ink"
+            android:textSize="15sp"
+            tools:text="こんにちは" />
+
+        <TextView
+            android:id="@+id/turnTranslation"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingTop="6dp"
+            android:textColor="@color/mute"
+            android:textSize="13sp"
+            android:visibility="gone"
+            tools:text="你好" />
+
+        <TextView
+            android:id="@+id/turnFix"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="6dp"
+            android:background="@drawable/bg_soft"
+            android:padding="8dp"
+            android:textColor="@color/clay_deep"
+            android:textSize="12sp"
+            android:visibility="gone"
+            tools:text="「こんにちわ」应为「こんにちは」" />
+    </LinearLayout>
 </LinearLayout>

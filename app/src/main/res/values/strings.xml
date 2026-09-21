@@ -67,8 +67,7 @@
     <string name="profile_realtime_translate_sub">AI 说完后附一条中文小字，需配好对话服务</string>
     <string name="history_title">历史对话</string>
     <string name="history_sub">场景对话与实时语音都会留在这里</string>
-    <string name="history_empty">还没有对话记录
-去「对话」里挑个场景开口吧</string>
+    <string name="history_empty">还没有对话记录\n去「对话」里挑个场景开口吧</string>
     <string name="history_mode_chat">场景对话</string>
     <string name="history_mode_realtime">实时语音</string>
     <string name="history_turns">%1$d 轮</string>
@@ -133,8 +132,7 @@
 
 
     <!-- 实时语音（拾语设计稿） -->
-    <string name="voice_ready_sub">实时语音对话 · 说完自动断句
-AI 语伴会先开口，轮到你时说话即可</string>
+    <string name="voice_ready_sub">实时语音对话 · 说完自动断句\nAI 语伴会先开口，轮到你时说话即可</string>
     <string name="voice_entry_title">实时语音对话</string>
     <string name="voice_entry_sub">AI 语伴在线 · 像朋友一样聊天</string>
     <string name="voice_partner_online">AI 语伴 %1$s 在线 · 像朋友一样聊天</string>
