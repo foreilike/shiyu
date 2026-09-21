@@ -133,4 +133,82 @@ class RealtimeProtocolTest {
         )
         assertNull(RealtimeProtocol.parse("not json"))
     }
+
+    // ---------- 连接参数拼装（对应官方文档的必填项） ----------
+
+    @Test
+    fun endpoint_appends_model_as_query_param() {
+        // 官方文档：model 是必填查询参数
+        assertEquals(
+            "wss://api.stepfun.com/v1/realtime?model=step-audio-2-mini",
+            RealtimeProtocol.endpointWithModel(
+                "wss://api.stepfun.com/v1/realtime", "step-audio-2-mini"
+            )
+        )
+    }
+
+    @Test
+    fun endpoint_uses_ampersand_when_query_already_present() {
+        assertEquals(
+            "wss://api.stepfun.com/v1/realtime?a=1&model=m",
+            RealtimeProtocol.endpointWithModel("wss://api.stepfun.com/v1/realtime?a=1", "m")
+        )
+    }
+
+    @Test
+    fun endpoint_is_untouched_when_model_blank_or_already_present() {
+        val base = "wss://api.stepfun.com/v1/realtime"
+        assertEquals(base, RealtimeProtocol.endpointWithModel(base, ""))
+        assertEquals(base, RealtimeProtocol.endpointWithModel(base, "  "))
+        val withModel = "$base?model=x"
+        assertEquals(withModel, RealtimeProtocol.endpointWithModel(withModel, "y"))
+    }
+
+    @Test
+    fun gender_instruction_matches_the_two_documented_sentences() {
+        assertEquals(
+            "请使用默认女声与用户交流",
+            RealtimeProtocol.genderInstructionFor(RealtimeProtocol.VOICE_FEMALE)
+        )
+        assertEquals(
+            "请使用默认男声与用户交流",
+            RealtimeProtocol.genderInstructionFor(RealtimeProtocol.VOICE_MALE)
+        )
+        assertNull(RealtimeProtocol.genderInstructionFor("some-cloned-voice"))
+    }
+
+    @Test
+    fun student_voice_ids_are_the_documented_ones() {
+        assertEquals("qingchunshaonv", RealtimeProtocol.VOICE_FEMALE)
+        assertEquals("wenrounansheng", RealtimeProtocol.VOICE_MALE)
+    }
+
+    @Test
+    fun gender_instruction_is_appended_at_the_end() {
+        val out = RealtimeProtocol.withGenderInstruction(
+            "你是一个日语语伴。", RealtimeProtocol.VOICE_FEMALE
+        )
+        // 别在这里写转义换行：本机跨工具写文件会把 \\n 折成真换行，把 Kotlin 源码写坏。
+        // 用常量拼出期望值，既避开这个坑，也把「追加在末尾」这件事讲得更直白。
+        val newline = "\n"
+        val expected = "你是一个日语语伴。" + newline + "请使用默认女声与用户交流"
+        assertEquals(expected, out)
+        assertTrue(out.endsWith("请使用默认女声与用户交流"))
+    }
+
+    @Test
+    fun gender_instruction_is_not_duplicated() {
+        val once = RealtimeProtocol.withGenderInstruction(
+            "prompt", RealtimeProtocol.VOICE_FEMALE
+        )
+        assertEquals(once, RealtimeProtocol.withGenderInstruction(once, RealtimeProtocol.VOICE_FEMALE))
+    }
+
+    @Test
+    fun cloned_voice_leaves_instructions_alone() {
+        assertEquals(
+            "prompt",
+            RealtimeProtocol.withGenderInstruction("prompt", "my-cloned-voice")
+        )
+    }
 }

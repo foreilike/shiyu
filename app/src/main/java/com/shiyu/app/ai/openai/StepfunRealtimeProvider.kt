@@ -50,17 +50,23 @@ class StepfunRealtimeProvider(
             listener?.onError(AiError.Unauthorized(401))
             return
         }
+        // model 是官方要求的必填查询参数，设置页把它存在 model 字段、不在 baseUrl 里，
+        // 必须在这里拼进 URL，否则握手会被拒。
+        val endpoint = RealtimeProtocol.endpointWithModel(url, config.model)
         val request = Request.Builder()
-            .url(url)
+            .url(endpoint)
             .header("Authorization", "Bearer ${config.apiKey}")
             .build()
         socket = client.newWebSocket(request, object : WebSocketListener() {
             override fun onOpen(webSocket: WebSocket, response: Response) {
                 connected = true
+                // 默认用女声：语伴形象是 yoyo / Emma，而另一个可选音色是男声
+                val voice = config.voice.ifBlank { RealtimeProtocol.VOICE_FEMALE }
                 webSocket.send(
                     RealtimeProtocol.sessionUpdate(
-                        instructions = instructions,
-                        voice = config.voice.ifBlank { "wenrounansheng" },
+                        // step-audio-2-mini 要求在 instructions 末尾追加性别提示
+                        instructions = RealtimeProtocol.withGenderInstruction(instructions, voice),
+                        voice = voice,
                         serverVad = options.serverVad,
                         silenceDurationMs = options.silenceDurationMs,
                         energyAwakenessThreshold = options.energyAwakenessThreshold,

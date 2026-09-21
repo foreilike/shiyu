@@ -18,8 +18,48 @@ import java.util.Base64
  */
 object RealtimeProtocol {
 
+    /**
+     * step-audio-2-mini 只开放这两个音色（官方文档明确列出）。
+     * 注意 [VOICE_MALE] 是**温柔男声** —— App 的语伴叫 yoyo / Emma，用它会声形不符，
+     * 所以默认音色取 [VOICE_FEMALE]。
+     */
+    const val VOICE_FEMALE = "qingchunshaonv"  // 青春少女
+    const val VOICE_MALE = "wenrounansheng"    // 温柔男声
+
     private var seq = 0
     private fun nextId(): String = "evt_${System.currentTimeMillis()}_${seq++}"
+
+    // ---------- 连接参数拼装（纯字符串逻辑，单测覆盖） ----------
+
+    /**
+     * `model` 是官方文档里的**必填查询参数**，而设置页把它存在 model 字段里、
+     * 不体现在 baseUrl 上。不拼上去握手会被拒（或落到非预期的默认模型）。
+     * 已经带了 model= 的 URL 原样返回，不重复追加。
+     */
+    fun endpointWithModel(baseUrl: String, model: String): String {
+        if (model.isBlank()) return baseUrl
+        if (baseUrl.contains("model=")) return baseUrl
+        val sep = if (baseUrl.contains("?")) "&" else "?"
+        return baseUrl + sep + "model=" + model.trim()
+    }
+
+    /**
+     * step-audio-2-mini 要求**在 instructions 结尾追加一句默认性别提示**，
+     * 否则模型不知道用哪个性别的声音。原文措辞只有这两句，别自己改写。
+     * 其它音色（克隆音色等）不需要，返回 null。
+     */
+    fun genderInstructionFor(voice: String): String? = when (voice) {
+        VOICE_FEMALE -> "请使用默认女声与用户交流"
+        VOICE_MALE -> "请使用默认男声与用户交流"
+        else -> null
+    }
+
+    /** 把性别提示追加到 systemPrompt 末尾；已经有就不重复追加 */
+    fun withGenderInstruction(instructions: String, voice: String): String {
+        val line = genderInstructionFor(voice) ?: return instructions
+        if (instructions.contains(line)) return instructions
+        return instructions.trimEnd() + "\n" + line
+    }
 
     // ---------- 客户端 → 服务端 ----------
 

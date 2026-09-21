@@ -18,7 +18,7 @@
 | 学习语言 | 日语 + 英语双语，可切换，进度/配置全隔离；韩/西/法在「课程」页标为即将支持 |
 | 工程根目录 | `D:\AI project\lang-partner`（目录名保留，未随应用改名） |
 | 主源码规模 | 72 个 `.kt`（6,519 行）+ 16 个布局 + 36 个 drawable + 6 份 assets JSON |
-| 测试 | **26 个测试类 / 367 个单测，全绿**（fail=0 err=0 skip=0），`lintDebug` 0 error |
+| 测试 | **26 个测试类 / 375 个单测，全绿**（fail=0 err=0 skip=0），`lintDebug` 0 error |
 | 交付 APK | `Shiyu-v1.0.0-release.apk`（约 5.70 MB，已签名） |
 | 构建命令 | 见 §2.2（**必须显式设置 `JAVA_HOME=D:\a\jbr`**） |
 | 联网能力 | 4 种 AI 能力（对话 / 识别 / 合成 / 实时语音）；**未配置凭证时全部降级为本地 Mock，App 照常可跑完流程** |
@@ -624,8 +624,9 @@ interface LanguageModule {
 
 ```
 接口地址：wss://api.stepfun.com/v1/realtime
-模型名：  step-audio-2-mini
-音色：    （留空 → 默认 wenrounansheng）
+模型名：  step-audio-2-mini     ← 必填，App 会自动拼成 ?model=step-audio-2-mini
+音色：    qingchunshaonv        ← 青春少女（女声）；留空时 App 默认用它
+                                ← 另一个可选值 wenrounansheng 是【温柔男声】
 启用：    开
 server_vad：开，静音断句 100，能量阈值 2500，前置填充 500
 ```
@@ -680,14 +681,14 @@ $env:JAVA_HOME = "D:\a\jbr"; .\gradlew.bat :app:testDebugUnitTest --console=plai
 # 原始：app\build\test-results\testDebugUnitTest\*.xml
 ```
 
-### 11.2 明细（26 类 / **367 例**，全绿）
+### 11.2 明细（26 类 / **375 例**，全绿）
 
 | 测试类 | 例数 | | 测试类 | 例数 |
 |---|---|---|---|---|
 | `SourcePolicyTest` | 4 | | `core.net.BaseUrlNormalizerTest` | 16 |
 | `ai.OpenAiProviderTest` | 12 | | `core.net.HttpErrorsTest` | 16 |
 | `core.answer.AnswerJudgeTest` | 17 | | `core.net.OpenAiWireTest` | 14 |
-| `core.audio.VadPolicyTest` | 10 | | `core.realtime.RealtimeProtocolTest` | 9 |
+| `core.audio.VadPolicyTest` | 10 | | `core.realtime.RealtimeProtocolTest` | 17 |
 | `core.chat.ReplyParserTest` | 11 | | `core.srs.Sm2SchedulerTest` | 11 |
 | **`core.srs.DailyQuotaTest`** | **7** | | | |
 | `core.context.ContextTrimmerTest` | 10 | | **`core.stats.AchievementsTest`** | **8** |
@@ -697,7 +698,7 @@ $env:JAVA_HOME = "D:\a\jbr"; .\gradlew.bat :app:testDebugUnitTest --console=plai
 | `core.lang.en.EnSentenceSplitterTest` | 25 | | `data.store.SettingsRepositoryTest` | 22 |
 | `core.lang.en.EnTokenizerTest` | 27 | | `data.store.StudyStoreTest` | 12 |
 | `core.lang.ja.KanaConverterTest` | 40 | | `core.lang.ja.KanaNormalizerTest` | 7 |
-| `core.log.LogRedactorTest` | 5 | | **合计** | **367** |
+| `core.log.LogRedactorTest` | 5 | | **合计** | **375** |
 
 加粗为本次改造新增：`AchievementsTest`（成就判定）、`DailyStatsStoreTest`（每日统计 / 连续天数 /
 本周切片 / 坏 JSON 隔离），另外 `SettingsRepositoryTest` 从 12 例加到 17 例（新增 nickname 的
@@ -1155,6 +1156,53 @@ binding.btnExit.setOnClickListener {
 「今天还没开始，先来 5 分钟」—— 用户会以为记录丢了。现在这种情形改说
 「已经开始了，满 1 分钟就会记上」（`home_goal_just_started`）。
 
+### 17.12 对照官方文档修正实时语音接入（2026-09-21）
+
+对照 <https://platform.stepfun.com/docs/zh/api-reference/realtime/chat> 逐项核对了
+`RealtimeProtocol` 与 `StepfunRealtimeProvider`，改了三处、留了一个待验证项。
+
+**① `model` 是必填查询参数，之前完全没传（会导致握手失败）。**
+
+官方把 `model` 列为**必填**，取值 `step-audio-2-mini` / `step-audio-2` /
+`stepaudio-2.5-realtime` / `step-1o-audio` / `step-audio-r1.5` 等。
+但设置页把它存在了 `model` 字段里、不在 baseUrl 上，而 Provider 直接拿 `config.baseUrl`
+去握手 —— **`config.model` 从头到尾没被用过**。现在会自动拼：
+
+```
+wss://api.stepfun.com/v1/realtime?model=step-audio-2-mini
+```
+
+见 `RealtimeProtocol.endpointWithModel`（已经有 `model=` 的 URL 不重复追加）。
+
+**② `step-audio-2-mini` 的音色白名单 + 必须在 instructions 末尾追加性别提示。**
+
+官方原文：声线只有 `qingchunshaonv`（青春少女）与 `wenrounansheng`（**温柔男声**）两个，
+并且「需要在 instructions 结尾处对应添加"请使用默认男声与用户交流"或"请使用默认女声与用户交流"」。
+
+⚠️ **默认音色改了**：原先默认 `wenrounansheng`，但那是**男声**，而 App 的语伴形象是
+yoyo / Emma。现在默认 `qingchunshaonv`（女声），并在 systemPrompt 末尾自动追加
+「请使用默认女声与用户交流」。要男声就把设置页的音色填 `wenrounansheng`，
+App 会自动换成对应的男声提示句。
+
+> 这两句提示词是官方给的固定措辞，**别自己改写或翻译**。
+
+**③ 服务端新增事件已确认可安全忽略。**
+
+官方新增了 `response.thinking.delta/done`、`conversation.item.created`、
+`input_audio_buffer.committed`、`response.output_item.*`、`response.content_part.*`。
+`RealtimeProtocol.parse` 的兜底分支把它们归为 `Unknown` 并忽略，无需改动。
+
+**④ 待验证：采样率与声道数。**
+
+官方文档**只写了 `pcm16`，没有给采样率、声道数、每帧字节数**。而 App 在
+`RealtimeAudioController` 里写死 **16000 Hz / 单声道 / 20ms 一帧（640 字节）**。
+如果服务端实际是 24 kHz，上下行都会失真（声音变调、语速不对）。
+
+**验证方法**：跑一遍官方的开源 demo
+[Step-Realtime-Console](https://github.com/stepfun-ai/Step-Realtime-Console)
+看它的 AudioContext 采样率，或直接抓包看上行帧长。**在真机听到 AI 语音之前，
+不要认为实时语音"已经通了"。**
+
 ## 附录 A：关键常量速查
 
 | 常量 | 值 | 位置 |
@@ -1174,7 +1222,7 @@ binding.btnExit.setOnClickListener {
 | 实时静音门控 | 800 ms | `RealtimeAudioController.SILENCE_GATE_MS` |
 | 实时 server_vad 默认 | 开 / 100 ms / 2500 / 500 ms | `RealtimeOptions` |
 | 实时测试连接超时 | 8 s | `SettingsActivity.probeRealtime` |
-| 默认音色 | `wenrounansheng` | `StepfunRealtimeProvider` |
+| 默认音色 | `qingchunshaonv`（青春少女/女声） | `RealtimeProtocol.VOICE_FEMALE` |
 | TTS 默认音色 | `alloy` | `OpenAiWire.buildTtsBody` |
 | 密钥掩码 | `take(3)+"****"+takeLast(4)`；<8 字符 → `****` | `LogRedactor.mask` |
 | 配置 version / 进度 version | 2 / 2 | `AppSettings` / `StudyStore` |
