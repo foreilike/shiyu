@@ -321,7 +321,9 @@ class VoiceChatActivity : BaseActivity() {
                 marginEnd = 3
             }
             bar.layoutParams = lp
-            bar.setBackgroundResource(R.drawable.bg_soft)
+            // 深色页上别用 bg_soft（近白暖底）—— 夜幕上一排近白柱，和"安静的纸/暖金"不搭。
+            // 这是本工程反复出现的「浅色页资源用在深色页」第五处。
+            bar.setBackgroundResource(R.drawable.bg_wave_bar_dark)
             binding.waveContainer.addView(bar)
             bars[i] = bar
         }
@@ -531,9 +533,12 @@ class VoiceChatActivity : BaseActivity() {
             // 重连彻底失败：连接已经没了，**必须把采集也停掉**。
             // 否则麦克风会一直开着往一个死掉的 socket 里推（sendAudio 会 no-op，
             // 但麦克风本身是热的），既费电又让人不放心。
-            audio?.stopCapture()
-            audio?.stopPlayback()
+            //
+            // 注意这个回调来自网络线程：stopCapture 会 join 采集线程并释放 AudioRecord，
+            // 必须在主线程做 —— 否则和主线程的 stopCapture/startCapture 撞在一起。
             runOnUiThread {
+                audio?.stopCapture()
+                audio?.stopPlayback()
                 binding.voiceState.text = getString(R.string.voice_reconnect_failed)
             }
         }
@@ -560,6 +565,11 @@ class VoiceChatActivity : BaseActivity() {
         }
 
         override fun onTranscriptDelta(text: String) {
+            // **整个回调体都进主线程**：aiBuffer 是普通 StringBuilder，
+            // 而 onResponseDone 也会读它 —— 两个回调都在 WS 线程其实没事，
+            // 但 sendTypedText / recordSession 在主线程序列化访问同一批容器，
+            // 一半在主线程一半在 WS 线程就会 ConcurrentModificationException。
+            // 统一收口到主线程是这里唯一可靠的解法。
             runOnUiThread {
                 val bubble = aiBubble ?: newAiBubble()
                 aiBuffer.append(text)
@@ -571,11 +581,11 @@ class VoiceChatActivity : BaseActivity() {
         }
 
         override fun onUserTranscript(text: String) {
-            if (text.isNotBlank()) {
-                recordedTurns.add(SessionTurn("user", text))
-                applyLanguageSwitchIfRequested(text)
-            }
             runOnUiThread {
+                if (text.isNotBlank()) {
+                    recordedTurns.add(SessionTurn("user", text))
+                    applyLanguageSwitchIfRequested(text)
+                }
                 turns++
                 val bubble = newUserBubble()
                 userBuffer.append(text)
@@ -587,15 +597,14 @@ class VoiceChatActivity : BaseActivity() {
         }
 
         override fun onResponseDone() {
-            // 一轮 AI 回复结束，把攒下的字幕整句记下来（增量是逐字来的，只有 done 时才是完整句）
-            val said = aiBuffer.toString().trim()
-            if (said.isNotEmpty()) {
-                recordedTurns.add(SessionTurn("assistant", said))
-                translateInto(aiBubble, said)
-                aiBubble = null
-            }
-            aiBuffer.clear()
             runOnUiThread {
+                // 一轮 AI 回复结束，把攒下的字幕整句记下来
+                // （增量是逐字来的，只有 done 时才是完整句）
+                val said = aiBuffer.toString().trim()
+                if (said.isNotEmpty()) {
+                    recordedTurns.add(SessionTurn("assistant", said))
+                    translateInto(aiBubble, said)
+                }
                 aiBuffer.clear()
                 aiBubble = null
                 userBuffer.clear()

@@ -36,6 +36,8 @@ class StudyStore(private val progressFile: File) {
     }
 
     fun load(): StudyData {
+        // 上次写到一半被打断（tmp 在、主文件不在）就先补回来
+        AtomicFile.recoverIfNeeded(progressFile)
         if (!progressFile.exists()) return StudyData()
         val text = try {
             progressFile.readText()
@@ -106,39 +108,16 @@ class StudyStore(private val progressFile: File) {
         atomicWrite(root.toString())
     }
 
-    private fun atomicWrite(text: String) {
-        val parent = progressFile.parentFile
-        if (parent != null && !parent.exists()) parent.mkdirs()
-        val tmp = File(progressFile.parentFile, progressFile.name + ".tmp")
-        tmp.writeText(text)
-        if (progressFile.exists()) {
-            progressFile.delete()
-        }
-        if (!tmp.renameTo(progressFile)) {
-            // 重命名失败时退化为直接写
-            progressFile.writeText(text)
-            tmp.delete()
-        }
-    }
+    private fun atomicWrite(text: String) = AtomicFile.write(progressFile, text)
 
-    private fun quarantine() {
-        try {
-            val target = File(
-                progressFile.parentFile,
-                progressFile.name + ".corrupt-" + System.currentTimeMillis()
-            )
-            progressFile.copyTo(target, overwrite = true)
-            progressFile.delete()
-        } catch (e: Exception) {
-            // 隔离失败也不得影响调用方
-        }
-    }
+    private fun quarantine() = AtomicFile.quarantine(progressFile)
 
     /** 当前语言的进度 Map（只读视图） */
     fun progressFor(lang: LangId, data: StudyData = load()): Map<String, CardProgress> =
         data.forLang(lang.tag).cards.toMap()
 
     /** 清空学习进度（「我的」页清空数据时调用） */
+    @Synchronized
     fun clear() {
         try {
             if (progressFile.exists()) progressFile.delete()
@@ -148,6 +127,7 @@ class StudyStore(private val progressFile: File) {
     }
 
     /** 评分后立刻落盘 */
+    @Synchronized
     fun recordReview(
         lang: LangId,
         cardId: String,

@@ -19,11 +19,13 @@ import org.json.JSONObject
  */
 class SettingsRepository(private val store: SecretStore) {
 
-    private var cached: AppSettings? = null
+    // @Volatile：Provider 可能在 IO 线程读它，UI 线程写它 —— 不加的话会读到过期配置
+    @Volatile private var cached: AppSettings? = null
 
     /** endpoint 组 key */
     enum class Group { CHAT, ASR, TTS, REALTIME }
 
+    @Synchronized
     fun load(): AppSettings {
         cached?.let { return it }
         val plain = try {
@@ -40,12 +42,19 @@ class SettingsRepository(private val store: SecretStore) {
         return settings
     }
 
+    @Synchronized
     fun save(settings: AppSettings) {
         cached = settings
         store.write(toJson(settings))
     }
 
-    /** 修改后立即落盘 */
+    /**
+     * 修改后立即落盘。
+     *
+     * **必须同步**：它是 load→copy→save 的读改写序列，两个线程并发会整体覆盖 ——
+     * 一次写会把另一次的改动悄悄抹掉（配置静默丢失）。
+     */
+    @Synchronized
     fun update(lang: LangId, group: Group, config: ProviderConfig) {
         val settings = load()
         val current = settings.langs[lang] ?: LanguageConfig()
@@ -61,6 +70,7 @@ class SettingsRepository(private val store: SecretStore) {
     }
 
     /** 实时语音附加参数（server_vad 等）修改后立即落盘 */
+    @Synchronized
     fun updateRealtimeOptions(lang: LangId, options: RealtimeOptions) {
         val settings = load()
         val current = settings.langs[lang] ?: LanguageConfig()
@@ -72,6 +82,7 @@ class SettingsRepository(private val store: SecretStore) {
     fun realtimeOptionsFor(lang: LangId): RealtimeOptions =
         configFor(lang).realtimeOptions
 
+    @Synchronized
     fun setActiveLang(lang: LangId) {
         val settings = load()
         save(settings.copy(activeLang = lang))
@@ -81,6 +92,7 @@ class SettingsRepository(private val store: SecretStore) {
 
     fun autoPlayTts(): Boolean = load().autoPlayTts
 
+    @Synchronized
     fun setAutoPlayTts(value: Boolean) {
         val settings = load()
         save(settings.copy(autoPlayTts = value))
@@ -89,6 +101,7 @@ class SettingsRepository(private val store: SecretStore) {
     /** 每日目标分钟数（我的页可改），越界值会被钳到 [MIN_GOAL_MINUTES]..[MAX_GOAL_MINUTES] */
     fun dailyGoalMinutes(): Int = load().dailyGoalMinutes
 
+    @Synchronized
     fun setDailyGoalMinutes(minutes: Int) {
         val settings = load()
         save(settings.copy(dailyGoalMinutes = clampGoalMinutes(minutes)))
@@ -97,6 +110,7 @@ class SettingsRepository(private val store: SecretStore) {
     /** 实时语音是否显示中文翻译 */
     fun realtimeTranslate(): Boolean = load().realtimeTranslate
 
+    @Synchronized
     fun setRealtimeTranslate(value: Boolean) {
         save(load().copy(realtimeTranslate = value))
     }
@@ -104,6 +118,7 @@ class SettingsRepository(private val store: SecretStore) {
     /** 实时语音是否用「按住说话」 */
     fun voicePushToTalk(): Boolean = load().voicePushToTalk
 
+    @Synchronized
     fun setVoicePushToTalk(value: Boolean) {
         save(load().copy(voicePushToTalk = value))
     }
@@ -115,6 +130,7 @@ class SettingsRepository(private val store: SecretStore) {
      * 设置昵称。前后空白会被去掉、长度截到 [MAX_NICKNAME_LENGTH]；
      * 传空串等于「清空，恢复默认称呼」。
      */
+    @Synchronized
     fun setNickname(value: String) {
         val settings = load()
         save(settings.copy(nickname = value.trim().take(MAX_NICKNAME_LENGTH)))
@@ -133,6 +149,7 @@ class SettingsRepository(private val store: SecretStore) {
     }
 
     /** 清空全部数据时调用：删除加密文件 */
+    @Synchronized
     fun clear() {
         cached = null
         store.clear()

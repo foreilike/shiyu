@@ -49,13 +49,28 @@ class OkHttpTransport(
                 }
                 builder.method(call.method, body)
                 client.newCall(builder.build()).execute().use { response ->
-                    val bytes = response.body?.bytes()
+                    // **必须限长**：原先直接 body.bytes() 全量读入内存。
+                    // 服务端（或被劫持的 200 错误页）返回几百 MB 的 body 就会 OOM 崩进程；
+                    // TTS 的音频体本来就没有天然上限。
+                    // 超限按 BadResponse 处理，而不是把整个 App 拖死。
+                    val declared = response.body?.contentLength() ?: -1L
+                    if (declared > MAX_BODY_BYTES) {
+                        return@use HttpRaw(
+                            code = response.code, body = "", headers = emptyMap(),
+                            ioError = null, binary = ByteArray(0)
+                        )
+                    }
+                    val bytes = response.body?.source()?.let { src ->
+                        src.request(MAX_BODY_BYTES + 1)
+                        if (src.buffer.size > MAX_BODY_BYTES) null else src.buffer.snapshot().toByteArray()
+                    }
                     HttpRaw(
                         code = response.code,
                         body = bytes?.toString(Charsets.UTF_8) ?: "",
+                        // toMultimap 的 key 是非空 String，原先的 if (k != null) 恒为真
+                        // （编译器一直有 "Condition is always true" 警告），去掉这层死判断
                         headers = response.headers.toMultimap()
-                            .mapNotNull { (k, v) -> if (k != null) k to (v.firstOrNull() ?: "") else null }
-                            .toMap(),
+                            .entries.associate { (k, v) -> k to (v.firstOrNull() ?: "") },
                         ioError = null,
                         binary = bytes
                     )
@@ -75,5 +90,9 @@ class OkHttpTransport(
             .readTimeout(30, TimeUnit.SECONDS)
             .writeTimeout(30, TimeUnit.SECONDS)
             .build()
+
+        /** 单次响应体上限：超过就按坏响应处理，别把内存打爆（TTS 音频体没有天然上限） */
+        private const val MAX_BODY_BYTES = 32L * 1024L * 1024L
     }
+
 }

@@ -40,6 +40,7 @@ class SessionStore(private val sessionsDir: File) {
      * 实时语音没有「逐轮落盘」的必要（中途崩了也没法续），
      * 所以攒到结束再写一条，比每轮 IO 更划算。
      */
+    @Synchronized
     fun saveRealtimeSession(
         lang: LangId,
         scenarioId: String,
@@ -65,6 +66,7 @@ class SessionStore(private val sessionsDir: File) {
     fun allSessionsNewestFirst(): List<SessionRecord> =
         allSessions().sortedByDescending { it.startedAt }
 
+    @Synchronized
     fun appendTurn(sessionId: String, role: String, text: String): SessionRecord? {
         val record = load(sessionId) ?: return null
         val updated = record.copy(turns = record.turns + SessionTurn(role, text))
@@ -77,6 +79,7 @@ class SessionStore(private val sessionsDir: File) {
     private fun trashDir(): File = File(sessionsDir, "trash")
 
     private fun loadFrom(file: File): SessionRecord? {
+        AtomicFile.recoverIfNeeded(file)
         if (!file.exists()) return null
         val text = try {
             file.readText()
@@ -102,6 +105,23 @@ class SessionStore(private val sessionsDir: File) {
         return out.sortedBy { it.startedAt }
     }
 
+    /**
+     * 某天某语言的用户发言轮数。
+     *
+     * 首页原先用 `DayStat.chatTurns`（只增不减），而「我的」页用会话文件实时重算 ——
+     * 两套真相：**删掉一条会话后，首页的数字会永久高于「我的」页**。
+     * 现在两边都从会话文件派生，口径一致。
+     */
+    fun userTurnsOn(lang: LangId, epochDay: Long): Int =
+        allSessions()
+            .filter { it.langId == lang.tag }
+            .filter {
+                java.time.Instant.ofEpochMilli(it.startedAt)
+                    .atZone(java.time.ZoneId.systemDefault())
+                    .toLocalDate().toEpochDay() == epochDay
+            }
+            .sumOf { record -> record.turns.count { it.role == "user" } }
+
     /** 累计对话轮数（按语言统计 user 发言数） */
     fun turnsCountByLang(lang: LangId): Int =
         allSessions()
@@ -115,6 +135,7 @@ class SessionStore(private val sessionsDir: File) {
      * `allSessions` 只扫 sessionsDir 下的**文件**（子目录 isFile 为 false），
      * 所以放进去就自然从列表里消失了，不用额外加标记位。
      */
+    @Synchronized
     fun trash(sessionId: String): Boolean {
         val file = sessionFile(sessionId)
         if (!file.exists()) return false
@@ -140,6 +161,7 @@ class SessionStore(private val sessionsDir: File) {
         trashDir().listFiles { f -> f.isFile && f.name.endsWith(".json") }?.size ?: 0
 
     /** 从回收站恢复 */
+    @Synchronized
     fun restore(sessionId: String): Boolean {
         val file = File(trashDir(), "$sessionId.json")
         if (!file.exists()) return false
@@ -152,6 +174,7 @@ class SessionStore(private val sessionsDir: File) {
     }
 
     /** 从回收站彻底删除单条 */
+    @Synchronized
     fun purge(sessionId: String): Boolean {
         val file = File(trashDir(), "$sessionId.json")
         return try {
@@ -162,6 +185,7 @@ class SessionStore(private val sessionsDir: File) {
     }
 
     /** 清空回收站，返回删掉几条 */
+    @Synchronized
     fun emptyTrash(): Int {
         val files = trashDir().listFiles { f -> f.isFile && f.name.endsWith(".json") }
             ?: return 0
@@ -176,6 +200,7 @@ class SessionStore(private val sessionsDir: File) {
      * 给会话起个名字（留空 = 恢复成场景名）。回收站里的也能改名，
      * 所以两个目录都试一下。
      */
+    @Synchronized
     fun rename(sessionId: String, title: String): Boolean {
         val trimmed = title.trim().take(MAX_TITLE_LENGTH)
         val record = load(sessionId)
@@ -186,6 +211,7 @@ class SessionStore(private val sessionsDir: File) {
     }
 
     /** 清空会话记录（「我的」页清空数据时调用）——连同回收站一起 */
+    @Synchronized
     fun clear() {
         try {
             if (sessionsDir.exists()) sessionsDir.deleteRecursively()
@@ -246,28 +272,10 @@ class SessionStore(private val sessionsDir: File) {
         val inTrash = File(trashDir(), "${record.sessionId}.json")
         val dir = if (!sessionFile(record.sessionId).exists() && inTrash.exists()) trashDir()
         else sessionsDir
-        val file = File(dir, "${record.sessionId}.json")
-        val tmp = File(dir, file.name + ".tmp")
-        tmp.writeText(root.toString())
-        if (file.exists()) file.delete()
-        if (!tmp.renameTo(file)) {
-            file.writeText(root.toString())
-            tmp.delete()
-        }
+        AtomicFile.write(File(dir, "${record.sessionId}.json"), root.toString())
     }
 
-    private fun quarantine(file: File) {
-        try {
-            val target = File(
-                file.parentFile,
-                file.name + ".corrupt-" + System.currentTimeMillis()
-            )
-            file.copyTo(target, overwrite = true)
-            file.delete()
-        } catch (e: Exception) {
-            // 隔离失败也不得影响调用方
-        }
-    }
+    private fun quarantine(file: File) = AtomicFile.quarantine(file)
 
     companion object {
         /** 自定义名称长度上限 */

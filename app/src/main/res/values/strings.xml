@@ -8,18 +8,14 @@
     <string name="cancel">取消</string>
     <string name="confirm">确定</string>
     <string name="delete">删除</string>
-    <string name="settings">设置</string>
-    <string name="clear_all_data">清空全部数据</string>
+        <string name="clear_all_data">清空全部数据</string>
     <!-- 导航（五 Tab：今日 / 课程 / 对话 / 复习 / 我的） -->
     <string name="tab_home">今日</string>
     <string name="tab_langs">课程</string>
     <string name="tab_talk">对话</string>
     <string name="tab_review">复习</string>
     <string name="tab_profile">我的</string>
-    <string name="tab_study">今日</string>
-    <string name="tab_chat">对话</string>
-    <string name="tab_chart">图表</string>
-    <!-- 今日（首页仪表盘） -->
+                <!-- 今日（首页仪表盘） -->
     <string name="home_greet_morning">早上好</string>
     <string name="home_greet_noon">中午好</string>
     <string name="home_greet_afternoon">下午好</string>
@@ -81,9 +77,7 @@
     <string name="history_empty_trash_confirm">清空后无法找回，确定吗？</string>
     <string name="history_trash_cleared">回收站已清空（%1$d 条）</string>
     <string name="history_delete_title">删除对话记录</string>
-    <string name="history_delete_confirm">删除后无法恢复，确定删除这条记录吗？</string>
-    <string name="history_deleted">已删除</string>
-    <string name="history_turns">%1$d 轮</string>
+            <string name="history_turns">%1$d 轮</string>
     <string name="history_duration">%1$d 分 %2$d 秒</string>
     <string name="history_detail_title">对话详情</string>
     <string name="history_role_me">我</string>
@@ -147,16 +141,13 @@
     <!-- 实时语音（拾语设计稿） -->
     <string name="voice_ready_sub">实时语音对话 · 说完自动断句\nAI 语伴会先开口，轮到你时说话即可</string>
     <string name="voice_entry_title">实时语音对话</string>
-    <string name="voice_entry_sub">AI 语伴在线 · 像朋友一样聊天</string>
-    <string name="voice_partner_online">AI 语伴 %1$s 在线 · 像朋友一样聊天</string>
+        <string name="voice_partner_online">AI 语伴 %1$s 在线 · 像朋友一样聊天</string>
     <string name="voice_kicker">REALTIME TALK</string>
     <string name="voice_listening">正在聆听…</string>
-    <string name="voice_speaking">%1$s 正在说…</string>
-    <string name="voice_ready_title">和 %1$s 聊聊天</string>
+        <string name="voice_ready_title">和 %1$s 聊聊天</string>
     <string name="voice_gated">已静默暂停推流 · 省流量计费</string>
     <string name="voice_start">开始对话</string>
-    <string name="voice_hangup">结束对话</string>
-    <string name="voice_back_home">返回首页</string>
+        <string name="voice_back_home">返回首页</string>
     <string name="voice_again">再来一轮</string>
     <string name="voice_summary_title">对话完成</string>
     <string name="voice_summary_time">对话时长</string>
@@ -175,32 +166,24 @@
     <string name="voice_type_send">发送</string>
     <string name="voice_state_idle">待开始</string>
     <!-- 学习页 -->
-    <string name="study_title">学习</string>
-    <string name="today_due">今日待复习</string>
+        <string name="today_due">今日待复习</string>
     <string name="mastered">已掌握</string>
-    <string name="card_front_hint">看卡片，输入答案</string>
-    <string name="answer_input">在此输入答案</string>
+        <string name="answer_input">在此输入答案</string>
     <string name="confirm_answer">确认</string>
-    <string name="next_card">下一张</string>
-    <string name="today_finished">今日已完成</string>
+        <string name="today_finished">今日已完成</string>
     <string name="correct_answer">回答正确</string>
     <string name="wrong_answer">回答错误</string>
     <string name="quality_forgot">完全不会</string>
     <string name="quality_vague">有点模糊</string>
     <string name="quality_recalled">想起来了</string>
     <string name="quality_easy">太简单了</string>
-    <string name="chart_entry">图表</string>
-    <string name="reading">读音</string>
-    <!-- 图表页 -->
-    <string name="chart_title">图表</string>
-    <string name="chart_katakana_toggle">片假名</string>
+            <!-- 图表页 -->
+        <string name="chart_katakana_toggle">片假名</string>
     <string name="chart_hint">点击格子查看说明并朗读</string>
     <string name="chart_section_vowel">vowel（元音）</string>
     <string name="chart_section_consonant">consonant（辅音）</string>
     <!-- 对话页 -->
-    <string name="chat_title">对话练习</string>
-    <string name="chat_pick_scenario">选择一个场景开始练习</string>
-    <string name="chat_completed_turns">已完成 %1$d 轮</string>
+            <string name="chat_completed_turns">已完成 %1$d 轮</string>
     <string name="chat_goal">目标表达</string>
     <string name="chat_send">发送</string>
     <string name="chat_record">录音</string>
@@ -214,9 +197,7 @@
     <string name="chat_no_stt">未配置语音识别，请直接输入文字</string>
     <string name="chat_stt_empty">没有识别到语音内容，请直接输入文字</string>
     <string name="chat_recording">录音中…</string>
-    <string name="chat_transcribing">识别中…</string>
-    <string name="chat_thinking">思考中…</string>
-    <string name="chat_mock_note">未配置对话服务，当前为本地模拟回复</string>
+            <string name="chat_mock_note">未配置对话服务，当前为本地模拟回复</string>
     <string name="chat_play_failed">音频播放失败</string>
     <!-- 设置页 -->
     <string name="settings_title">设置</string>
@@ -260,8 +241,7 @@
     <string name="field_api_key">API Key</string>
     <string name="field_model">模型名（model）</string>
     <string name="field_voice">音色（voice）</string>
-    <string name="field_enabled">启用</string>
-    <string name="test_connection">测试连接</string>
+        <string name="test_connection">测试连接</string>
     <string name="test_success">连接成功</string>
     <string name="test_failed_key">API Key 无效或无权限，请检查</string>
     <string name="test_failed_address">接口地址或模型名不存在，请检查</string>
@@ -273,16 +253,10 @@
     <string name="settings_saved">已保存</string>
     <string name="settings_https_only_group">「%1$s」的接口地址需以 https:// 或 wss:// 开头</string>
     <string name="settings_https_only">地址需以 https:// 或 wss:// 开头，请检查</string>
-    <string name="settings_key_masked">掩码</string>
-    <string name="settings_key_show">显示</string>
+        <string name="settings_key_show">显示</string>
     <string name="settings_key_hide">隐藏</string>
     <!-- 我的页 -->
-    <string name="profile_title">我的</string>
-    <string name="profile_total_cards">总卡数</string>
-    <string name="profile_today_due">今日待复习</string>
-    <string name="profile_mastered">已掌握</string>
-    <string name="profile_total_turns">累计对话轮数</string>
-    <string name="profile_clear_confirm">会清空：学习进度、对话记录、学习统计。\n\nAPI 配置（接口地址、Key、模型）会保留 —— 需要单独清除请到「API 设置」里用每组的「清空」按钮。</string>
+                        <string name="profile_clear_confirm">会清空：学习进度、对话记录、学习统计。\n\nAPI 配置（接口地址、Key、模型）会保留 —— 需要单独清除请到「API 设置」里用每组的「清空」按钮。</string>
     <string name="profile_cleared">已清空全部数据</string>
     <string name="profile_auto_play">自动朗读 AI 回复</string>
     <!-- 错误提示（§5.5 映射表） -->

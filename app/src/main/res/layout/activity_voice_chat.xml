@@ -392,7 +392,7 @@
             android:layout_height="wrap_content"
             android:gravity="center"
             android:paddingTop="8dp"
-            android:text="实时语音对话 · 说完自动断句\nAI 语伴会先开口，轮到你时说话即可"
+            android:text="@string/voice_ready_sub"
             android:textColor="#A79684"
             android:textSize="12sp" />
 

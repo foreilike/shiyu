@@ -28,6 +28,7 @@ class DailyStatsStore(private val statsFile: File) {
     )
 
     fun load(): StatsData {
+        AtomicFile.recoverIfNeeded(statsFile)
         if (!statsFile.exists()) return StatsData()
         val text = try {
             statsFile.readText()
@@ -99,6 +100,7 @@ class DailyStatsStore(private val statsFile: File) {
      * 只传 reviewedCards 不传 langTag 时总量会涨、分桶不动，会让「今日待复习」偏乐观 ——
      * 所以调用方请在评分时两个都传。
      */
+    @Synchronized
     fun record(
         epochDay: Long,
         studySeconds: Long = 0L,
@@ -167,6 +169,7 @@ class DailyStatsStore(private val statsFile: File) {
         data.days.values.sumOf { it.totalSeconds }
 
     /** 清空全部每日记录（「清空全部数据」时调用） */
+    @Synchronized
     fun clear() {
         try {
             if (statsFile.exists()) statsFile.delete()
@@ -175,30 +178,7 @@ class DailyStatsStore(private val statsFile: File) {
         }
     }
 
-    private fun atomicWrite(text: String) {
-        val parent = statsFile.parentFile
-        if (parent != null && !parent.exists()) parent.mkdirs()
-        val tmp = File(statsFile.parentFile, statsFile.name + ".tmp")
-        tmp.writeText(text)
-        if (statsFile.exists()) {
-            statsFile.delete()
-        }
-        if (!tmp.renameTo(statsFile)) {
-            statsFile.writeText(text)
-            tmp.delete()
-        }
-    }
+    private fun atomicWrite(text: String) = AtomicFile.write(statsFile, text)
 
-    private fun quarantine() {
-        try {
-            val target = File(
-                statsFile.parentFile,
-                statsFile.name + ".corrupt-" + System.currentTimeMillis()
-            )
-            statsFile.copyTo(target, overwrite = true)
-            statsFile.delete()
-        } catch (e: Exception) {
-            // 隔离失败也不得影响调用方
-        }
-    }
+    private fun quarantine() = AtomicFile.quarantine(statsFile)
 }

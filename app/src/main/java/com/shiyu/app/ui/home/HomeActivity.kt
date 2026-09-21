@@ -78,7 +78,7 @@ class HomeActivity : BaseActivity() {
         val epochDay = today.toEpochDay()
 
         renderHeader(today, epochDay)
-        renderGoal(epochDay)
+        renderGoal(lang, epochDay)
         renderContinue(module.id, module)
         binding.voicePartner.text = getString(
             R.string.voice_partner_online,
@@ -110,7 +110,7 @@ class HomeActivity : BaseActivity() {
         else -> getString(R.string.home_greet_evening)
     }
 
-    private fun renderGoal(epochDay: Long) {
+    private fun renderGoal(lang: LangId, epochDay: Long) {
         val stat = AppGraph.dailyStatsStore.dayOf(epochDay)
         val minutes = stat.totalMinutes
         val goal = AppGraph.settingsRepository.dailyGoalMinutes()
@@ -126,7 +126,12 @@ class HomeActivity : BaseActivity() {
             else -> getString(R.string.home_goal_left, goal - minutes)
         }
         binding.goalStat1.text = getString(R.string.home_stat_reviewed, stat.reviewedCards)
-        binding.goalStat2.text = getString(R.string.home_stat_turns, stat.chatTurns)
+        // 与「我的」页同源（会话文件），删会话后两边一起变；
+        // 原先用 DayStat.chatTurns，只增不减，会永久高于「我的」页
+        binding.goalStat2.text = getString(
+            R.string.home_stat_turns,
+            AppGraph.sessionStore.userTurnsOn(lang, epochDay)
+        )
         binding.goalStat3.text =
             getString(R.string.home_stat_voice, (stat.voiceSeconds / 60L).toInt())
     }

@@ -35,6 +35,14 @@ interface RealtimeVoiceProvider {
 
     interface Listener {
         fun onConnected()
+
+        /**
+         * 服务端确认会话可用（收到 `session.created`）。
+         *
+         * 与 [onConnected]（WebSocket 握手成功）**不是一回事**：握手只说明 TCP 与
+         * Bearer 过了，模型名非法照样会被服务端随后拒绝。「测试连接」要等这个才算成功。
+         */
+        fun onReady() {}
         /** 服务端 VAD 判定用户开始说话（用于打断 AI 播放） */
         fun onUserSpeechStarted()
         fun onUserSpeechStopped()

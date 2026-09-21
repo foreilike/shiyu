@@ -169,7 +169,9 @@ class ProfileActivity : BaseActivity() {
             item.bar.backgroundTintList =
                 ColorStateList.valueOf(if (isToday) clay else claySoft)
             item.barValue.text = if (day.totalMinutes > 0) day.totalMinutes.toString() else ""
-            item.barLabel.text = WEEKDAYS[(day.epochDay - week[0].epochDay).toInt()]
+            // 下标钳制：currentWeek 理论上恒为连续 7 天，但用日期差当索引一旦不成立就越界崩
+            val idx = (day.epochDay - week[0].epochDay).toInt().coerceIn(0, WEEKDAYS.size - 1)
+            item.barLabel.text = WEEKDAYS[idx]
             if (isToday) {
                 item.barLabel.setTextColor(clay)
             }
@@ -210,7 +212,12 @@ class ProfileActivity : BaseActivity() {
      */
     private fun badgeView(badge: Achievements.Badge, parent: LinearLayout): View {
         val item = ItemBadgeBinding.inflate(LayoutInflater.from(this), parent, false)
-        val meta = BADGE_META.getValue(badge.id)
+        // 用 ?: 而不是 getValue：将来新增一个成就却漏了 META 映射，
+        // getValue 会抛 NoSuchElementException —— 整个「我的」页直接崩。
+        // 少显示一个徽章是小事，打不开页面是大事。
+        val meta = BADGE_META[badge.id] ?: return View(this).apply {
+            layoutParams = LinearLayout.LayoutParams(0, 1, 1f)
+        }
         item.badgeName.text = getString(meta.nameRes)
         item.badgeDesc.text = getString(meta.descRes)
         item.badgeIcon.setImageResource(meta.iconRes)

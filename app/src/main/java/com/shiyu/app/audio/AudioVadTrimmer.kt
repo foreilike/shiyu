@@ -46,7 +46,13 @@ object AudioVadTrimmer {
         if (!input.exists() || input.length() == 0L) return null
         return try {
             val pcm = decodeToPcm16(input) ?: return null
-            val result = VadPolicy.trim(pcm.samples) ?: return null
+            // **必须传实际采样率**：原先用默认值 16000，而 decoder 输出的可能是
+            // 24k/44.1k/48k。分帧尺寸与 padding 的毫秒换算会全错 —— 头尾裁错位置，
+            // 时长统计虚报（48k 会虚报约 3 倍）。而这个模块存在的意义就是准确掐掉静音省计费。
+            val result = VadPolicy.trim(
+                pcm.samples,
+                VadPolicy.Params(sampleRate = pcm.sampleRate)
+            ) ?: return null
             val out = File(cacheDir, "vad_${System.currentTimeMillis()}.wav")
             writeWav(out, pcm.samples, result.startSample, result.endSample, pcm.sampleRate)
             Outcome(out, result.originalMs, result.keptMs, result.trimmedMs)

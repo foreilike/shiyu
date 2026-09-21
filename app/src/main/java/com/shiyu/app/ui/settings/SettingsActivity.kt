@@ -46,6 +46,7 @@ class SettingsActivity : BaseActivity() {
     private lateinit var binding: ActivitySettingsBinding
 
     private val transport = OkHttpTransport()
+    private val mainHandler = android.os.Handler(android.os.Looper.getMainLooper())
     private val realKeys = mutableMapOf<SettingsRepository.Group, String>()
     private val keyVisible = mutableMapOf<SettingsRepository.Group, Boolean>()
 
@@ -541,36 +542,68 @@ class SettingsActivity : BaseActivity() {
         }
     }
 
-    /** REALTIME 测试：建连并等 session.created；8 秒超时。 */
+    /**
+     * REALTIME 测试：建连并等 `session.created`；8 秒超时。
+     *
+     * 三个必须做对的点（原先都漏了）：
+     * 1. **成功判定要等 `session.created`**，不是 WebSocket 握手成功 ——
+     *    后者只说明 TCP + Bearer 通过了，模型名非法照样会被服务端随后拒绝，
+     *    那时候已经报了"连接成功"。
+     * 2. **协程取消时要关掉 provider**：用户在 8 秒里离开设置页，lifecycleScope 会取消，
+     *    不注册 invokeOnCancellation 的话 WebSocket 和它自建的 OkHttpClient 永不释放。
+     * 3. **完成标志要用 CAS**：回调来自 WS 线程，超时看门狗来自另一个线程，
+     *    `var done` 的检查-再赋值是 TOCTOU，两边可能都 resume —— 第二次抛
+     *    `Already resumed` 直接崩。
+     */
     private suspend fun probeRealtime(config: ProviderConfig): com.shiyu.app.ai.AiError? =
         suspendCancellableCoroutine { cont ->
             val provider = StepfunRealtimeProvider(config, RealtimeOptions())
-            var done = false
-            fun finish(error: com.shiyu.app.ai.AiError?) {
-                if (!done) {
-                    done = true
-                    provider.close()
-                    if (cont.isActive) cont.resume(error)
-                }
+            val done = java.util.concurrent.atomic.AtomicBoolean(false)
+            // 超时看门狗用主线程 postDelayed，不再裸开 Thread.sleep
+            val watchdog = Runnable { finishProbe(cont, done, provider, com.shiyu.app.ai.AiError.Timeout(8000)) }
+            cont.invokeOnCancellation {
+                mainHandler.removeCallbacks(watchdog)
+                provider.close()
             }
             provider.setListener(object : RealtimeVoiceProvider.Listener {
-                override fun onConnected() = finish(null)
+                // 握手成功不算数，什么都不做，等 onReady
+                override fun onConnected() {}
+                // 握手成功不算成功，等 session.created（provider 内部会在那时回调这个）
+                override fun onReady() {
+                    mainHandler.removeCallbacks(watchdog)
+                    finishProbe(cont, done, provider, null)
+                }
                 override fun onUserSpeechStarted() {}
                 override fun onUserSpeechStopped() {}
                 override fun onAudioDelta(pcm: ByteArray) {}
                 override fun onTranscriptDelta(text: String) {}
                 override fun onUserTranscript(text: String) {}
                 override fun onResponseDone() {}
-                override fun onError(error: com.shiyu.app.ai.AiError) = finish(error)
+                override fun onError(error: com.shiyu.app.ai.AiError) {
+                    mainHandler.removeCallbacks(watchdog)
+                    finishProbe(cont, done, provider, error)
+                }
                 override fun onClosed() {}
             })
             provider.connect("连接测试")
-            // 超时看门狗
-            Thread {
-                Thread.sleep(8000)
-                finish(com.shiyu.app.ai.AiError.Timeout(8000))
-            }.start()
+            mainHandler.postDelayed(watchdog, 8000)
         }
+
+    /** CAS 保证只结算一次；provider 一定关掉 */
+    private fun finishProbe(
+        cont: kotlinx.coroutines.CancellableContinuation<com.shiyu.app.ai.AiError?>,
+        done: java.util.concurrent.atomic.AtomicBoolean,
+        provider: StepfunRealtimeProvider,
+        error: com.shiyu.app.ai.AiError?
+    ) {
+        if (!done.compareAndSet(false, true)) return
+        try {
+            provider.close()
+        } catch (e: Exception) {
+            // 忽略
+        }
+        if (cont.isActive) cont.resume(error)
+    }
 
     private fun langStt(): String =
         com.shiyu.app.core.lang.LanguageRegistry

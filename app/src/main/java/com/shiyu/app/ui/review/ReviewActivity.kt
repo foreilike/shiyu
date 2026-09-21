@@ -8,6 +8,7 @@ import android.os.SystemClock
 import android.view.View
 import android.view.inputmethod.EditorInfo
 import androidx.core.content.ContextCompat
+import androidx.lifecycle.lifecycleScope
 import com.shiyu.app.AppGraph
 import com.shiyu.app.R
 import com.shiyu.app.core.answer.AnswerJudge
@@ -21,6 +22,8 @@ import com.shiyu.app.databinding.ActivityReviewBinding
 import com.shiyu.app.ui.BaseActivity
 import com.shiyu.app.ui.chart.ChartActivity
 import com.shiyu.app.ui.nav.BottomNav
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import java.time.LocalDate
 
 /**
@@ -238,8 +241,12 @@ class ReviewActivity : BaseActivity() {
             CardState()
         }
         val outcome = Sm2Scheduler.review(previousState, quality, today)
-        AppGraph.studyStore.recordReview(lang, card.id, outcome, today)
-        AppGraph.dailyStatsStore.record(today, reviewedCards = 1, langTag = lang.tag)
+        // 落盘挪到 IO：这是评分按钮的回调，主线程同步写两个文件会掉帧；
+        // 两个 store 现在都是 @Synchronized，后台写是安全的。
+        lifecycleScope.launch(Dispatchers.IO) {
+            AppGraph.studyStore.recordReview(lang, card.id, outcome, today)
+            AppGraph.dailyStatsStore.record(today, reviewedCards = 1, langTag = lang.tag)
+        }
         queueIndex++
         renderChips()
         showNext()

@@ -35,6 +35,7 @@
         <!-- Tab 4：复习 -->
         <activity
             android:name=".ui.review.ReviewActivity"
+            android:configChanges="orientation|screenSize|keyboardHidden|screenLayout|smallestScreenSize"
             android:exported="false"
             android:windowSoftInputMode="adjustResize" />
 
@@ -55,10 +56,12 @@
             android:exported="false" />
         <activity
             android:name=".ui.chat.ChatActivity"
+            android:configChanges="orientation|screenSize|keyboardHidden|screenLayout|smallestScreenSize"
             android:exported="false"
             android:windowSoftInputMode="adjustResize" />
         <activity
             android:name=".ui.settings.SettingsActivity"
+            android:configChanges="orientation|screenSize|keyboardHidden|screenLayout|smallestScreenSize"
             android:exported="false"
             android:windowSoftInputMode="adjustResize" />
         <activity

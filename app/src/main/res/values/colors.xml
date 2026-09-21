@@ -26,18 +26,4 @@
     <color name="bad_red">#FFB3261E</color>       <!-- 错误（柔和红） -->
     <color name="violet_soft">#FFECEAF4</color>   <!-- 徽章浅底 -->
     <color name="track">#FFECE4D8</color>         <!-- 进度条轨道 -->
-    <color name="scrim_40">#66000000</color>
-
-    <!-- ===== 兼容旧引用（代码/布局里的历史名，指向新色板） ===== -->
-    <color name="purple_500">#FFA34E28</color>
-    <color name="purple_700">#FF7E3A1B</color>
-    <color name="teal_200">#FFC89B72</color>
-    <color name="black">#FF211B16</color>
-    <color name="white">#FFFFFFFF</color>
-    <color name="gray_light">#FFF5E7DC</color>
-    <color name="gray_text">#FF9A8C7D</color>
-    <color name="bubble_user">#FFA34E28</color>
-    <color name="bubble_ai">#FFFFFFFF</color>
-    <color name="wrong_red">#FFB3261E</color>
-    <color name="right_green">#FF3E6B54</color>
 </resources>

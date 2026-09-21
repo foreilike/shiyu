@@ -126,6 +126,24 @@ class ChatActivity : BaseActivity() {
         }
     }
 
+    /**
+     * 切后台就释放录音与外放。
+     *
+     * 原先只在 onDestroy 释放 —— 录音中按 Home 键，MediaRecorder 会继续开着麦克风
+     * （费电、隐私观感也差），MediaPlayer 还在后台外放。
+     *
+     * 录音中被切走的话，先把这一段发出去再释放 —— 用户按 Home 通常不是想取消这句话。
+     */
+    override fun onStop() {
+        if (recording) {
+            stopRecordingAndSend()
+        } else {
+            releaseRecorder()
+            releasePlayer()
+        }
+        super.onStop()
+    }
+
     override fun onDestroy() {
         handler.removeCallbacks(autoStopRunnable)
         releaseRecorder()
@@ -140,8 +158,12 @@ class ChatActivity : BaseActivity() {
         if (text.isBlank()) return
         binding.messageInput.setText("")
         appendUserText(text)
-        AppGraph.sessionStore.appendTurn(sessionId, "user", text)
-        AppGraph.dailyStatsStore.record(LocalDate.now().toEpochDay(), chatTurns = 1)
+        // 落盘挪到 IO：发消息是输入框回调，主线程同步写会话文件 + 统计会卡输入响应
+        val sid = sessionId
+        lifecycleScope.launch(Dispatchers.IO) {
+            AppGraph.sessionStore.appendTurn(sid, "user", text)
+            AppGraph.dailyStatsStore.record(LocalDate.now().toEpochDay(), chatTurns = 1)
+        }
         runTurn()
     }
 
@@ -359,12 +381,20 @@ class ChatActivity : BaseActivity() {
             Toast.makeText(this, R.string.chat_play_failed, Toast.LENGTH_SHORT).show()
             return
         }
-        player = MediaPlayer().apply {
-            setOnCompletionListener { releasePlayer(); file.delete() }
-            setOnErrorListener { _, _, _ -> releasePlayer(); file.delete(); true }
-            setDataSource(file.absolutePath)
-            prepare()
-            start()
+        // MediaPlayer 的构造/设源/prepare 都可能抛（服务端返回截断或非音频字节时），
+        // 原先只有 writeBytes 在 try 里，这三步在外面 —— 坏音频直接把 App 崩掉。
+        try {
+            player = MediaPlayer().apply {
+                setOnCompletionListener { releasePlayer(); file.delete() }
+                setOnErrorListener { _, _, _ -> releasePlayer(); file.delete(); true }
+                setDataSource(file.absolutePath)
+                prepare()
+                start()
+            }
+        } catch (e: Exception) {
+            releasePlayer()
+            try { file.delete() } catch (ignored: Exception) { /* 忽略 */ }
+            Toast.makeText(this, R.string.chat_play_failed, Toast.LENGTH_SHORT).show()
         }
     }
 

@@ -30,13 +30,16 @@ class StepfunRealtimeProvider(
     private val TAG = "ShiyuRealtime"
 
     private var listener: RealtimeVoiceProvider.Listener? = null
-    private var socket: WebSocket? = null
-    private var connected = false
+
+    // 采集线程会读 connected/socket（sendAudio），OkHttp 线程与主线程会写它们 ——
+    // 不加 volatile 可能读到过期值：断开后还在发、或连上了却一直 no-op 丢帧
+    @Volatile private var socket: WebSocket? = null
+    @Volatile private var connected = false
 
     /** 重连用：记住最后一次的 instructions；用户主动关闭后不再重连 */
     private var lastInstructions: String? = null
     private var closedByUser = false
-    private var retryCount = 0
+    @Volatile private var retryCount = 0
     private val mainHandler = android.os.Handler(android.os.Looper.getMainLooper())
     private val reconnectTask = Runnable {
         val text = lastInstructions ?: return@Runnable
@@ -60,6 +63,15 @@ class StepfunRealtimeProvider(
     }
 
     private fun openSocket(instructions: String) {
+        // 关掉上一个 socket：不关的话它的 listener 还活着，
+        // 延迟回调 onClosed 会再触发一次 scheduleReconnect，形成计划外的重复重连
+        try {
+            socket?.cancel()
+        } catch (e: Exception) {
+            // 忽略
+        }
+        socket = null
+
         val url = BaseUrlNormalizer.normalize(config.baseUrl) ?: run {
             listener?.onError(AiError.BadResponse("invalid realtime baseUrl"))
             return
@@ -78,7 +90,10 @@ class StepfunRealtimeProvider(
         socket = client.newWebSocket(request, object : WebSocketListener() {
             override fun onOpen(webSocket: WebSocket, response: Response) {
                 connected = true
-                retryCount = 0
+                // **不要在这里重置 retryCount**：握手成功 ≠ 会话可用。
+                // 服务端可能接受握手后立刻踢掉连接，那时 onOpen→onClosed 会无限循环：
+                // retryCount 每次都被清零，MAX_RETRIES 形同虚设，用户界面永远卡在"重连中"。
+                // 真正的可用信号是 session.created，所以重置放在那里。
                 android.util.Log.i(TAG, "realtime connected: $endpoint")
                 // 默认用女声：语伴形象是 yoyo / Emma，而另一个可选音色是男声
                 val voice = config.voice.ifBlank { RealtimeProtocol.VOICE_FEMALE }
@@ -107,7 +122,12 @@ class StepfunRealtimeProvider(
                 }
                 if (type == "error") {
                     android.util.Log.e(TAG, "<- ERROR $text")
-                } else if (type == "session.updated" || type == "session.created") {
+                } else if (type == "session.created") {
+                    // 到这里才算真正可用：重置重连计数，并通知「测试连接」
+                    retryCount = 0
+                    android.util.Log.i(TAG, "<- $type ${text.take(700)}")
+                    listener?.onReady()
+                } else if (type == "session.updated") {
                     // 这条最关键：它回显服务端实际接受的会话配置。
                     // 如果没有 turn_detection，说明 server_vad 压根没生效。
                     android.util.Log.i(TAG, "<- $type ${text.take(700)}")
@@ -288,6 +308,7 @@ class StepfunRealtimeProvider(
 
     override fun close() {
         closedByUser = true
+        retryCount = 0
         mainHandler.removeCallbacks(reconnectTask)
         connected = false
         try {

@@ -3,6 +3,7 @@ package com.shiyu.app.data.secret
 import android.content.Context
 import android.security.keystore.KeyGenParameterSpec
 import android.security.keystore.KeyProperties
+import com.shiyu.app.data.store.AtomicFile
 import java.io.File
 import java.security.KeyStore
 import javax.crypto.Cipher
@@ -24,6 +25,7 @@ class KeystoreSecretStore(context: Context) : SecretStore {
     @Volatile
     private var consecutiveFailures = 0
 
+    @Synchronized
     override fun read(): String? {
         if (!file.exists()) return null
         return try {
@@ -50,6 +52,7 @@ class KeystoreSecretStore(context: Context) : SecretStore {
         }
     }
 
+    @Synchronized
     override fun write(plain: String) {
         val cipher = Cipher.getInstance(TRANSFORMATION)
         cipher.init(Cipher.ENCRYPT_MODE, getOrCreateKey())
@@ -59,11 +62,13 @@ class KeystoreSecretStore(context: Context) : SecretStore {
         out[0] = VERSION
         System.arraycopy(iv, 0, out, 1, iv.size)
         System.arraycopy(cipherText, 0, out, 1 + iv.size, cipherText.size)
-        if (!file.exists()) file.createNewFile()
-        file.writeBytes(out)
+        // 原子写：原先直接截断整写，写一半被杀就得到半截密文，
+        // 下次 read 判为失败 —— 而失败恢复逻辑又是死的（见下），配置等于永久丢失。
+        AtomicFile.writeBytes(file, out)
         consecutiveFailures = 0
     }
 
+    @Synchronized
     override fun clear() {
         try {
             if (file.exists()) file.delete()
@@ -78,11 +83,32 @@ class KeystoreSecretStore(context: Context) : SecretStore {
         consecutiveFailures = 0
     }
 
+    /**
+     * 解密失败的处理。
+     *
+     * **这里原先是"连续失败 3 次就重建"的计数恢复，实测是死代码**：
+     * 计数器是内存字段（每次冷启动归零），而 `SettingsRepository` 又在进程内缓存了
+     * 读取结果，`read()` 一个进程生命周期里只会被调用一次 —— 计数器永远到不了 3。
+     * 结果是：Keystore 密钥失效（应用数据被克隆/恢复到新机、系统安全更新丢了条目）之后，
+     * 每次读都失败、界面显示"配置凭空消失"，而注释里承诺的自愈**从来不会发生**。
+     *
+     * 现在改成**立即隔离并重建**：解不开的密文在密码学上已不可恢复，留着它只会让人
+     * 永远停在"读不出来"的状态。隔离而不是删除 —— 原始密文保留成 `.corrupt-*` 供排查，
+     * 密钥删掉，下次写入重建一把新的。用户看到的是"配置被重置"，而不是"配置坏了但没提示"。
+     */
     private fun onFailure() {
         consecutiveFailures += 1
-        if (consecutiveFailures >= 3) {
-            clear()
+        try {
+            AtomicFile.quarantine(file)
+        } catch (e: Exception) {
+            // 忽略
         }
+        try {
+            keyStore.deleteEntry(KEY_ALIAS)
+        } catch (e: Exception) {
+            // 忽略
+        }
+        consecutiveFailures = 0
     }
 
     private fun getOrCreateKey(): SecretKey {

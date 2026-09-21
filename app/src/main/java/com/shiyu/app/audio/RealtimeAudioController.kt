@@ -35,16 +35,22 @@ class RealtimeAudioController(
         /** 20ms 一帧；官方建议 20–30ms 一包，太小会碎、太大增加延迟 */
         private const val FRAME_SAMPLES = 480 // 20ms @24k
         private const val FRAME_BYTES = FRAME_SAMPLES * 2
+        /** stopCapture 等采集线程退出最多等这么久 */
+        private const val CAPTURE_JOIN_TIMEOUT_MS = 500L
         private const val SILENCE_GATE_MS = 800
         private const val SILENCE_GATE_FRAMES = SILENCE_GATE_MS / 20
     }
 
-    private var recorder: android.media.AudioRecord? = null
+    // 采集线程会读它、stopCapture 会写它 —— 必须 volatile，否则可能读到过期的非 null 值
+    @Volatile private var recorder: android.media.AudioRecord? = null
     private var captureThread: Thread? = null
     private val capturing = AtomicBoolean(false)
 
-    private var player: android.media.AudioTrack? = null
+    @Volatile private var player: android.media.AudioTrack? = null
     private val playing = AtomicBoolean(false)
+
+    /** 只保护 player / playing 的读写；**不要用它包住 track.write**（会阻塞打断） */
+    private val playerLock = Any()
 
     @Volatile var speechActive: Boolean = false
         private set
@@ -101,7 +107,16 @@ class RealtimeAudioController(
         }
         recorder = rec
         attachAudioEffects(rec.audioSessionId)
-        rec.startRecording()
+        try {
+            rec.startRecording()
+        } catch (e: Exception) {
+            // 权限竞态、麦克风被别的 App 占用等都可能在这里抛。
+            // 不接住的话异常会从主线程冒出去直接崩，而且刚挂上的效果器和 AudioRecord 全泄漏。
+            releaseAudioEffects()
+            try { rec.release() } catch (ignored: Exception) { /* 忽略 */ }
+            recorder = null
+            return
+        }
         capturing.set(true)
         captureThread = Thread({ captureLoop() }, "rt-capture").apply { start() }
     }
@@ -159,7 +174,13 @@ class RealtimeAudioController(
             val rec = recorder ?: break
             var read = 0
             while (read < FRAME_BYTES) {
-                val n = rec.read(buf, read, FRAME_BYTES - read)
+                // read 可能在 stop/release 的瞬间抛 IllegalStateException，必须接住 ——
+                // 这是采集线程，异常冒出去就是整个 App 崩
+                val n = try {
+                    rec.read(buf, read, FRAME_BYTES - read)
+                } catch (e: Exception) {
+                    break
+                }
                 if (n <= 0) break
                 read += n
             }
@@ -208,33 +229,68 @@ class RealtimeAudioController(
 
     fun stopCapture() {
         capturing.set(false)
+        // **必须等采集线程退出后再释放 AudioRecord**。
+        // 否则采集线程可能正阻塞在 rec.read()，我们这边 stop()+release() 之后它再调用一次
+        // read()，就会在已释放的对象上抛 IllegalStateException —— 采集线程没有捕获，直接崩。
+        val thread = captureThread
+        captureThread = null
+        if (thread != null && thread !== Thread.currentThread()) {
+            try {
+                thread.join(CAPTURE_JOIN_TIMEOUT_MS)
+            } catch (e: InterruptedException) {
+                Thread.currentThread().interrupt()
+            }
+        }
         releaseAudioEffects()
         try {
             recorder?.stop()
         } catch (e: Exception) {
             // 忽略
         }
-        recorder?.release()
+        try {
+            recorder?.release()
+        } catch (e: Exception) {
+            // 忽略
+        }
         recorder = null
-        captureThread = null
         speechActive = false
     }
 
     // ---------- 播放 ----------
 
-    @Synchronized
+    /**
+     * 播放一包下行音频。
+     *
+     * **`write` 必须在锁外执行**：MODE_STREAM 下缓冲写满时 `write` 会阻塞，
+     * 而 `interrupt()` 需要同一把锁 —— 持锁写会让「打断」卡在锁上，
+     * 用户感觉是「按了打断要等一下才停」。
+     * 锁只用来保护 player/playing 这几个字段的读写。
+     */
     fun playPcm(bytes: ByteArray) {
         if (bytes.isEmpty()) return
         // 打断之后、服务端真正停下之前，还会飘来几百毫秒的音频包。
         // 不过滤的话，下一个包就会把刚暂停的播放重新拉起来 —— 表现就是
         // 「按了打断没反应，它停一下又接着说」。
         if (droppingAudio) return
-        val track = player ?: newTrack().also { player = it }
-        if (!playing.get()) {
-            track.play()
-            playing.set(true)
+        val track: android.media.AudioTrack
+        synchronized(playerLock) {
+            if (droppingAudio) return
+            val t = player ?: newTrack().also { player = it }
+            if (!playing.get()) {
+                try {
+                    t.play()
+                } catch (e: Exception) {
+                    return
+                }
+                playing.set(true)
+            }
+            track = t
         }
-        track.write(bytes, 0, bytes.size)
+        try {
+            track.write(bytes, 0, bytes.size)
+        } catch (e: Exception) {
+            // 播放失败不该影响主链路（打断时 write 会正常返回错误）
+        }
     }
 
     /**
@@ -243,7 +299,6 @@ class RealtimeAudioController(
      * 窗口在 [resumeAudio] 时关闭 —— 调用方应当在服务端开始**新一轮**响应
      * （`response.created`）时调用它，而不是在打断那一刻。
      */
-    @Synchronized
     fun resumeAudio() {
         droppingAudio = false
     }
@@ -262,23 +317,23 @@ class RealtimeAudioController(
             .build()
 
     /** barge-in：丢弃已排队音频，立即静音，并挡住后续残留的音频包 */
-    @Synchronized
     fun interrupt() {
+        // 先把标志立起来：playPcm 在锁外也会读它，新来的音频包立即被挡掉，
+        // 不用等 pause/flush 做完
         droppingAudio = true
-        val track = player ?: return
+        playing.set(false)
+        val track = synchronized(playerLock) { player } ?: return
         try {
             track.pause()
             track.flush()
         } catch (e: Exception) {
             // 忽略
         }
-        playing.set(false)
     }
 
-    @Synchronized
     fun stopPlayback() {
-        val track = player
         playing.set(false)
+        val track = synchronized(playerLock) { player }
         try {
             track?.pause()
             track?.flush()
@@ -296,7 +351,7 @@ class RealtimeAudioController(
         } catch (e: Exception) {
             // 忽略
         }
-        player = null
+        synchronized(playerLock) { player = null }
     }
 
     /** 与 VadPolicy 默认阈值一致（-45 dBFS） */
