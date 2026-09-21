@@ -203,7 +203,8 @@ class SettingsActivity : BaseActivity() {
         loadGroup(
             SettingsRepository.Group.REALTIME,
             binding.realtimeBaseUrl, binding.realtimeApiKey, binding.realtimeModel,
-            binding.realtimeKeyToggle, binding.realtimeVoice, binding.switchRealtime
+            binding.realtimeKeyToggle, binding.realtimeVoice, binding.switchRealtime,
+            defaultBaseUrl = getString(R.string.realtime_default_url)
         )
 
         val opts = AppGraph.settingsRepository.realtimeOptionsFor(lang)
@@ -220,12 +221,16 @@ class SettingsActivity : BaseActivity() {
         modelField: EditText,
         keyToggle: android.widget.Button,
         voiceField: EditText?,
-        enabled: Switch
+        enabled: Switch,
+        defaultBaseUrl: String? = null
     ) {
         val lang = AppGraph.settingsRepository.activeLang()
         val config = AppGraph.settingsRepository.groupFor(lang, group)
         realKeys[group] = config.apiKey
-        baseUrlField.setText(config.baseUrl)
+        // 实时语音的地址没配过时**预填**官方默认值，而不是只留一行灰色提示 ——
+        // 提示文字和已填内容长得太像，用户会以为已经填好了，然后对着
+        // 「未配置实时语音服务」百思不得其解。
+        baseUrlField.setText(config.baseUrl.ifEmpty { defaultBaseUrl.orEmpty() })
         modelField.setText(config.model)
         voiceField?.setText(config.voice)
         enabled.isChecked = config.enabled
