@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">拾语</string>
-
     <!-- 通用 -->
     <string name="lang_ja">日语</string>
     <string name="lang_en">英语</string>
@@ -11,7 +10,6 @@
     <string name="delete">删除</string>
     <string name="settings">设置</string>
     <string name="clear_all_data">清空全部数据</string>
-
     <!-- 导航（五 Tab：今日 / 课程 / 对话 / 复习 / 我的） -->
     <string name="tab_home">今日</string>
     <string name="tab_langs">课程</string>
@@ -21,7 +19,6 @@
     <string name="tab_study">今日</string>
     <string name="tab_chat">对话</string>
     <string name="tab_chart">图表</string>
-
     <!-- 今日（首页仪表盘） -->
     <string name="home_greet_morning">早上好</string>
     <string name="home_greet_noon">中午好</string>
@@ -48,7 +45,6 @@
     <string name="home_entry_review_sub">%1$d 张卡片待复习</string>
     <string name="home_entry_chart">发音表</string>
     <string name="home_entry_chart_sub">点格子即可跟读</string>
-
     <!-- 课程（语种切换） -->
     <string name="langs_title">课程</string>
     <string name="langs_sub">切换语种后，全站内容与进度随之切换</string>
@@ -61,7 +57,6 @@
     <string name="lang_ko">韩语</string>
     <string name="lang_es">西班牙语</string>
     <string name="lang_fr">法语</string>
-
     <!-- 我的（统计 / 周柱状图 / 成就） -->
     <string name="profile_realtime_translate">实时语音显示中文翻译</string>
     <string name="profile_realtime_translate_sub">AI 说完后附一条中文小字，需配好对话服务</string>
@@ -77,15 +72,12 @@
     <string name="history_trash_sub">删掉的对话会先放这里，随时可以恢复</string>
     <string name="history_trash_empty">回收站是空的</string>
     <string name="history_trash_confirm">移入回收站？
-
 %1$s
-
 之后可以在回收站里恢复。</string>
     <string name="history_trashed">已移入回收站</string>
     <string name="history_restore_confirm">恢复这条对话记录？</string>
     <string name="history_restored">已恢复</string>
     <string name="history_purge_confirm">彻底删除后无法找回，确定吗？
-
 %1$s</string>
     <string name="history_purged">已彻底删除</string>
     <string name="history_empty_trash">清空回收站</string>
@@ -132,7 +124,6 @@
     <string name="profile_about">关于拾语</string>
     <string name="profile_about_text">拾语 %1$s · 一个安静的语言陪练</string>
     <string name="profile_lang_stats">%1$s：待复习 %2$d · 已掌握 %3$d · 对话 %4$d 轮</string>
-
     <string name="badge_first_voice">初次开口</string>
     <string name="badge_first_voice_d">完成首次语音对话</string>
     <string name="badge_streak_7">七日之火</string>
@@ -145,22 +136,17 @@
     <string name="badge_hours_10_d">累计学习 10 小时</string>
     <string name="badge_turns_100">健谈者</string>
     <string name="badge_turns_100_d">累计对话 100 轮</string>
-
     <!-- 复习页补充 -->
     <string name="review_title">复习</string>
     <string name="review_sub">来自课程与对话场景的记忆卡片</string>
     <string name="review_tap_hint">输入答案后点「确认」翻面</string>
     <string name="review_progress">第 %1$d / %2$d 张</string>
     <string name="review_chart_entry">发音表</string>
-
     <!-- 对话中心 -->
     <string name="talk_title">对话</string>
     <string name="talk_sub">挑一个场景开口，或直接进实时语音</string>
     <string name="talk_scenarios">场景练习</string>
-
     <string name="back">返回</string>
-
-
     <!-- 实时语音（拾语设计稿） -->
     <string name="voice_ready_sub">实时语音对话 · 说完自动断句\nAI 语伴会先开口，轮到你时说话即可</string>
     <string name="voice_entry_title">实时语音对话</string>
@@ -190,7 +176,6 @@
     <string name="voice_type_hint">输入想说的话…</string>
     <string name="voice_type_send">发送</string>
     <string name="voice_state_idle">待开始</string>
-
     <!-- 学习页 -->
     <string name="study_title">学习</string>
     <string name="today_due">今日待复习</string>
@@ -208,14 +193,12 @@
     <string name="quality_easy">太简单了</string>
     <string name="chart_entry">图表</string>
     <string name="reading">读音</string>
-
     <!-- 图表页 -->
     <string name="chart_title">图表</string>
     <string name="chart_katakana_toggle">片假名</string>
     <string name="chart_hint">点击格子查看说明并朗读</string>
     <string name="chart_section_vowel">vowel（元音）</string>
     <string name="chart_section_consonant">consonant（辅音）</string>
-
     <!-- 对话页 -->
     <string name="chat_title">对话练习</string>
     <string name="chat_pick_scenario">选择一个场景开始练习</string>
@@ -237,19 +220,18 @@
     <string name="chat_thinking">思考中…</string>
     <string name="chat_mock_note">未配置对话服务，当前为本地模拟回复</string>
     <string name="chat_play_failed">音频播放失败</string>
-
     <!-- 设置页 -->
     <string name="settings_title">设置</string>
     <string name="settings_config_lang">配置语言</string>
     <string name="settings_copy_to_other">把当前语言的配置复制到%1$s</string>
-    <string name="settings_copy_confirm">把「%1$s」的 4 组配置（地址、Key、模型名、音色、开关）整体复制到「%2$s」？
-
-会覆盖目标语言已有的同名配置。</string>
+    <string name="settings_copy_confirm">把「%1$s」的 4 组配置（地址、Key、模型名、音色、开关）整体复制到「%2$s」？</string>
     <string name="settings_copy_done">已复制 %1$d 组到%2$s</string>
     <string name="settings_copy_empty">当前语言的 4 组都还是空的，先填一组再复制</string>
     <string name="settings_sync_all">把对话组的地址和 Key 同步到其它</string>
-    <string name="settings_sync_hint">4 组能力通常共用同一个网关。同步会把「对话」组的接口地址与 API Key 复制到语音识别、语音合成和另一门语言；实时语音走 wss 协议，只同步 Key、不动地址。各组的模型名、音色、启用开关都不会被改。</string>
-    <string name="settings_sync_confirm">将用「对话」组的地址与 Key 覆盖其它组（模型名和开关不变），确定吗？</string>
+    
+    
+    <string name="settings_sync_hint">上面两个按钮都是省事用的，不是必做。四组能力各用一家的模型也完全正常，那就分别填。两个按钮都会覆盖目标已有的同名配置。</string>
+    <string name="settings_sync_confirm">将用「对话」组的地址与 Key 覆盖其它三组（模型名和开关不变）。</string>
     <string name="settings_sync_done">已同步到其它 %1$d 组</string>
     <string name="settings_sync_empty">请先填好「对话」组的接口地址或 API Key</string>
     <string name="settings_switch_lang_hint">已切换到%1$s 的配置</string>
@@ -289,7 +271,6 @@
     <string name="settings_key_masked">掩码</string>
     <string name="settings_key_show">显示</string>
     <string name="settings_key_hide">隐藏</string>
-
     <!-- 我的页 -->
     <string name="profile_title">我的</string>
     <string name="profile_total_cards">总卡数</string>
@@ -299,7 +280,6 @@
     <string name="profile_clear_confirm">确定要清空全部数据吗？此操作不可恢复。</string>
     <string name="profile_cleared">已清空全部数据</string>
     <string name="profile_auto_play">自动朗读 AI 回复</string>
-
     <!-- 错误提示（§5.5 映射表） -->
     <string name="err_network">网络连接失败，请检查网络后重试</string>
     <string name="err_timeout">请求超时，请稍后重试</string>
