@@ -18,7 +18,7 @@
 | 学习语言 | 日语 + 英语双语，可切换，进度/配置全隔离；韩/西/法在「课程」页标为即将支持 |
 | 工程根目录 | `D:\AI project\lang-partner`（目录名保留，未随应用改名） |
 | 主源码规模 | 72 个 `.kt`（6,519 行）+ 16 个布局 + 36 个 drawable + 6 份 assets JSON |
-| 测试 | **26 个测试类 / 375 个单测，全绿**（fail=0 err=0 skip=0），`lintDebug` 0 error |
+| 测试 | **26 个测试类 / 387 个单测，全绿**（fail=0 err=0 skip=0），`lintDebug` 0 error |
 | 交付 APK | `Shiyu-v1.0.0-release.apk`（约 5.70 MB，已签名） |
 | 构建命令 | 见 §2.2（**必须显式设置 `JAVA_HOME=D:\a\jbr`**） |
 | 联网能力 | 4 种 AI 能力（对话 / 识别 / 合成 / 实时语音）；**未配置凭证时全部降级为本地 Mock，App 照常可跑完流程** |
@@ -681,7 +681,7 @@ $env:JAVA_HOME = "D:\a\jbr"; .\gradlew.bat :app:testDebugUnitTest --console=plai
 # 原始：app\build\test-results\testDebugUnitTest\*.xml
 ```
 
-### 11.2 明细（26 类 / **375 例**，全绿）
+### 11.2 明细（27 类 / **387 例**，全绿）
 
 | 测试类 | 例数 | | 测试类 | 例数 |
 |---|---|---|---|---|
@@ -690,7 +690,7 @@ $env:JAVA_HOME = "D:\a\jbr"; .\gradlew.bat :app:testDebugUnitTest --console=plai
 | `core.answer.AnswerJudgeTest` | 17 | | `core.net.OpenAiWireTest` | 14 |
 | `core.audio.VadPolicyTest` | 10 | | `core.realtime.RealtimeProtocolTest` | 17 |
 | `core.chat.ReplyParserTest` | 11 | | `core.srs.Sm2SchedulerTest` | 11 |
-| **`core.srs.DailyQuotaTest`** | **7** | | | |
+| **`core.srs.DailyQuotaTest`** | **7** | | **`data.store.AtomicFileTest`** | **11** |
 | `core.context.ContextTrimmerTest` | 10 | | **`core.stats.AchievementsTest`** | **8** |
 | `core.lang.LanguageModuleTest` | 13 | | `data.asset.AssetContentTest` | 9 |
 | `core.lang.MockProviderTest` | 7 | | **`data.store.DailyStatsStoreTest`** | **21** |
@@ -698,7 +698,7 @@ $env:JAVA_HOME = "D:\a\jbr"; .\gradlew.bat :app:testDebugUnitTest --console=plai
 | `core.lang.en.EnSentenceSplitterTest` | 25 | | `data.store.SettingsRepositoryTest` | 22 |
 | `core.lang.en.EnTokenizerTest` | 27 | | `data.store.StudyStoreTest` | 12 |
 | `core.lang.ja.KanaConverterTest` | 40 | | `core.lang.ja.KanaNormalizerTest` | 7 |
-| `core.log.LogRedactorTest` | 5 | | **合计** | **375** |
+| `core.log.LogRedactorTest` | 5 | | **合计** | **387** |
 
 加粗为本次改造新增：`AchievementsTest`（成就判定）、`DailyStatsStoreTest`（每日统计 / 连续天数 /
 本周切片 / 坏 JSON 隔离），另外 `SettingsRepositoryTest` 从 12 例加到 17 例（新增 nickname 的
@@ -1331,6 +1331,106 @@ App 会自动换成对应的男声提示句。
 
 **还没验（需要真人开口）：**
 barge-in 打断、中文字幕开关、切后台恢复、免提外放 AEC 效果。
+
+### 17.15 深度自检（2026-09-21 晚）—— 四路并行审计
+
+对音频 / 数据 / 网络 / UI 四个子系统各派一路独立审计，逐条核实后统一修复。
+**这一轮没有新功能，全是健壮性与正确性**，其中三类问题会静默丢数据或直接崩溃。
+
+#### A. 数据安全（最严重的一类）
+
+**A1. 「原子写」其实不原子 —— 崩溃窗口会静默清空全部进度。**
+三个明文 store 与加密 store 的落盘都写成：
+
+```kotlin
+tmp.writeText(text)
+if (target.exists()) target.delete()   // ← 这一步是多余的，而且有害
+if (!tmp.renameTo(target)) { ... }
+```
+
+`rename(2)` 本身就是原子替换，先 `delete` 只是**打开了一个"目标文件不存在"的窗口**。
+进程恰好在 `delete` 之后、`rename` 之前被杀（低内存 kill / 断电），下次启动就找不到文件，
+`load()` 走「文件不存在 → 返回空结构」分支，**用户全部进度静默清零**。
+更糟的是：`tmp` 里明明躺着完整数据，**没有任何一处会去捡它**。
+
+现在统一走 `data/store/AtomicFile.kt`：写 tmp → `rename` 直接覆盖（不删），
+并且每次 `load()` 之前先 `recoverIfNeeded()` 把上次写一半的 tmp 认领回来。
+
+> **加密存储原先是最不设防的一处**：它直接 `file.writeBytes(out)` 截断整写，
+> 连 tmp 都没有 —— 而它存的是全部 API 配置。现在同样走 AtomicFile（字节版）。
+
+**A2. 并发写互相踩。** 三个 store 的 `record()` / `appendTurn()` 都是
+`load → 改 → save` 的无锁序列，而且 tmp 文件名固定。两个线程同时写会交错出坏 JSON →
+下次 load 解析失败 → 隔离 → **整份统计历史清零**。现在全部 `@Synchronized`。
+
+**A3. Keystore 自愈是死代码。** `KeystoreSecretStore` 有个「连续失败 3 次就重建」的计数器，
+但它同时具备两个致命前提缺失：
+
+- 计数器是**内存字段**，每次冷启动归零；
+- `SettingsRepository` 在进程内缓存了读取结果，`read()` 一个进程生命周期**只会被调用一次**。
+
+所以计数器**永远到不了 3**。密钥真的失效时（应用数据被克隆/恢复到新机、系统安全更新
+丢了 Keystore 条目），每次读都失败、界面显示"配置凭空消失"，而注释承诺的自愈从不发生。
+
+现在改成**解密失败即隔离并重建密钥**：解不开的密文在密码学上已不可恢复，
+留着它只会让人永远停在"读不出来"的状态。隔离（而不是删除）保留原始密文供排查。
+
+**A4. `SettingsRepository.cached` 无同步。** `update()` / 每个 `set*()` 都是
+`load → copy → save`，并发写会整体 last-writer-wins —— **一次写把另一次的改动悄悄抹掉**。
+加 `@Volatile` + `@Synchronized`。
+
+#### B. 崩溃路径
+
+| 位置 | 问题 |
+|---|---|
+| `RealtimeAudioController.stopCapture` | 不 join 采集线程就 `release()`，采集线程在已释放对象上再 `read` 抛 `IllegalStateException` —— **必须** 先停标志 → `join(500ms)` → 再释放；`read` 加 try/catch；`recorder` 加 `@Volatile` |
+| `VoiceChatActivity` 回调 | 字幕缓冲 / 轮次记录一半在主线程、一半在 WebSocket 回调线程读写 → `ConcurrentModificationException`。回调体统一收口到主线程 |
+| `SettingsActivity.probeRealtime` | 协程取消时不关 provider → WebSocket 与自建 OkHttpClient **永久泄漏**；`var done` 的检查-再赋值是 TOCTOU，WS 线程与看门狗线程可能双双 `resume` 抛 `Already resumed` |
+| `ChatActivity.playAudio` | `MediaPlayer` 的构造/设源/`prepare` 都在 try 之外，服务端返回坏音频直接崩 |
+| `ProfileActivity` | 成就 META 用 `getValue`，漏登记一个就整页崩；周柱状图用日期差当数组下标会越界 |
+| `OkHttpTransport` | 全量 `body.bytes()` 无上限，服务端返几百 MB 就 OOM（TTS 音频体没有天然上限）。加 32MB 上限按坏响应处理 |
+
+#### C. 行为正确性
+
+- **无限重连**：`retryCount` 在 `onOpen` 清零，但**握手成功 ≠ 会话可用**。
+  服务端接受握手后立刻踢连接，就会 `onOpen→onClosed→重连→onOpen…` 无限循环，
+  `MAX_RETRIES` 形同虚设、界面永远卡在"重连中"。改为收到 `session.created` 才清零；
+  重连前先 `cancel()` 旧 socket（其 listener 的延迟回调会重复触发重连）。
+- **「测试连接」的成功判定**：原先在 WebSocket 握手就报"成功"，**模型名非法也照样通过**。
+  新增 `onReady()`（`session.created`）作为真正的可用信号。
+- **VAD 裁剪用错采样率**：decoder 已经返回实际采样率，`trim` 却用默认 16k。
+  非 16k 设备上分帧与 padding 的毫秒换算全错 —— 头尾裁错位置、时长虚报约 3 倍。
+  而这个模块存在的意义正是准确掐掉静音省计费。
+- **播放持锁阻塞打断**：`track.write` 缓冲满时会阻塞，而 `interrupt()` 需要同一把锁 ——
+  表现就是「按了打断要等一下才停」。锁只保护字段，`write` 挪到锁外。
+- **「对话 N 轮」两套真相**：首页用 `DayStat.chatTurns`（只增不减），
+  我的页从会话文件实时重算 —— **删一条会话后首页的数字会永久高于我的页**。
+  统一从会话文件派生（新增 `SessionStore.userTurnsOn`）。
+- **旋屏丢状态**：对话页 / 复习页 / 设置页持有会话与表单状态却无 `configChanges`，
+  旋屏即重建；对话页还会每转一次屏就重生一条只有开场白的孤儿会话。已加 `configChanges`。
+  （这条同时修掉了 §12.1 里"配置变更丢当前卡片状态"那个已知取舍。）
+- **后台占用麦克风**：对话页只在 `onDestroy` 释放录音与外放，按 Home 后 `MediaRecorder`
+  仍开着麦克风。加 `onStop` 释放（录音中被切走则先把这段发出去再释放）。
+
+#### D. 性能与清理
+
+- 评分与发消息的**落盘从主线程挪到 IO**（store 已 `@Synchronized`，后台写是安全的）。
+- 删 24 条死字符串、12 条旧色板颜色、1 个无引用 drawable。
+- 语音页波形柱改用深色专用 drawable —— 这是**「浅色页资源用在深色页」的第五处**。
+- 修掉 `OkHttpTransport` 里一条恒真判断的编译警告（`toMultimap` 的 key 非空）。
+
+#### E. 审计确认「没有问题」的部分
+
+供接手人参考，以下路径经核查对空串 / 畸形 / 缺字段输入均能优雅降级，无 `!!`、无未捕获 JSON 异常：
+`BaseUrlNormalizer`、`ReplyParser`、`EnSentenceSplitter`、`EnNormalizer`、`ScenarioParser`、
+各 `buildDeck/buildChart`、`HttpErrors` 分类顺序、`LogRedactor`、`VadPolicy`（纯逻辑部分）。
+`Speaker` / `MiniWaveView` / `lifecycleScope` 的使用也未见泄漏。
+
+#### F. 测试
+
+`AtomicFileTest` 新增 11 例，锁住这轮最重要的修复：原子覆盖不留 tmp、
+残留 tmp 能被认领、目标存在时不认领、空 tmp 不认领、隔离保留原始内容。
+**376 → 387 例全绿**，lint 0 error。
 
 ## 附录 A：关键常量速查
 
