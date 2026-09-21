@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/paper"
@@ -80,13 +81,6 @@
                 android:layout_marginTop="12dp"
                 android:text="@string/settings_copy_to_other" />
 
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
-                android:text="@string/settings_sync_hint"
-                android:textColor="@color/mute"
-                android:textSize="11.5sp" />
         </LinearLayout>
 
         <!-- 对话服务 -->
@@ -121,6 +115,13 @@
                     android:textColor="@color/ink"
                     android:textSize="15sp"
                     android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/chatStatus"
+                    style="@style/ShiyuSubtitle"
+                    android:layout_marginEnd="10dp"
+                    android:textSize="11.5sp"
+                    tools:text="未配置" />
 
                 <Switch
                     android:id="@+id/switchChat"
@@ -163,13 +164,26 @@
                 android:hint="@string/field_model"
                 android:inputType="text" />
 
-            <Button
-                android:id="@+id/chatTest"
-                style="@style/MiniButton"
+            <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_marginStart="0dp"
+                android:layout_height="wrap_content"
                 android:layout_marginTop="14dp"
-                android:text="@string/test_connection" />
+                android:orientation="horizontal">
+
+                <Button
+                    android:id="@+id/chatTest"
+                    style="@style/MiniButton"
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:layout_marginStart="0dp"
+                    android:text="@string/test_connection" />
+
+                <Button
+                    android:id="@+id/chatClear"
+                    style="@style/MiniButton"
+                    android:layout_marginStart="8dp"
+                    android:text="@string/settings_clear_group" />
+            </LinearLayout>
         </LinearLayout>
 
         <!-- 语音识别 -->
@@ -204,6 +218,13 @@
                     android:textColor="@color/ink"
                     android:textSize="15sp"
                     android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/asrStatus"
+                    style="@style/ShiyuSubtitle"
+                    android:layout_marginEnd="10dp"
+                    android:textSize="11.5sp"
+                    tools:text="未配置" />
 
                 <Switch
                     android:id="@+id/switchAsr"
@@ -246,13 +267,26 @@
                 android:hint="@string/field_model"
                 android:inputType="text" />
 
-            <Button
-                android:id="@+id/asrTest"
-                style="@style/MiniButton"
+            <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_marginStart="0dp"
+                android:layout_height="wrap_content"
                 android:layout_marginTop="14dp"
-                android:text="@string/test_connection" />
+                android:orientation="horizontal">
+
+                <Button
+                    android:id="@+id/asrTest"
+                    style="@style/MiniButton"
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:layout_marginStart="0dp"
+                    android:text="@string/test_connection" />
+
+                <Button
+                    android:id="@+id/asrClear"
+                    style="@style/MiniButton"
+                    android:layout_marginStart="8dp"
+                    android:text="@string/settings_clear_group" />
+            </LinearLayout>
         </LinearLayout>
 
         <!-- 语音合成 -->
@@ -287,6 +321,13 @@
                     android:textColor="@color/ink"
                     android:textSize="15sp"
                     android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/ttsStatus"
+                    style="@style/ShiyuSubtitle"
+                    android:layout_marginEnd="10dp"
+                    android:textSize="11.5sp"
+                    tools:text="未配置" />
 
                 <Switch
                     android:id="@+id/switchTts"
@@ -335,13 +376,26 @@
                 android:hint="@string/field_voice"
                 android:inputType="text" />
 
-            <Button
-                android:id="@+id/ttsTest"
-                style="@style/MiniButton"
+            <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_marginStart="0dp"
+                android:layout_height="wrap_content"
                 android:layout_marginTop="14dp"
-                android:text="@string/test_connection" />
+                android:orientation="horizontal">
+
+                <Button
+                    android:id="@+id/ttsTest"
+                    style="@style/MiniButton"
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:layout_marginStart="0dp"
+                    android:text="@string/test_connection" />
+
+                <Button
+                    android:id="@+id/ttsClear"
+                    style="@style/MiniButton"
+                    android:layout_marginStart="8dp"
+                    android:text="@string/settings_clear_group" />
+            </LinearLayout>
         </LinearLayout>
 
         <!-- 实时语音（第 4 组） -->
@@ -377,6 +431,13 @@
                     android:textSize="15sp"
                     android:textStyle="bold" />
 
+                <TextView
+                    android:id="@+id/realtimeStatus"
+                    style="@style/ShiyuSubtitle"
+                    android:layout_marginEnd="10dp"
+                    android:textSize="11.5sp"
+                    tools:text="未配置" />
+
                 <Switch
                     android:id="@+id/switchRealtime"
                     android:layout_width="wrap_content"
@@ -386,7 +447,7 @@
             <EditText
                 android:id="@+id/realtimeBaseUrl"
                 style="@style/FieldInput"
-                android:hint="@string/realtime_default_url"
+                android:hint="@string/field_base_url"
                 android:inputType="textUri" />
 
             <LinearLayout
@@ -415,7 +476,7 @@
             <EditText
                 android:id="@+id/realtimeModel"
                 style="@style/FieldInput"
-                android:hint="@string/realtime_default_model"
+                android:hint="@string/field_model"
                 android:inputType="text" />
 
             <EditText
@@ -472,13 +533,26 @@
                 android:textColor="@color/mute"
                 android:textSize="11sp" />
 
-            <Button
-                android:id="@+id/realtimeTest"
-                style="@style/MiniButton"
+            <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_marginStart="0dp"
+                android:layout_height="wrap_content"
                 android:layout_marginTop="14dp"
-                android:text="@string/test_connection" />
+                android:orientation="horizontal">
+
+                <Button
+                    android:id="@+id/realtimeTest"
+                    style="@style/MiniButton"
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:layout_marginStart="0dp"
+                    android:text="@string/test_connection" />
+
+                <Button
+                    android:id="@+id/realtimeClear"
+                    style="@style/MiniButton"
+                    android:layout_marginStart="8dp"
+                    android:text="@string/settings_clear_group" />
+            </LinearLayout>
         </LinearLayout>
 
         <Button

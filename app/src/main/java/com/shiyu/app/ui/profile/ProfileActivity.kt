@@ -353,10 +353,13 @@ class ProfileActivity : BaseActivity() {
             .setMessage(R.string.profile_clear_confirm)
             .setNegativeButton(R.string.cancel, null)
             .setPositiveButton(R.string.delete) { _, _ ->
+                // **不清 API 配置**。原先这里调了 settingsRepository.clear()，
+                // 结果是「想清学习记录」的人把 8 组配置连同 50 位的 Key 一起清掉了 ——
+                // 重新输一遍非常痛苦，而且和"清空学习数据"的预期完全不符。
+                // 配置改由设置页每组的「清空」按钮单独处理，粒度明确、互不影响。
                 AppGraph.studyStore.clear()
                 AppGraph.sessionStore.clear()
                 AppGraph.dailyStatsStore.clear()
-                AppGraph.settingsRepository.clear()
                 Toast.makeText(this, R.string.profile_cleared, Toast.LENGTH_SHORT).show()
                 binding.autoPlaySwitch.isChecked = true
                 render()

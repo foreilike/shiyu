@@ -71,14 +71,11 @@
     <string name="history_trash">回收站</string>
     <string name="history_trash_sub">删掉的对话会先放这里，随时可以恢复</string>
     <string name="history_trash_empty">回收站是空的</string>
-    <string name="history_trash_confirm">移入回收站？
-%1$s
-之后可以在回收站里恢复。</string>
+    <string name="history_trash_confirm">移入回收站？\n\n%1$s\n\n之后可以在回收站里恢复。</string>
     <string name="history_trashed">已移入回收站</string>
     <string name="history_restore_confirm">恢复这条对话记录？</string>
     <string name="history_restored">已恢复</string>
-    <string name="history_purge_confirm">彻底删除后无法找回，确定吗？
-%1$s</string>
+    <string name="history_purge_confirm">彻底删除后无法找回，确定吗？\n\n%1$s</string>
     <string name="history_purged">已彻底删除</string>
     <string name="history_empty_trash">清空回收站</string>
     <string name="history_empty_trash_confirm">清空后无法找回，确定吗？</string>
@@ -223,14 +220,21 @@
     <!-- 设置页 -->
     <string name="settings_title">设置</string>
     <string name="settings_config_lang">配置语言</string>
-    <string name="settings_copy_to_other">把当前语言的配置复制到%1$s</string>
+    <string name="settings_status_unset">未配置</string>
+<string name="settings_status_ready">已开启</string>
+<string name="settings_status_disabled">已关闭</string>
+<string name="settings_clear_group">清空</string>
+<string name="settings_clear_group_title">清空「%1$s」</string>
+<string name="settings_clear_group_confirm">把这组的接口地址、API Key、模型名、音色全部清掉，并关闭开关？\n\n其它组不受影响。</string>
+<string name="settings_clear_group_done">已清空「%1$s」</string>
+<string name="settings_copy_to_other">把当前语言的配置复制到%1$s</string>
     <string name="settings_copy_confirm">把「%1$s」的 4 组配置（地址、Key、模型名、音色、开关）整体复制到「%2$s」？</string>
     <string name="settings_copy_done">已复制 %1$d 组到%2$s</string>
     <string name="settings_copy_empty">当前语言的 4 组都还是空的，先填一组再复制</string>
     
     
     
-    <string name="settings_sync_hint">这个按钮是省事用的，不是必做。四组能力各用一家的模型也完全正常，那就分别填。复制会覆盖目标语言已有的同名配置。</string>
+    
     
     
     
@@ -248,9 +252,9 @@
     <string name="field_silence_ms">静音断句时长（ms）</string>
     <string name="field_energy_threshold">唤醒能量阈值（0–5000）</string>
     <string name="field_prefix_padding_ms">前置填充（ms）</string>
-    <string name="realtime_default_url">wss://api.stepfun.com/v1/realtime</string>
-    <string name="realtime_default_model">step-audio-2-mini</string>
-    <string name="realtime_hint">实时语音单条 WebSocket 同时承载听与说；静音段也会计费，App 已在端上做静音门控。</string>
+    
+    
+    <string name="realtime_hint">单条 WebSocket 同时承载听与说；静音段也会计费，App 已在端上做静音门控。</string>
     <string name="field_base_url">接口地址（baseUrl）</string>
     <string name="field_api_key">API Key</string>
     <string name="field_model">模型名（model）</string>
@@ -277,7 +281,7 @@
     <string name="profile_today_due">今日待复习</string>
     <string name="profile_mastered">已掌握</string>
     <string name="profile_total_turns">累计对话轮数</string>
-    <string name="profile_clear_confirm">确定要清空全部数据吗？此操作不可恢复。</string>
+    <string name="profile_clear_confirm">会清空：学习进度、对话记录、学习统计。\n\nAPI 配置（接口地址、Key、模型）会保留 —— 需要单独清除请到「API 设置」里用每组的「清空」按钮。</string>
     <string name="profile_cleared">已清空全部数据</string>
     <string name="profile_auto_play">自动朗读 AI 回复</string>
     <!-- 错误提示（§5.5 映射表） -->

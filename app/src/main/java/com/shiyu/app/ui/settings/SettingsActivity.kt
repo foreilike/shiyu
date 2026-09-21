@@ -68,6 +68,11 @@ class SettingsActivity : BaseActivity() {
         setupKeyToggle(SettingsRepository.Group.TTS, binding.ttsApiKey, binding.ttsKeyToggle)
         setupKeyToggle(SettingsRepository.Group.REALTIME, binding.realtimeApiKey, binding.realtimeKeyToggle)
 
+        binding.chatClear.setOnClickListener { confirmClearGroup(SettingsRepository.Group.CHAT) }
+        binding.asrClear.setOnClickListener { confirmClearGroup(SettingsRepository.Group.ASR) }
+        binding.ttsClear.setOnClickListener { confirmClearGroup(SettingsRepository.Group.TTS) }
+        binding.realtimeClear.setOnClickListener { confirmClearGroup(SettingsRepository.Group.REALTIME) }
+
         binding.chatTest.setOnClickListener { testGroup(SettingsRepository.Group.CHAT) }
         binding.asrTest.setOnClickListener { testGroup(SettingsRepository.Group.ASR) }
         binding.ttsTest.setOnClickListener { testGroup(SettingsRepository.Group.TTS) }
@@ -177,6 +182,31 @@ class SettingsActivity : BaseActivity() {
         ).show()
     }
 
+    /**
+     * 清空单组配置。
+     *
+     * 「清空全部数据」在「我的」页，粒度太粗 —— 想换掉对话服务的 Key 却不想动实时语音的配置，
+     * 之前只能一个个字段手动删。这里给每组一个独立的清空，互不影响。
+     */
+    private fun confirmClearGroup(group: SettingsRepository.Group) {
+        val label = groupLabel(group)
+        MaterialAlertDialogBuilder(this)
+            .setTitle(getString(R.string.settings_clear_group_title, label))
+            .setMessage(R.string.settings_clear_group_confirm)
+            .setNegativeButton(R.string.cancel, null)
+            .setPositiveButton(R.string.delete) { _, _ ->
+                val lang = AppGraph.settingsRepository.activeLang()
+                AppGraph.settingsRepository.update(lang, group, ProviderConfig())
+                loadForm()
+                Toast.makeText(
+                    this,
+                    getString(R.string.settings_clear_group_done, label),
+                    Toast.LENGTH_SHORT
+                ).show()
+            }
+            .show()
+    }
+
     // ---------- 表单 ----------
 
     private fun loadForm() {
@@ -202,8 +232,7 @@ class SettingsActivity : BaseActivity() {
         loadGroup(
             SettingsRepository.Group.REALTIME,
             binding.realtimeBaseUrl, binding.realtimeApiKey, binding.realtimeModel,
-            binding.realtimeKeyToggle, binding.realtimeVoice, binding.switchRealtime,
-            defaultBaseUrl = getString(R.string.realtime_default_url)
+            binding.realtimeKeyToggle, binding.realtimeVoice, binding.switchRealtime
         )
 
         val opts = AppGraph.settingsRepository.realtimeOptionsFor(lang)
@@ -220,20 +249,52 @@ class SettingsActivity : BaseActivity() {
         modelField: EditText,
         keyToggle: android.widget.Button,
         voiceField: EditText?,
-        enabled: Switch,
-        defaultBaseUrl: String? = null
+        enabled: Switch
     ) {
         val lang = AppGraph.settingsRepository.activeLang()
         val config = AppGraph.settingsRepository.groupFor(lang, group)
         realKeys[group] = config.apiKey
-        // 实时语音的地址没配过时**预填**官方默认值，而不是只留一行灰色提示 ——
-        // 提示文字和已填内容长得太像，用户会以为已经填好了，然后对着
-        // 「未配置实时语音服务」百思不得其解。
-        baseUrlField.setText(config.baseUrl.ifEmpty { defaultBaseUrl.orEmpty() })
+        // **不要预填任何"官方默认地址"**。两个理由：
+        //  1) 预填会让"清空全部数据"看起来没清干净（用户实际踩过）；
+        //  2) App 可能被分享给别人用，自带一个指向厂商的默认值等于替人做了选择。
+        // 空着就好，配没配由标题旁的状态徽章说清楚，不靠默认值暗示。
+        baseUrlField.setText(config.baseUrl)
         modelField.setText(config.model)
         voiceField?.setText(config.voice)
         enabled.isChecked = config.enabled
+        renderGroupStatus(group, config.enabled, config.baseUrl)
+        enabled.setOnCheckedChangeListener { _, _ -> renderGroupStatus(group, enabled.isChecked, baseUrlField.text.toString()) }
         renderKey(group, keyField, keyToggle)
+    }
+
+    /** 标题旁的状态：一眼看出这组配没配、开没开 */
+    private fun renderGroupStatus(
+        group: SettingsRepository.Group,
+        enabled: Boolean,
+        baseUrl: String
+    ) {
+        val view = statusViewFor(group) ?: return
+        val configured = baseUrl.isNotBlank()
+        view.text = getString(
+            when {
+                !configured -> R.string.settings_status_unset
+                enabled -> R.string.settings_status_ready
+                else -> R.string.settings_status_disabled
+            }
+        )
+        view.setTextColor(
+            androidx.core.content.ContextCompat.getColor(
+                this,
+                if (configured && enabled) R.color.ok_green else R.color.mute
+            )
+        )
+    }
+
+    private fun statusViewFor(group: SettingsRepository.Group): android.widget.TextView? = when (group) {
+        SettingsRepository.Group.CHAT -> binding.chatStatus
+        SettingsRepository.Group.ASR -> binding.asrStatus
+        SettingsRepository.Group.TTS -> binding.ttsStatus
+        SettingsRepository.Group.REALTIME -> binding.realtimeStatus
     }
 
     private fun renderKey(

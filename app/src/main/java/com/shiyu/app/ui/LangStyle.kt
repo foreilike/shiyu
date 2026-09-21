@@ -12,10 +12,11 @@ import com.shiyu.app.core.lang.LangId
  */
 object LangStyle {
 
-    fun partnerName(lang: LangId): String = when (lang) {
-        LangId.JA -> "yoyo"
-        LangId.EN -> "Emma"
-    }
+    /**
+     * 语伴名。**两门语言都用 yoyo** —— 用户明确要求统一成一个名字：
+     * 这是同一个产品里的同一个 AI 语伴，换语言就换名字反而割裂。
+     */
+    fun partnerName(lang: LangId): String = "yoyo"
 
     @ColorRes
     fun accentRes(lang: LangId): Int = when (lang) {
