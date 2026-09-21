@@ -57,7 +57,10 @@ class HistoryDetailActivity : BaseActivity() {
             return
         }
 
-        binding.headerBar.subTitle.text = getString(R.string.history_detail_title)
+        // 起过名字就用名字，否则用「对话详情」；起过名之后列表和详情才叫得一致
+        binding.headerBar.subTitle.text = record.title.ifBlank {
+            getString(R.string.history_detail_title)
+        }
         val userTurns = record.turns.count { it.role == "user" }
         val meta = mutableListOf(
             LangId.fromTag(record.langId).displayName,

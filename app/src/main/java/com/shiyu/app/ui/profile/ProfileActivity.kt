@@ -12,7 +12,7 @@ import android.widget.FrameLayout
 import android.widget.LinearLayout
 import android.widget.TextView
 import android.widget.Toast
-import androidx.appcompat.app.AlertDialog
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import androidx.core.content.ContextCompat
 import com.shiyu.app.AppGraph
 import com.shiyu.app.BuildConfig
@@ -278,7 +278,7 @@ class ProfileActivity : BaseActivity() {
             setPadding(pad, pad / 2, pad, 0)
             addView(input)
         }
-        AlertDialog.Builder(this)
+        MaterialAlertDialogBuilder(this)
             .setTitle(R.string.profile_edit_name)
             .setView(wrapper)
             .setNegativeButton(R.string.cancel, null)
@@ -326,7 +326,7 @@ class ProfileActivity : BaseActivity() {
                 }
             )
         }
-        AlertDialog.Builder(this)
+        MaterialAlertDialogBuilder(this)
             .setTitle(R.string.profile_daily_goal_title)
             .setView(wrapper)
             .setNegativeButton(R.string.cancel, null)
@@ -348,7 +348,7 @@ class ProfileActivity : BaseActivity() {
     }
 
     private fun confirmClear() {
-        AlertDialog.Builder(this)
+        MaterialAlertDialogBuilder(this)
             .setTitle(R.string.clear_all_data)
             .setMessage(R.string.profile_clear_confirm)
             .setNegativeButton(R.string.cancel, null)

@@ -138,16 +138,13 @@ class SettingsActivity : BaseActivity() {
             Toast.makeText(this, R.string.settings_https_only, Toast.LENGTH_LONG).show()
             return
         }
-        val chatKey = if (isMasked(SettingsRepository.Group.CHAT)) {
-            realKeys[SettingsRepository.Group.CHAT] ?: ""
-        } else {
-            binding.chatApiKey.text.toString().trim()
-        }
+        // 与保存/测试连接同一套判定，别再自己写一遍
+        val chatKey = currentKey(SettingsRepository.Group.CHAT)
         if (normalized.isNullOrEmpty() && chatKey.isEmpty()) {
             Toast.makeText(this, R.string.settings_sync_empty, Toast.LENGTH_LONG).show()
             return
         }
-        androidx.appcompat.app.AlertDialog.Builder(this)
+        com.google.android.material.dialog.MaterialAlertDialogBuilder(this)
             .setTitle(R.string.settings_sync_all)
             .setMessage(R.string.settings_sync_confirm)
             .setNegativeButton(R.string.cancel, null)
@@ -261,6 +258,37 @@ class SettingsActivity : BaseActivity() {
     private fun isMasked(group: SettingsRepository.Group): Boolean =
         keyVisible[group] != true && (realKeys[group] ?: "").isNotEmpty()
 
+    private fun groupLabel(group: SettingsRepository.Group): String = getString(
+        when (group) {
+            SettingsRepository.Group.CHAT -> R.string.provider_chat
+            SettingsRepository.Group.ASR -> R.string.provider_asr
+            SettingsRepository.Group.TTS -> R.string.provider_tts
+            SettingsRepository.Group.REALTIME -> R.string.provider_realtime
+        }
+    )
+
+    private fun keyFieldFor(group: SettingsRepository.Group): EditText = when (group) {
+        SettingsRepository.Group.CHAT -> binding.chatApiKey
+        SettingsRepository.Group.ASR -> binding.asrApiKey
+        SettingsRepository.Group.TTS -> binding.ttsApiKey
+        SettingsRepository.Group.REALTIME -> binding.realtimeApiKey
+    }
+
+    /**
+     * 当前这一组的 Key 该取哪个值。
+     *
+     * **保存和测试连接必须走同一个函数**：显示掩码时用已存的值（掩码不是真 Key，
+     * 存回去就毁了）；其余情况一律以输入框为准。
+     *
+     * 之前测试连接单独写成 `realKeys[group] ?: ""`，于是「刚填进去、还没保存」的 Key
+     * 它根本看不见 —— 拿空字符串去请求，服务端回 401，界面显示「API Key 无效」，
+     * 用户对着自己刚复制的 Key 百思不得其解。文档 §12.2 第 8 条要求"测试连接用当前
+     * 表单值即时构造"，这条意图在 Key 上从来没落实过。
+     */
+    private fun currentKey(group: SettingsRepository.Group): String =
+        if (isMasked(group)) (realKeys[group] ?: "")
+        else keyFieldFor(group).text.toString().trim()
+
     private fun setEditable(field: EditText, editable: Boolean) {
         field.isFocusable = editable
         field.isFocusableInTouchMode = editable
@@ -275,6 +303,12 @@ class SettingsActivity : BaseActivity() {
     ) {
         keyToggle.setOnClickListener {
             val nowVisible = keyVisible[group] != true
+            // 从「明文」切回「掩码」之前，先把输入框里的内容收进 realKeys。
+            // 掩码是按 realKeys 重新生成的，不收的话用户在明文态改的 Key 会被旧值覆盖 ——
+            // 而且界面上看不出任何异常，只是保存后才发现 Key 还是老的。
+            if (!nowVisible && !isMasked(group)) {
+                realKeys[group] = keyField.text.toString().trim()
+            }
             keyVisible[group] = nowVisible
             renderKey(group, keyField, keyToggle)
         }
@@ -298,7 +332,13 @@ class SettingsActivity : BaseActivity() {
             }
             val normalized = BaseUrlNormalizer.normalize(raw)
             if (normalized == null) {
-                Toast.makeText(this, R.string.settings_https_only, Toast.LENGTH_LONG).show()
+                // 说清楚是哪一组：保存是整体操作，任何一组地址不合法都会让**所有**改动都不落盘，
+                // 只提示一句"地址需以 https:// 开头"，用户根本不知道去看哪个输入框。
+                Toast.makeText(
+                    this,
+                    getString(R.string.settings_https_only_group, groupLabel(group)),
+                    Toast.LENGTH_LONG
+                ).show()
                 return
             }
             normalizedUrls[group] = normalized
@@ -348,9 +388,8 @@ class SettingsActivity : BaseActivity() {
     ) {
         val lang = AppGraph.settingsRepository.activeLang()
         val existing = AppGraph.settingsRepository.groupFor(lang, group)
-        // 显示掩码时保持原值，其余情况（明文态 / 原本为空刚输入）一律以输入框为准。
-        // 只看 keyVisible 会把"空 Key 首次手输"的内容丢掉。
-        val key = if (isMasked(group)) existing.apiKey else keyField.text.toString().trim()
+        // 与「测试连接」走同一套判定，避免两条路径对"当前 Key 是什么"理解不一致
+        val key = currentKey(group)
         val config = ProviderConfig(
             baseUrl = normalizedUrls[group] ?: existing.baseUrl,
             apiKey = key,
@@ -376,14 +415,20 @@ class SettingsActivity : BaseActivity() {
             Toast.makeText(this, R.string.settings_https_only, Toast.LENGTH_LONG).show()
             return
         }
-        val key = realKeys[group] ?: ""
+        val key = currentKey(group)
         val model = when (group) {
             SettingsRepository.Group.CHAT -> binding.chatModel.text.toString().trim()
             SettingsRepository.Group.ASR -> binding.asrModel.text.toString().trim()
             SettingsRepository.Group.TTS -> binding.ttsModel.text.toString().trim()
             SettingsRepository.Group.REALTIME -> binding.realtimeModel.text.toString().trim()
         }
-        val voice = binding.ttsVoice.text.toString().trim()
+        // 音色必须按组取：原先写死 ttsVoice，于是「测试连接」测实时语音时
+        // 拿的是语音合成那组填的音色 —— 表单里明明写着别的，请求却用这一组的。
+        val voice = when (group) {
+            SettingsRepository.Group.TTS -> binding.ttsVoice.text.toString().trim()
+            SettingsRepository.Group.REALTIME -> binding.realtimeVoice.text.toString().trim()
+            else -> ""
+        }
 
         val config = ProviderConfig(
             baseUrl = base,

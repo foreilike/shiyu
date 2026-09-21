@@ -545,14 +545,19 @@ class VoiceChatActivity : BaseActivity() {
 
     private fun newAiBubble(): TextView =
         TextView(this).apply {
-            textSize = 14f
+            textSize = 15f
             setTextColor(ContextCompat.getColor(context, R.color.cream))
-            setBackgroundResource(R.drawable.bg_card)
+            // 深色页专用气泡底。这里以前用的是 bg_card（浅色页的白底卡片），
+            // 奶油色字印白底 = 在夜幕上糊成一片白影，等于看不清。
+            setBackgroundResource(R.drawable.bg_bubble_ai_dark)
             setPadding(28, 20, 28, 20)
             val lp = LinearLayout.LayoutParams(
                 LinearLayout.LayoutParams.WRAP_CONTENT,
                 LinearLayout.LayoutParams.WRAP_CONTENT
-            ).apply { bottomMargin = 24 }
+            ).apply {
+                gravity = android.view.Gravity.START
+                bottomMargin = 24
+            }
             layoutParams = lp
             binding.transcriptContainer.addView(this)
             aiBubble = this
@@ -561,7 +566,7 @@ class VoiceChatActivity : BaseActivity() {
 
     private fun newUserBubble(): TextView =
         TextView(this).apply {
-            textSize = 14f
+            textSize = 15f
             setTextColor(ContextCompat.getColor(context, R.color.cream))
             setBackgroundResource(R.drawable.bg_bubble_user)
             setPadding(28, 20, 28, 20)
@@ -581,7 +586,7 @@ class VoiceChatActivity : BaseActivity() {
     private fun appendAiLine(text: String) {
         val tv = TextView(this).apply {
             textSize = 12f
-            setTextColor(0xFFA79684.toInt())
+            setTextColor(0xFFC9B8A4.toInt())
             setPadding(4, 8, 4, 8)
         }
         tv.text = text

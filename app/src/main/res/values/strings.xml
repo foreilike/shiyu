@@ -70,6 +70,30 @@
     <string name="history_empty">还没有对话记录\n去「对话」里挑个场景开口吧</string>
     <string name="history_mode_chat">场景对话</string>
     <string name="history_mode_realtime">实时语音</string>
+    <string name="history_delete">删除这条记录</string>
+    <string name="history_rename">重命名</string>
+    <string name="history_rename_title">给这段对话起个名字</string>
+    <string name="history_trash">回收站</string>
+    <string name="history_trash_sub">删掉的对话会先放这里，随时可以恢复</string>
+    <string name="history_trash_empty">回收站是空的</string>
+    <string name="history_trash_confirm">移入回收站？
+
+%1$s
+
+之后可以在回收站里恢复。</string>
+    <string name="history_trashed">已移入回收站</string>
+    <string name="history_restore_confirm">恢复这条对话记录？</string>
+    <string name="history_restored">已恢复</string>
+    <string name="history_purge_confirm">彻底删除后无法找回，确定吗？
+
+%1$s</string>
+    <string name="history_purged">已彻底删除</string>
+    <string name="history_empty_trash">清空回收站</string>
+    <string name="history_empty_trash_confirm">清空后无法找回，确定吗？</string>
+    <string name="history_trash_cleared">回收站已清空（%1$d 条）</string>
+    <string name="history_delete_title">删除对话记录</string>
+    <string name="history_delete_confirm">删除后无法恢复，确定删除这条记录吗？</string>
+    <string name="history_deleted">已删除</string>
     <string name="history_turns">%1$d 轮</string>
     <string name="history_duration">%1$d 分 %2$d 秒</string>
     <string name="history_detail_title">对话详情</string>
@@ -246,6 +270,7 @@
     <string name="test_failed_format">响应格式异常，无法解析</string>
     <string name="test_failed_generic">请求失败，请检查配置</string>
     <string name="settings_saved">已保存</string>
+    <string name="settings_https_only_group">「%1$s」的接口地址需以 https:// 或 wss:// 开头</string>
     <string name="settings_https_only">地址需以 https:// 或 wss:// 开头，请检查</string>
     <string name="settings_key_masked">掩码</string>
     <string name="settings_key_show">显示</string>

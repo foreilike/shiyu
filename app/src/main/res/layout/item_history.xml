@@ -67,9 +67,31 @@
     </LinearLayout>
 
     <ImageView
+        android:id="@+id/btnRename"
+        android:layout_width="38dp"
+        android:layout_height="38dp"
+        android:layout_marginStart="4dp"
+        android:background="?attr/selectableItemBackgroundBorderless"
+        android:contentDescription="@string/history_rename"
+        android:padding="10dp"
+        android:src="@drawable/ic_edit"
+        app:tint="@color/mute" />
+
+    <ImageView
+        android:id="@+id/btnDelete"
+        android:layout_width="38dp"
+        android:layout_height="38dp"
+        android:layout_marginStart="4dp"
+        android:background="?attr/selectableItemBackgroundBorderless"
+        android:contentDescription="@string/history_delete"
+        android:padding="10dp"
+        android:src="@drawable/ic_delete"
+        app:tint="@color/mute" />
+
+    <ImageView
         android:layout_width="14dp"
         android:layout_height="14dp"
-        android:layout_marginStart="10dp"
+        android:layout_marginStart="2dp"
         android:contentDescription="@null"
         android:src="@drawable/ic_chevron_right"
         app:tint="@color/mute" />

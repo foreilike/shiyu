@@ -72,8 +72,11 @@ class SessionStore(private val sessionsDir: File) {
         return updated
     }
 
-    fun load(sessionId: String): SessionRecord? {
-        val file = sessionFile(sessionId)
+    fun load(sessionId: String): SessionRecord? = loadFrom(sessionFile(sessionId))
+
+    private fun trashDir(): File = File(sessionsDir, "trash")
+
+    private fun loadFrom(file: File): SessionRecord? {
         if (!file.exists()) return null
         val text = try {
             file.readText()
@@ -105,7 +108,84 @@ class SessionStore(private val sessionsDir: File) {
             .filter { it.langId == lang.tag }
             .sumOf { record -> record.turns.count { it.role == "user" } }
 
-    /** 清空会话记录（「我的」页清空数据时调用） */
+    /**
+     * 删除单条会话记录 —— **不真删，移进回收站**。
+     *
+     * 对话是攒出来的东西，误删一次就没了太可惜。回收站是 `sessions/trash/` 子目录：
+     * `allSessions` 只扫 sessionsDir 下的**文件**（子目录 isFile 为 false），
+     * 所以放进去就自然从列表里消失了，不用额外加标记位。
+     */
+    fun trash(sessionId: String): Boolean {
+        val file = sessionFile(sessionId)
+        if (!file.exists()) return false
+        val dir = trashDir()
+        if (!dir.exists()) dir.mkdirs()
+        return try {
+            file.renameTo(File(dir, file.name))
+        } catch (e: Exception) {
+            false
+        }
+    }
+
+    /** 回收站里的会话，按删除时间（文件修改时间）倒序 */
+    fun trashedSessions(): List<SessionRecord> {
+        val files = trashDir().listFiles { f -> f.isFile && f.name.endsWith(".json") }
+            ?: return emptyList()
+        return files
+            .sortedByDescending { it.lastModified() }
+            .mapNotNull { loadFrom(it) }
+    }
+
+    fun trashedCount(): Int =
+        trashDir().listFiles { f -> f.isFile && f.name.endsWith(".json") }?.size ?: 0
+
+    /** 从回收站恢复 */
+    fun restore(sessionId: String): Boolean {
+        val file = File(trashDir(), "$sessionId.json")
+        if (!file.exists()) return false
+        if (!sessionsDir.exists()) sessionsDir.mkdirs()
+        return try {
+            file.renameTo(sessionFile(sessionId))
+        } catch (e: Exception) {
+            false
+        }
+    }
+
+    /** 从回收站彻底删除单条 */
+    fun purge(sessionId: String): Boolean {
+        val file = File(trashDir(), "$sessionId.json")
+        return try {
+            if (file.exists()) file.delete() else false
+        } catch (e: Exception) {
+            false
+        }
+    }
+
+    /** 清空回收站，返回删掉几条 */
+    fun emptyTrash(): Int {
+        val files = trashDir().listFiles { f -> f.isFile && f.name.endsWith(".json") }
+            ?: return 0
+        var n = 0
+        for (f in files) {
+            try { if (f.delete()) n++ } catch (e: Exception) { /* 跳过 */ }
+        }
+        return n
+    }
+
+    /**
+     * 给会话起个名字（留空 = 恢复成场景名）。回收站里的也能改名，
+     * 所以两个目录都试一下。
+     */
+    fun rename(sessionId: String, title: String): Boolean {
+        val trimmed = title.trim().take(MAX_TITLE_LENGTH)
+        val record = load(sessionId)
+            ?: loadFrom(File(trashDir(), "$sessionId.json"))
+            ?: return false
+        save(record.copy(title = trimmed))
+        return true
+    }
+
+    /** 清空会话记录（「我的」页清空数据时调用）——连同回收站一起 */
     fun clear() {
         try {
             if (sessionsDir.exists()) sessionsDir.deleteRecursively()
@@ -137,6 +217,7 @@ class SessionStore(private val sessionsDir: File) {
             startedAt = root.optLong("startedAt", 0L),
             mode = root.optString("mode", MODE_CHAT).ifEmpty { MODE_CHAT },
             durationSeconds = root.optLong("durationSeconds", 0L),
+            title = root.optString("title", ""),
             turns = turns
         )
     }
@@ -151,6 +232,7 @@ class SessionStore(private val sessionsDir: File) {
         root.put("startedAt", record.startedAt)
         root.put("mode", record.mode)
         root.put("durationSeconds", record.durationSeconds)
+        root.put("title", record.title)
         val turnsArr = JSONArray()
         for (turn in record.turns) {
             val o = JSONObject()
@@ -159,8 +241,13 @@ class SessionStore(private val sessionsDir: File) {
             turnsArr.put(o)
         }
         root.put("turns", turnsArr)
-        val file = sessionFile(record.sessionId)
-        val tmp = File(sessionsDir, file.name + ".tmp")
+        // 就地更新：记录若在回收站里，别因为一次改名把它挪出来。
+        // 两个目录都查一遍，在哪个目录就在哪个目录重写。
+        val inTrash = File(trashDir(), "${record.sessionId}.json")
+        val dir = if (!sessionFile(record.sessionId).exists() && inTrash.exists()) trashDir()
+        else sessionsDir
+        val file = File(dir, "${record.sessionId}.json")
+        val tmp = File(dir, file.name + ".tmp")
         tmp.writeText(root.toString())
         if (file.exists()) file.delete()
         if (!tmp.renameTo(file)) {
@@ -180,5 +267,10 @@ class SessionStore(private val sessionsDir: File) {
         } catch (e: Exception) {
             // 隔离失败也不得影响调用方
         }
+    }
+
+    companion object {
+        /** 自定义名称长度上限 */
+        const val MAX_TITLE_LENGTH = 24
     }
 }

@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  实时语音页的 AI 气泡底（深色沉浸页专用）。
+
+  **别用 bg_card**：那是浅色页的白底卡片，而这里的文字是奶油色 —— 浅字印白底，
+  在深色页上糊成一片，等于看不见。这类「同色字印同色底」的坑在这个工程里踩过好几次
+  （MaterialButton 那批、语音页写死的文案），本质都是把浅色页的资源用到了深色页上。
+
+  做法：极淡的浅色底 + 暖金细描边，在夜幕上足够分辨，又不抢视线。
+-->
+<shape xmlns:android="http://schemas.android.com/apk/res/android"
+    android:shape="rectangle">
+    <solid android:color="#1FF4EDE5" />
+    <stroke
+        android:width="1dp"
+        android:color="#33C89B72" />
+    <corners android:radius="18dp" />
+</shape>
