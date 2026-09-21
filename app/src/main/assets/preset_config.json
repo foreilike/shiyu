@@ -1,0 +1,18 @@
+{
+  "_comment": "出厂预置配置：首次启动且本地没有任何配置时写入。放进 APK 意味着 API Key 是明文的，只适合自用/内部分发，不要外传这个安装包。",
+  "activeLang": "ja",
+  "groups": {
+    "chat": {
+      "baseUrl": "https://api.stepfun.com/step_plan/v1",
+      "apiKey": "REDACTED_API_KEY",
+      "model": "step-5-preview",
+      "enabled": true
+    },
+    "realtime": {
+      "baseUrl": "wss://api.stepfun.com/v1/realtime",
+      "apiKey": "REDACTED_API_KEY",
+      "model": "stepaudio-3-realtime-preview",
+      "enabled": true
+    }
+  }
+}

@@ -3,6 +3,7 @@ package com.shiyu.app
 import android.content.Context
 import com.shiyu.app.ai.AiProviderRegistry
 import com.shiyu.app.data.asset.AssetRepository
+import com.shiyu.app.data.asset.PresetConfig
 import com.shiyu.app.data.secret.KeystoreSecretStore
 import com.shiyu.app.data.store.DailyStatsStore
 import com.shiyu.app.data.store.SessionStore
@@ -38,5 +39,7 @@ object AppGraph {
         dailyStatsStore = DailyStatsStore(File(app.filesDir, "daily_stats.json"))
         assetRepository = AssetRepository(app)
         providerRegistry = AiProviderRegistry(settingsRepository)
+        // 出厂预置配置：只在本地一份配置都没有时写入（不会覆盖用户已改的设置）
+        PresetConfig.seedIfEmpty(app, settingsRepository)
     }
 }
