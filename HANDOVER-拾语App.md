@@ -18,7 +18,7 @@
 | 学习语言 | 日语 + 英语双语，可切换，进度/配置全隔离；韩/西/法在「课程」页标为即将支持 |
 | 工程根目录 | `D:\AI project\lang-partner`（目录名保留，未随应用改名） |
 | 主源码规模 | 72 个 `.kt`（6,519 行）+ 16 个布局 + 36 个 drawable + 6 份 assets JSON |
-| 测试 | **26 个测试类 / 356 个单测，全绿**（fail=0 err=0 skip=0），`lintDebug` 0 error |
+| 测试 | **26 个测试类 / 362 个单测，全绿**（fail=0 err=0 skip=0），`lintDebug` 0 error |
 | 交付 APK | `Shiyu-v1.0.0-release.apk`（约 5.70 MB，已签名） |
 | 构建命令 | 见 §2.2（**必须显式设置 `JAVA_HOME=D:\a\jbr`**） |
 | 联网能力 | 4 种 AI 能力（对话 / 识别 / 合成 / 实时语音）；**未配置凭证时全部降级为本地 Mock，App 照常可跑完流程** |
@@ -42,7 +42,7 @@
 1. **`JAVA_HOME` 是本机最大的坑。** 本机默认 JDK 11 与 AGP 8.7.3 不兼容，每次构建前必须显式指向 `D:\a\jbr`（Android Studio 自带 JBR 21）。
 2. **`keystore/` 与 `keystore.properties` 是发布身份的唯一凭据。** 丢失后**无法再向同一应用 ID 发布任何更新**（只能换包名重新上架）。必须立即异地备份，详见 §14.3。
 3. **布局里不要再写 `android:background` 给 `<Button>`。** 主题是 Theme.Material3，`<Button>` 会被自动换成 `MaterialButton`，它**完全忽略 `android:background`**，用主题默认的陶土填充；如果文字色恰好也是陶土，就变成一个没字的深色方块（v1.0 的「显示 Key」「测试连接」「录音」三处就是这么坏的）。统一用 §17.3 的三个 `ShiyuButton.*` 样式。
-4. **真机冒烟已执行大半，但必须知道「单测全绿」不等于「能跑」。** v1.0 交付时的 `MessageAdapter` 有一行必然抛 `ClassCastException` 的强转，导致「场景对话」在真机上**一进就崩**，而 321 个单测全绿、没人发现 —— 因为没有任何一条测试覆盖 ViewBinding/RecyclerView 绑定。本次已修复（§17.7 ③），并把验证结果记在 §13.1；剩余未走查项也在那里。
+4. **「单测全绿」不等于「能跑」，这个仓库已经栽过两次。** v1.0 交付时的 `MessageAdapter` 有一行必然抛 `ClassCastException` 的强转，「场景对话」在真机上**一进就崩**（§17.7 ③）；本轮又抓出「返回首页」按钮失灵、朗读语言错误、「待复习」跨语言串号三个 bug（§17.11）。四个都有同一个特征：**单测覆盖不到 View 层与异步初始化**。UI 改动请务必真机验，方法见 §13.1 开头的操作经验。
 
 ---
 
@@ -680,7 +680,7 @@ $env:JAVA_HOME = "D:\a\jbr"; .\gradlew.bat :app:testDebugUnitTest --console=plai
 # 原始：app\build\test-results\testDebugUnitTest\*.xml
 ```
 
-### 11.2 明细（26 类 / **356 例**，全绿）
+### 11.2 明细（26 类 / **362 例**，全绿）
 
 | 测试类 | 例数 | | 测试类 | 例数 |
 |---|---|---|---|---|
@@ -692,12 +692,12 @@ $env:JAVA_HOME = "D:\a\jbr"; .\gradlew.bat :app:testDebugUnitTest --console=plai
 | **`core.srs.DailyQuotaTest`** | **7** | | | |
 | `core.context.ContextTrimmerTest` | 10 | | **`core.stats.AchievementsTest`** | **8** |
 | `core.lang.LanguageModuleTest` | 13 | | `data.asset.AssetContentTest` | 9 |
-| `core.lang.MockProviderTest` | 7 | | **`data.store.DailyStatsStoreTest`** | **15** |
+| `core.lang.MockProviderTest` | 7 | | **`data.store.DailyStatsStoreTest`** | **21** |
 | `core.lang.en.EnNormalizerTest` | 26 | | `data.store.SessionStoreTest` | 8 |
 | `core.lang.en.EnSentenceSplitterTest` | 25 | | `data.store.SettingsRepositoryTest` | 17 |
 | `core.lang.en.EnTokenizerTest` | 27 | | `data.store.StudyStoreTest` | 12 |
 | `core.lang.ja.KanaConverterTest` | 40 | | `core.lang.ja.KanaNormalizerTest` | 7 |
-| `core.log.LogRedactorTest` | 5 | | **合计** | **356** |
+| `core.log.LogRedactorTest` | 5 | | **合计** | **362** |
 
 加粗为本次改造新增：`AchievementsTest`（成就判定）、`DailyStatsStoreTest`（每日统计 / 连续天数 /
 本周切片 / 坏 JSON 隔离），另外 `SettingsRepositoryTest` 从 12 例加到 17 例（新增 nickname 的
@@ -761,13 +761,19 @@ lint error 会直接让这条命令失败，别忽略。
 
 ### 13.1 P0 —— 真机冒烟清单
 
-测试机：魅族 22（`adb devices` 确认）。**注意 release 与 debug 签名不同，不能互相覆盖安装，切换前先卸载。**
+测试机：魅族 22（`adb devices` 确认）。**release 与 debug 签名不同，不能互相覆盖安装，切换前先卸载。**
 
-> 经验：这台魅族 22 的 USB 连接**极不稳定，约 1–2 分钟掉一次**，逐屏截图验收会一直被打断。
-> 建议先 `adb tcpip 5555` 切无线调试再验（本次试过，本机网络策略下连不上 5555，需要换网络环境）。
-> 另外截图前要确认没进 Dozing：`adb shell dumpsys power | grep mWakefulness`。
+> **操作经验（省下接手人的时间）：**
+> - 这台机器的 USB 连接**约 1–2 分钟掉一次**，`adb tcpip 5555` 在本机网络下连不上；截图前先
+>   `adb shell svc power stayon true`，并确认 `dumpsys power | grep mWakefulness` 不是 Dozing。
+> - **`adb shell input tap` 连续点击经常丢**。不要靠肉眼估算坐标：先
+>   `uiautomator dump` 拿真实 bounds 再点，并且每次点完用
+>   `dumpsys activity activities | grep topResumedActivity` 复核落点。
+> - Git Bash 下 `/sdcard/...` 会被当成本地路径，拉 dump 文件要 `export MSYS_NO_PATHCONV=1`。
+> - **想读落盘数据就装 debug 包**（release 不可调试，`run-as` 用不了）：
+>   `adb shell run-as com.shiyu.app cat files/daily_stats.json`。
 
-**已在真机验证通过（2026-09-20 / 09-21，release 包）：**
+**已在真机验证通过（2026-09-20 / 09-21）：**
 
 | # | 步骤 | 结果 |
 |---|---|---|
@@ -775,36 +781,44 @@ lint error 会直接让这条命令失败，别忽略。
 | 2 | 五个 Tab 逐个点开 | ✅ 今日 / 课程 / 对话 / 复习 / 我的 全部正常，中央麦克风凸起正确 |
 | 3 | 状态栏与页头 | ✅ 暖纸底延伸到屏幕顶端，状态栏图标为深色，页头不被压住 |
 | 4 | 课程页切语言 | ✅ 切到英语后首页语伴变 Emma、卡片总数变 110、韩/西/法为灰态 |
-| 5 | 复习页出卡 | ✅ 「今日待复习 20」与首页一致，卡片正面/例句挖空正常 |
-| 6 | **复习页输入答案 → 确认** | ✅ 两段式翻转正常；显示读音与判题结果（含「回答错误：输入 X，期望 Y」）；四个评分键出现 |
-| 7 | **点评分「太简单了」** | ✅ 进下一张；「今日待复习」减 1；首页「复习 1 张」与目标环 8 分钟同步更新 |
+| 5 | 复习页出卡 | ✅ 卡片正面/例句挖空正常 |
+| 6 | 复习页输入答案 → 确认 | ✅ 两段式翻转正常；显示读音与判题结果；四个评分键出现 |
+| 7 | 点评分「太简单了」 | ✅ 进下一张；「今日待复习」减 1；首页「复习 1 张」同步更新 |
 | 8 | 首页 / 复习页口径 | ✅ 两个页面显示的待复习张数**完全一致**（走同一个 `DailyQuota`） |
-| 9 | **发音表（二级页）** | ✅ 英语音素表按 vowel / consonant 分节，卡片格子排列正常，点格子显示说明 |
-| 10 | 我的页数据 | ✅ 连续天数 / 掌握词汇 / 累计小时 / 周柱状图 / 6 枚成就进度均为真实值 |
-| 11 | 我的页改名 | ✅ 改名后头像取首字、首页问候语带上称呼 |
-| 12 | **场景对话（不配凭证）** | ✅ 开场白分句显示、目标表达可见、「未配置对话服务」提示、**「发送」与「录音」按钮文字可见** |
-| 13 | **文字发送一轮** | ✅ 用户气泡靠右（陶土）、AI 气泡靠左（白底描边）、`(mock)` 三段式回复 + 中文翻译 |
-| 14 | **对话轮次埋点** | ✅ 我的页「英语：对话 1 轮」、「健谈者 1/100」同步更新 |
-| 15 | 清空全部数据 | ✅ 统计归零，「初次开口」回到 0/1 未解锁 |
-| 16 | 语音页深色沉浸 | ✅ 夜幕底、状态栏图标转浅色、「开始对话」按钮文字可见 |
-| 17 | 设置页 | ✅ 「显示」「测试连接」「保存」按钮**全部有文字**；输入框间距正常、不再与按钮重叠 |
-| 18 | **设置页语言芯片** | ✅ 标题随语言变（设置 · 日语 / 设置 · 英语），芯片高亮正确，有切换提示 |
-| 19 | **一键同步的空值防护** | ✅ 对话组为空时给「请先填好…」提示，不弹确认框、不误覆盖 |
+| 9 | **双语隔离（数据层）** | ✅ 日语评 1 张后 `study_progress.json` 为 `ja:1 / en:0`；`daily_stats.json` 的 `reviewedByLang` 为 `{"ja":1}` |
+| 10 | **双语隔离（显示层）** | ✅ 日语评 1 张后切到英语，英语仍显示 20 张（修复前会被扣成 19） |
+| 11 | **杀进程重启** | ✅ 语言、进度、连续天数全部保持 |
+| 12 | 发音表（二级页） | ✅ 日语五十音 / 英语音素表分节正常，卡片格子排列正确 |
+| 13 | **发音表点格子朗读** | ✅ 日志实测 `Synthesis request for locale jpn-JPN` + `AudioTrack start`（真的发声） |
+| 14 | **片假名切换** | ✅ 网格切成 ア イ ウ エ オ…，顶部说明同步为「あ / ア　a」 |
+| 15 | **对话页点句子朗读** | ✅ 日志实测 `locale eng-USA` + `AudioTrack start` |
+| 16 | 我的页数据 | ✅ 连续天数 / 掌握词汇 / 累计小时 / 周柱状图（今天有柱子）/ 成就进度均为真实值 |
+| 17 | 我的页改名 | ✅ 改名后头像取首字、首页问候语带上称呼 |
+| 18 | 场景对话（不配凭证） | ✅ 开场白分句、目标表达、「未配置对话服务」提示、按钮文字均可见 |
+| 19 | 文字发送一轮 | ✅ 用户气泡靠右、AI 气泡靠左、`(mock)` 三段式回复 + 中文翻译 |
+| 20 | 对话轮次埋点 | ✅ 我的页「对话 1 轮」、「健谈者 1/100」同步更新 |
+| 21 | **实时语音 Mock 全流程** | ✅ 准备层（头像 E /「和 Emma 聊聊天」跟随语言）→ 开始对话 → 计时、波形、「正在聆听…」、静音门控提示「已静默暂停推流」、Mock 字幕气泡 → 结束 → 总结层（时长/轮次） |
+| 22 | **实时语音埋点** | ✅ `daily_stats.json` 的 `voiceSeconds` 累加；「初次开口」成就解锁 |
+| 23 | **「返回首页」按钮** | ✅ 正确回到「今日」页（修复前会重复弹总结层，用户被困在语音页） |
+| 24 | **一键同步 · 空值防护** | ✅ 对话组为空时给提示，不弹确认框 |
+| 25 | **一键同步 · 实际覆盖** | ✅ 对话组填 `https://api.example.com/v1` 后同步：语音识别组被填上、**英语语言的配置也被填上** |
+| 26 | **一键同步 · 边界** | ✅ 实时语音组的 `wss://api.stepfun.com/v1/realtime` **未被覆盖**（设计如此） |
+| 27 | 设置页语言芯片 | ✅ 标题随语言变，芯片高亮正确 |
+| 28 | 设置页 | ✅ 「显示」「测试连接」「保存」按钮文字全部可见；输入框间距正常 |
+| 29 | **横竖屏切换** | ✅ 不崩溃，布局自动重排，底部导航正确（卡片区在横屏需滚动，属已知取舍） |
+| 30 | 清空全部数据 | ✅ 统计归零，「初次开口」回到 0/1 未解锁 |
 
-**仍未走查（接手后第一优先级）：**
+**需要真实凭据、本次未验（接手人自己配好服务后走一遍即可）：**
 
 | # | 步骤 | 预期 |
 |---|---|---|
-| 20 | 飞行模式下做 3 张卡，评分 2/3/4/5 各一次 | 无崩溃；切语言后进度不串（V19） |
-| 21 | 杀掉 App 重进 | 当前语言、进度、昵称都保持 |
-| 22 | 点 AI 回复中的单句 | 系统 TTS 朗读该句 |
-| 23 | 发音表点格子朗读 | 真的发出语音（本次只验了选中态） |
-| 24 | 一键同步的实际覆盖 | 确认识别/合成/另一语言的地址与 Key 被填上，**且实时语音的地址不变** |
-| 25 | 实时语音 hero → 开始对话 | 授权麦克风；波形有反应；静音 800ms 后出现「已静默暂停推流」 |
-| 26 | 点「结束对话」 | 出总结层，时长与轮次有数值；回首页后「开口 N 分钟」与「初次开口」成就更新 |
-| 27 | 填真实 OpenAI 兼容服务，逐组「测试连接」 | 4 组各自给出预期中文提示 |
-| 28 | 配 stepfun realtime 后重做 25–26 | WebSocket 握手成功；能听到语音；字幕逐字出现；用户一开口 AI 立刻停播（barge-in） |
-| 29 | 横竖屏切换 | 已知代价：配置变更会丢当前卡片状态（§12.1 第 5 条） |
+| 31 | 填一个真实 OpenAI 兼容服务，逐组「测试连接」 | 4 组各自给出预期中文提示（成功 / Key 无效 / 地址不存在…） |
+| 32 | 配 stepfun realtime 后重做 21–22 | WebSocket 握手成功；能听到 AI 语音；字幕逐字出现；用户一开口立刻停播（barge-in） |
+| 33 | 回合制录音链路（真机麦克风 → STT → LLM → TTS） | 上传前 VAD 裁静音；识别文本回填输入框 |
+
+> 第 33 条是唯一**完全没被覆盖过**的一段：`ChatActivity` 的录音 → `AudioVadTrimmer` →
+> `OpenAiSttProvider` 这条链路只有单测覆盖，真机上一次都没跑过。不是本次改造引入的风险，
+> 但接手后建议优先补。
 
 ### 13.2 P1 —— 音频质量（用户已明确提出过）
 
@@ -1091,6 +1105,51 @@ if (lp != null) {
 - §13.1 后半段的 14 条真机走查尚未执行。
 
 ---
+
+### 17.11 三个由真机走查抓出来的 bug（2026-09-21 第二轮）
+
+**① 「返回首页」把用户困在语音页。**
+`VoiceChatActivity` 的总结层里 `btnExit` 接了 `endSession()` —— 而这一轮早就结算过了，
+再调一次只会重算时长、把总结层重新弹一遍，按钮看起来完全没反应。
+改成直接回「今日」页（只 `finish()` 会退到「对话」Tab，和按钮写着的"首页"对不上，
+两个坑都踩过）：
+
+```kotlin
+binding.btnExit.setOnClickListener {
+    startActivity(Intent(this, HomeActivity::class.java)
+        .addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT))
+    finish()
+}
+```
+
+**② 朗读用错了语言 —— `TextToSpeech` 初始化是异步的。**
+
+`Speaker` 原先在构造后立刻 `tts?.language = locale`。但 `TextToSpeech(context, listener)`
+返回时引擎还没连上，这次赋值会在引擎初始化时被覆盖掉。调用方 invariably 是
+`Speaker(this)` 紧跟 `setLanguage(...)`（都在 `onCreate` 里），所以**语言设置从来没生效过**。
+
+表现：手机上系统默认是中文，于是**用中文音色去念英文和日文句子**。日志实锤 ——
+修复前 `Synthesis request for locale zho-CHN`，修复后 `eng-USA` / `jpn-JPN`。
+
+修法：把 locale 缓存起来，等 `onInit` 回调里再 `applyLanguage`；同时把
+`LANG_MISSING_DATA` / `LANG_NOT_SUPPORTED` 通过 `onLanguageUnavailable` 暴露给 UI
+（设备没装语音包时不再静默失败）。
+
+**③ 「今日待复习」跨语言串号。**
+`DailyQuota` 用的是 `DayStat.reviewedCards`（**当天全部语言**的复习总数），
+于是**在英语里评一张卡，日语的待复习也跟着少一张** —— 正是 V19 要求不能发生的串号，
+只不过发生在显示层而不是数据层。
+
+修法：`DayStat` 增加 `reviewedByLang`（tag → 张数），`record()` 增加 `langTag` 参数成对写入；
+`reviewedCards` 仍然保留为"当天活动总量"（首页活动小结用），两者用途不同，不是冗余。
+首页与复习页改取 `reviewedIn(lang.tag)`。
+
+> `DailyStatsStoreTest` 里专门有一条 `reviewing_one_language_does_not_touch_the_other`
+> 锁这个行为，别改回去。
+
+**顺带**：目标环只有分钟粒度，学了不到 1 分钟会显示「0 分钟」，而老文案是
+「今天还没开始，先来 5 分钟」—— 用户会以为记录丢了。现在这种情形改说
+「已经开始了，满 1 分钟就会记上」（`home_goal_just_started`）。
 
 ## 附录 A：关键常量速查
 

@@ -118,7 +118,7 @@ class ReviewActivity : BaseActivity() {
         val progress = AppGraph.studyStore.progressFor(module.id)
         val remaining = DailyQuota.remaining(
             availableCards = queue.size - queueIndex,
-            reviewedToday = AppGraph.dailyStatsStore.dayOf(today).reviewedCards
+            reviewedToday = AppGraph.dailyStatsStore.dayOf(today).reviewedIn(module.id.tag)
         )
         val mastered = progress.values.count { it.reps >= MASTERED_REPS }
         binding.chipDue.text = "${getString(R.string.today_due)} $remaining"
@@ -239,7 +239,7 @@ class ReviewActivity : BaseActivity() {
         }
         val outcome = Sm2Scheduler.review(previousState, quality, today)
         AppGraph.studyStore.recordReview(lang, card.id, outcome, today)
-        AppGraph.dailyStatsStore.record(today, reviewedCards = 1)
+        AppGraph.dailyStatsStore.record(today, reviewedCards = 1, langTag = lang.tag)
         queueIndex++
         renderChips()
         showNext()

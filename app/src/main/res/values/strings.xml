@@ -33,6 +33,7 @@
     <string name="home_goal_done">今日目标已完成，继续就是赚到</string>
     <string name="home_goal_left">还差 %1$d 分钟，睡前再聊一会儿吧</string>
     <string name="home_goal_start">今天还没开始，先来 5 分钟</string>
+    <string name="home_goal_just_started">已经开始了，满 1 分钟就会记上</string>
     <string name="home_goal_unit">分钟</string>
     <string name="home_stat_reviewed">复习 %1$d 张</string>
     <string name="home_stat_turns">对话 %1$d 轮</string>

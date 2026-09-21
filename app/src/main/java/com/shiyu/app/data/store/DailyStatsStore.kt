@@ -11,8 +11,9 @@ import java.time.temporal.TemporalAdjusters
 /**
  * 每日学习活动存储（filesDir/daily_stats.json，version 1）。
  *
- * 只记「拾语」首页与我的页要展示的四项真实数据，不跨语言区分 —— 连续天数与学习时长
- * 是账号级概念，切语言不应该把打卡断掉。
+ * 只记「拾语」首页与我的页要展示的真实数据。连续天数与学习时长是账号级概念，
+ * 切语言不应该把打卡断掉；但**复习张数按语言分桶**（见 [DayStat.reviewedByLang]），
+ * 否则英语做了一张卡会把日语的「今日待复习」也扣掉一张。
  *
  * 自愈与落盘规则与 [StudyStore] 保持一致：
  * - 文件不存在 → 空结构；
@@ -49,10 +50,21 @@ class DailyStatsStore(private val statsFile: File) {
                 studySeconds = o.optLong("studySeconds", 0L).coerceAtLeast(0L),
                 voiceSeconds = o.optLong("voiceSeconds", 0L).coerceAtLeast(0L),
                 reviewedCards = o.optInt("reviewedCards", 0).coerceAtLeast(0),
+                reviewedByLang = parseByLang(o.optJSONObject("reviewedByLang")),
                 chatTurns = o.optInt("chatTurns", 0).coerceAtLeast(0)
             )
         }
         return data
+    }
+
+    private fun parseByLang(obj: JSONObject?): Map<String, Int> {
+        if (obj == null) return emptyMap()
+        val out = mutableMapOf<String, Int>()
+        for (tag in obj.keys()) {
+            val v = obj.optInt(tag, 0)
+            if (v > 0) out[tag] = v
+        }
+        return out
     }
 
     fun save(data: StatsData) {
@@ -65,6 +77,11 @@ class DailyStatsStore(private val statsFile: File) {
             o.put("voiceSeconds", stat.voiceSeconds)
             o.put("reviewedCards", stat.reviewedCards)
             o.put("chatTurns", stat.chatTurns)
+            val byLang = JSONObject()
+            for ((tag, count) in stat.reviewedByLang) {
+                byLang.put(tag, count)
+            }
+            o.put("reviewedByLang", byLang)
             days.put(epochDay.toString(), o)
         }
         root.put("days", days)
@@ -75,22 +92,36 @@ class DailyStatsStore(private val statsFile: File) {
     fun dayOf(epochDay: Long, data: StatsData = load()): DayStat =
         data.days[epochDay] ?: DayStat(epochDay = epochDay)
 
-    /** 累加一天的各项数值；任何一项为 0 都可以传，立即落盘 */
+    /**
+     * 累加一天的各项数值；任何一项为 0 都可以传，立即落盘。
+     *
+     * [reviewedCards] 与 [langTag] 要成对传：前者累加到当天总量，后者决定分桶。
+     * 只传 reviewedCards 不传 langTag 时总量会涨、分桶不动，会让「今日待复习」偏乐观 ——
+     * 所以调用方请在评分时两个都传。
+     */
     fun record(
         epochDay: Long,
         studySeconds: Long = 0L,
         voiceSeconds: Long = 0L,
         reviewedCards: Int = 0,
+        langTag: String? = null,
         chatTurns: Int = 0
     ) {
         if (studySeconds <= 0L && voiceSeconds <= 0L && reviewedCards <= 0 && chatTurns <= 0) return
         val data = load()
         val old = data.days[epochDay] ?: DayStat(epochDay = epochDay)
+        val added = reviewedCards.coerceAtLeast(0)
+        val newByLang = if (langTag != null && added > 0) {
+            old.reviewedByLang + (langTag to (old.reviewedByLang[langTag] ?: 0) + added)
+        } else {
+            old.reviewedByLang
+        }
         data.days[epochDay] = old.copy(
             epochDay = epochDay,
             studySeconds = old.studySeconds + studySeconds.coerceAtLeast(0L),
             voiceSeconds = old.voiceSeconds + voiceSeconds.coerceAtLeast(0L),
-            reviewedCards = old.reviewedCards + reviewedCards.coerceAtLeast(0),
+            reviewedCards = old.reviewedCards + added,
+            reviewedByLang = newByLang,
             chatTurns = old.chatTurns + chatTurns.coerceAtLeast(0)
         )
         save(data)

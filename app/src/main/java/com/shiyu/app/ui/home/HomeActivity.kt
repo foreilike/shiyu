@@ -118,6 +118,9 @@ class HomeActivity : BaseActivity() {
         binding.goalTitle.text = getString(R.string.home_goal_title, GOAL_MINUTES)
         binding.goalSub.text = when {
             minutes >= GOAL_MINUTES -> getString(R.string.home_goal_done)
+            // 已经学了一点但不足一分钟：说「今天还没开始」会让人以为记录丢了，
+            // 目标环只有分钟粒度，这里用文案把"其实记上了"讲清楚
+            minutes == 0 && stat.totalSeconds > 0 -> getString(R.string.home_goal_just_started)
             minutes == 0 -> getString(R.string.home_goal_start)
             else -> getString(R.string.home_goal_left, GOAL_MINUTES - minutes)
         }
@@ -136,11 +139,12 @@ class HomeActivity : BaseActivity() {
         val deck = module.buildDeck(AppGraph.assetRepository.deckJson(module))
         val progress = AppGraph.studyStore.progressFor(lang)
         val epochDay = LocalDate.now().toEpochDay()
-        // 与复习页同一口径（DailyQuota），否则会出现首页 20 / 复习页 19 的矛盾
+        // 与复习页同一口径（DailyQuota），且**按当前语言分桶** ——
+        // 用当天全局已复习数会让英语做一张卡把日语的待复习也扣掉一张（跨语言串）。
         val due = DailyQuota.remaining(
             availableCards = AppGraph.studyStore
                 .selectToday(lang, deck.map { it.id }, epochDay).size,
-            reviewedToday = AppGraph.dailyStatsStore.dayOf(epochDay).reviewedCards
+            reviewedToday = AppGraph.dailyStatsStore.dayOf(epochDay).reviewedIn(lang.tag)
         )
         val mastered = progress.values.count { it.reps >= MASTERED_REPS }
         val pct = if (deck.isEmpty()) 0 else mastered * 100 / deck.size

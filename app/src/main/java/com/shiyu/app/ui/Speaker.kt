@@ -1,12 +1,18 @@
 package com.shiyu.app.ui
 
 import android.content.Context
+import android.os.Bundle
 import android.speech.tts.TextToSpeech
 import com.shiyu.app.core.lang.LangId
 import java.util.Locale
 
 /**
- * 系统 TTS 朗读助手（图表页与逐句朗读用，不占用 AI Provider）。
+ * 系统 TTS 朗读助手（发音表与逐句朗读用，不占用 AI Provider）。
+ *
+ * **为什么要记住 locale**：`TextToSpeech(context, listener)` 是异步的 —— 构造返回时引擎还没连上，
+ * 此时赋值 `tts.language` 会被引擎初始化覆盖掉。调用方 invariably 在 onCreate 里
+ * `Speaker(this)` 紧接着 `setLanguage(...)`，如果不缓存、等 [onInit] 再应用，
+ * 朗读就会用系统默认语言（中文 ROM 上就是中文）去念英文/日文句子。
  */
 class Speaker(context: Context) : TextToSpeech.OnInitListener {
 
@@ -14,12 +20,19 @@ class Speaker(context: Context) : TextToSpeech.OnInitListener {
     private var ready = false
     private var pendingText: String? = null
 
+    /** 期望的朗读语言；引擎就绪前先存着，就绪后再应用 */
+    private var locale: Locale? = null
+
+    /** 语音包缺失时的回调，供 UI 提示（可为空） */
+    var onLanguageUnavailable: ((Locale) -> Unit)? = null
+
     /** 抑制开关：录音期间置 true，阻断一切朗读，从根上避免「外放被录进麦克风」的回环。 */
     private var suppressed = false
 
     fun setLanguage(langId: LangId) {
-        val locale = if (langId == LangId.JA) Locale.JAPANESE else Locale.ENGLISH
-        tts?.language = locale
+        val target = if (langId == LangId.JA) Locale.JAPANESE else Locale.ENGLISH
+        locale = target
+        if (ready) applyLanguage(target)
     }
 
     fun setSuppressed(suppressed: Boolean) {
@@ -30,9 +43,24 @@ class Speaker(context: Context) : TextToSpeech.OnInitListener {
     override fun onInit(status: Int) {
         ready = status == TextToSpeech.SUCCESS
         if (ready) {
+            // 引擎连上后才真正生效：把调用方早先设过的语言补上
+            locale?.let { applyLanguage(it) }
             val text = pendingText
             pendingText = null
             if (text != null) speakNow(text)
+        }
+    }
+
+    private fun applyLanguage(target: Locale) {
+        val result = try {
+            tts?.setLanguage(target)
+        } catch (e: Exception) {
+            null
+        }
+        if (result == TextToSpeech.LANG_MISSING_DATA || result == TextToSpeech.LANG_NOT_SUPPORTED) {
+            // 设备没装这门语言的语音包：保留系统默认，并通知 UI。
+            // 不抛异常 —— 朗读失败不该影响主链路。
+            onLanguageUnavailable?.invoke(target)
         }
     }
 
@@ -43,7 +71,7 @@ class Speaker(context: Context) : TextToSpeech.OnInitListener {
     }
 
     private fun speakNow(text: String) {
-        val params: android.os.Bundle? = null
+        val params: Bundle? = null
         tts?.speak(text, TextToSpeech.QUEUE_FLUSH, params, "utterance-${text.hashCode()}")
     }
 
@@ -51,5 +79,6 @@ class Speaker(context: Context) : TextToSpeech.OnInitListener {
         tts?.stop()
         tts?.shutdown()
         tts = null
+        ready = false
     }
 }

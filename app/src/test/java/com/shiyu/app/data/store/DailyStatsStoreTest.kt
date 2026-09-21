@@ -11,9 +11,9 @@ import java.time.DayOfWeek
 import java.time.LocalDate
 
 /**
- * DailyStatsStore：每日活动的落盘 / 自愈 / 连续天数 / 本周切片。
+ * DailyStatsStore：每日活动的落盘 / 自愈 / 连续天数 / 本周切片 / 复习张数按语言分桶。
  *
- * 首页目标环、连续天数徽标、我的页周柱状图与「累计小时」全部由这几个方法算出来，
+ * 首页目标环、连续天数徽标、我的页周柱状图、「今日待复习」的配额扣减全部由这几个方法算出来，
  * 所以口径必须锁死在测试里。
  */
 class DailyStatsStoreTest {
@@ -38,13 +38,14 @@ class DailyStatsStoreTest {
         val stat = newStore().dayOf(sunday)
         assertEquals(0L, stat.totalSeconds)
         assertEquals(0, stat.reviewedCards)
+        assertEquals(0, stat.reviewedIn("ja"))
         assertFalse(stat.active)
     }
 
     @Test
     fun record_persists_and_accumulates() {
         val store = newStore()
-        store.record(sunday, studySeconds = 120L, reviewedCards = 3)
+        store.record(sunday, studySeconds = 120L, reviewedCards = 3, langTag = "ja")
         store.record(sunday, voiceSeconds = 60L, chatTurns = 2)
 
         assertTrue(File(tmp.root, "daily_stats.json").exists())
@@ -57,6 +58,67 @@ class DailyStatsStoreTest {
         assertEquals(3, stat.totalMinutes)
     }
 
+    // ---------- 复习张数按语言分桶（切语言不能互相扣配额） ----------
+
+    @Test
+    fun reviewed_cards_are_bucketed_by_language() {
+        val store = newStore()
+        store.record(sunday, reviewedCards = 3, langTag = "ja")
+        store.record(sunday, reviewedCards = 1, langTag = "en")
+
+        val stat = store.dayOf(sunday)
+        assertEquals(4, stat.reviewedCards)   // 当天总量（首页活动小结用）
+        assertEquals(3, stat.reviewedIn("ja"))
+        assertEquals(1, stat.reviewedIn("en"))
+        assertEquals(0, stat.reviewedIn("ko")) // 没学过的语言不受影响
+    }
+
+    @Test
+    fun reviewed_by_lang_survives_round_trip() {
+        newStore().record(sunday, reviewedCards = 2, langTag = "en")
+        val stat = newStore().dayOf(sunday)
+        assertEquals(2, stat.reviewedIn("en"))
+        assertEquals(0, stat.reviewedIn("ja"))
+    }
+
+    @Test
+    fun reviewing_one_language_does_not_touch_the_other() {
+        // 这是本组测试存在的理由：英语做一张卡，不能把日语的今日配额也扣掉一张
+        val store = newStore()
+        store.record(sunday, reviewedCards = 1, langTag = "en")
+        assertEquals(0, store.dayOf(sunday).reviewedIn("ja"))
+    }
+
+    @Test
+    fun file_without_bucket_field_treats_every_language_as_zero() {
+        // 早期文件只有全局 reviewedCards，没有 reviewedByLang
+        File(tmp.root, "daily_stats.json").writeText(
+            """{"version":1,"days":{"$sunday":{"reviewedCards":5,"studySeconds":100}}}"""
+        )
+        val stat = newStore().dayOf(sunday)
+        assertEquals(5, stat.reviewedCards)
+        assertEquals(0, stat.reviewedIn("ja"))
+        assertEquals(0, stat.reviewedIn("en"))
+    }
+
+    @Test
+    fun record_without_lang_tag_still_counts_globally() {
+        val store = newStore()
+        store.record(sunday, reviewedCards = 2)
+        val stat = store.dayOf(sunday)
+        assertEquals(2, stat.reviewedCards)
+        assertEquals(0, stat.reviewedIn("ja"))
+    }
+
+    @Test
+    fun zero_reviewed_cards_does_not_create_a_bucket() {
+        val store = newStore()
+        store.record(sunday, studySeconds = 30L, reviewedCards = 0, langTag = "ja")
+        assertTrue(store.dayOf(sunday).reviewedByLang.isEmpty())
+    }
+
+    // ---------- 其余行为 ----------
+
     @Test
     fun record_with_all_zero_does_not_write() {
         val store = newStore()
@@ -67,11 +129,12 @@ class DailyStatsStoreTest {
     @Test
     fun negative_values_are_clamped_to_zero() {
         val store = newStore()
-        store.record(sunday, studySeconds = 100L, voiceSeconds = -500L, reviewedCards = -3)
+        store.record(sunday, studySeconds = 100L, voiceSeconds = -500L, reviewedCards = -3, langTag = "ja")
         val stat = store.dayOf(sunday)
         assertEquals(100L, stat.studySeconds)
         assertEquals(0L, stat.voiceSeconds)
         assertEquals(0, stat.reviewedCards)
+        assertTrue(stat.reviewedByLang.isEmpty())
     }
 
     @Test

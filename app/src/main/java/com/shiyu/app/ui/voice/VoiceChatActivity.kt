@@ -24,6 +24,7 @@ import com.shiyu.app.databinding.ActivityVoiceChatBinding
 import com.shiyu.app.ui.AiErrorMessages
 import com.shiyu.app.ui.BaseActivity
 import com.shiyu.app.ui.LangStyle
+import com.shiyu.app.ui.home.HomeActivity
 import java.time.LocalDate
 
 /**
@@ -110,7 +111,16 @@ class VoiceChatActivity : BaseActivity() {
             appendAiLine("提示：" + scenario.goalExpressions.firstOrNull().orEmpty())
         }
         binding.btnAgain.setOnClickListener { resetSession() }
-        binding.btnExit.setOnClickListener { endSession() }
+        // 总结层里的「返回首页」：这一轮已经结算过了，直接退出并回到「今日」。
+        // 两个坑都踩过：原先接 endSession() 会重算时长、把总结层再弹一次，按钮像失灵；
+        // 只 finish() 则会退到进入语音页的那一层（「对话」Tab），和按钮写着的"首页"对不上。
+        binding.btnExit.setOnClickListener {
+            startActivity(
+                Intent(this, HomeActivity::class.java)
+                    .addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT)
+            )
+            finish()
+        }
 
         if (!AppGraph.providerRegistry.isRealtimeEnabled(module.id)) {
             binding.voiceState.text = getString(R.string.voice_mock_note)
