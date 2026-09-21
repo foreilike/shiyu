@@ -48,4 +48,47 @@ object VoicePrompts {
         }
         return builder.toString()
     }
+
+    /**
+     * 语音对话里学习者可以随时要求换语言。
+     *
+     * **为什么要在客户端判断，而不是交给提示词**：实测 `step-audio-2-mini` 面对"默认说日语"
+     * 和"用户要求中文就照做"两条规则时，几乎总是守前者 —— 换了两版措辞都一样。
+     * 轻量语音模型对长规则列表的遵循度有限，所以改成：**客户端识别意图 → 重发 session.update
+     * 把系统提示里的语言要求直接改掉**。模型看到的不再是"可选规则"，而是"现在就用中文"。
+     */
+    enum class LanguageMode { TARGET, CHINESE }
+
+    /** 识别学习者这句话是不是在要求换语言；不是在要求就返回 null */
+    fun detectLanguageSwitch(text: String): LanguageMode? {
+        val t = text.replace(" ", "").replace("　", "")
+        if (t.isEmpty()) return null
+        val toChinese = listOf(
+            "用中文", "说中文", "讲中文", "中文回复", "中文回答", "中文说",
+            "用汉语", "说汉语", "翻译一下", "翻译成中文", "中文解释"
+        ).any { t.contains(it) }
+        if (toChinese) return LanguageMode.CHINESE
+        val toTarget = listOf(
+            "用日语", "说日语", "日语回复", "日语回答",
+            "用英语", "说英语", "英语回复", "英语回答"
+        ).any { t.contains(it) }
+        if (toTarget) return LanguageMode.TARGET
+        return null
+    }
+
+    /**
+     * 按语言模式改写系统提示；[LanguageMode.TARGET] 时原样返回（即基础提示本身）。
+     *
+     * 用 [StringBuilder] 拼换行而不是写转义序列 —— 本机跨工具写文件会把 \\n 折成真换行，
+     * 把 Kotlin 源码写坏（这个坑在别处已经踩过两次）。
+     */
+    fun withLanguageMode(base: String, mode: LanguageMode): String {
+        if (mode == LanguageMode.TARGET) return base
+        val sb = StringBuilder(base)
+        sb.append('\n').append('\n')
+        sb.append("【临时切换】学习者刚刚明确要求你用中文。")
+        sb.append("从现在起，直到他再次要求换回去，你都必须用简体中文回答，")
+        sb.append("每次一到两句，不要再夹任何日语。")
+        return sb.toString()
+    }
 }

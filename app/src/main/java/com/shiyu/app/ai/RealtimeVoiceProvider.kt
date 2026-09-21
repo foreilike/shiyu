@@ -13,6 +13,13 @@ interface RealtimeVoiceProvider {
     fun connect(instructions: String)
 
     /** 推送一段 pcm16 音频（客户端已做静音门控） */
+    /**
+     * 中途改写系统提示（重发 session.update）。
+     * 目前用于「学习者要求换语言」——见 VoicePrompts 里为什么不能只靠提示词。
+     * 未实现的服务端实现可以忽略。
+     */
+    fun updateInstructions(instructions: String) {}
+
     fun sendAudio(pcm: ByteArray)
 
     /** 非 server_vad 模式下手动提交音频缓冲 */

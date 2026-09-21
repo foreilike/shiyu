@@ -60,6 +60,10 @@ class VoiceChatActivity : BaseActivity() {
     /** 本轮的完整往返，结束时整条写入 SessionStore（实时语音不逐轮落盘） */
     private val recordedTurns = mutableListOf<SessionTurn>()
 
+    /** 本轮的基础系统提示（不随语言开关变化），与当前语言模式 */
+    private var basePrompt = ""
+    private var languageMode = VoicePrompts.LanguageMode.TARGET
+
     private val bars = arrayOfNulls<View>(21)
     private var aiBubble: TextView? = null
     private val aiBuffer = StringBuilder()
@@ -141,6 +145,21 @@ class VoiceChatActivity : BaseActivity() {
         if (!AppGraph.providerRegistry.isRealtimeEnabled(module.id)) {
             binding.voiceState.text = getString(R.string.voice_mock_note)
         }
+    }
+
+    /**
+     * 学习者说「用中文 / 翻译一下」时，**在客户端把系统提示改掉**并重发 session.update。
+     *
+     * 为什么不交给提示词：实测 `step-audio-2-mini` 面对「默认日语」+「用户要求中文就照做」
+     * 两条规则时几乎总守前者，换了两版措辞都无效。改成由客户端直接改写系统提示，
+     * 模型看到的就从"可选规则"变成"现在就用中文"。
+     * 详见 `VoicePrompts.detectLanguageSwitch` 的注释与单测。
+     */
+    private fun applyLanguageSwitchIfRequested(userText: String) {
+        val wanted = VoicePrompts.detectLanguageSwitch(userText) ?: return
+        if (wanted == languageMode) return
+        languageMode = wanted
+        provider?.updateInstructions(VoicePrompts.withLanguageMode(basePrompt, wanted))
     }
 
     // ---------- 中文翻译 ----------
@@ -271,6 +290,8 @@ class VoiceChatActivity : BaseActivity() {
         val voicePrompt = VoicePrompts.forScenario(
             module.id, scenario.titleZh, scenario.goalExpressions
         )
+        basePrompt = voicePrompt
+        languageMode = VoicePrompts.LanguageMode.TARGET
         val p = AppGraph.providerRegistry.factory(module.id).realtime(voicePrompt)
         provider = p
         p.setListener(listener)
@@ -291,6 +312,7 @@ class VoiceChatActivity : BaseActivity() {
     private fun toggleListening() {
         if (!running) return
         // 手动打断：停播 + 清服务端音频缓冲，立即回到聆听
+        android.util.Log.i(TAG, "tap 打断：audio=${audio != null} provider=${provider != null}")
         audio?.interrupt()
         provider?.cancelResponse()
         binding.voiceState.text = getString(R.string.voice_listening)
@@ -447,7 +469,10 @@ class VoiceChatActivity : BaseActivity() {
         }
 
         override fun onUserTranscript(text: String) {
-            if (text.isNotBlank()) recordedTurns.add(SessionTurn("user", text))
+            if (text.isNotBlank()) {
+                recordedTurns.add(SessionTurn("user", text))
+                applyLanguageSwitchIfRequested(text)
+            }
             runOnUiThread {
                 turns++
                 val bubble = newUserBubble()

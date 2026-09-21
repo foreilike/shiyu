@@ -113,9 +113,26 @@ class StepfunRealtimeProvider(
                     android.util.Log.i(TAG, "<- $type ${text.take(700)}")
                 } else if (type == "response.created") {
                     responseInFlight = true
+                    responseStartedAt = System.currentTimeMillis()
+                    firstAudioLogged = false
+                    audioBytes = 0L
                     android.util.Log.i(TAG, "<- $type")
-                } else if (type.startsWith("response.audio.delta")) {
-                    // 音频增量太密，不逐条打
+                } else if (type == "response.audio.delta") {
+                    // 只记首个包和总量：首个包的时刻 = 用户实际感到的"多久才开口"，
+                    // 总量 = 这一轮到底说了多长。逐条打会把日志淹掉。
+                    audioBytes += text.length.toLong()
+                    if (!firstAudioLogged) {
+                        firstAudioLogged = true
+                        android.util.Log.i(
+                            TAG,
+                            "<- first audio after ${System.currentTimeMillis() - responseStartedAt}ms"
+                        )
+                    }
+                } else if (type == "response.audio.done") {
+                    android.util.Log.i(
+                        TAG,
+                        "<- audio.done total=${System.currentTimeMillis() - responseStartedAt}ms b64=${audioBytes}B"
+                    )
                 } else {
                     android.util.Log.i(TAG, "<- $type")
                 }
@@ -184,6 +201,28 @@ class StepfunRealtimeProvider(
 
     /** 是否有响应正在生成（response.created → response.done 之间） */
     @Volatile private var responseInFlight = false
+
+    /** 延迟测量：response.created 的时刻 / 本轮是否已报过首个音频包 / 累计音频字节 */
+    private var responseStartedAt = 0L
+    private var firstAudioLogged = false
+    private var audioBytes = 0L
+
+    override fun updateInstructions(instructions: String) {
+        if (!connected) return
+        lastInstructions = instructions
+        val voice = config.voice.ifBlank { RealtimeProtocol.VOICE_FEMALE }
+        android.util.Log.i(TAG, "-> session.update(改写提示词) 尾部=${instructions.takeLast(80)}")
+        socket?.send(
+            RealtimeProtocol.sessionUpdate(
+                instructions = RealtimeProtocol.withGenderInstruction(instructions, voice),
+                voice = voice,
+                serverVad = options.serverVad,
+                silenceDurationMs = options.silenceDurationMs,
+                energyAwakenessThreshold = options.energyAwakenessThreshold,
+                prefixPaddingMs = options.prefixPaddingMs
+            )
+        )
+    }
 
     override fun sendAudio(pcm: ByteArray) {
         if (!connected) return
