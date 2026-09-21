@@ -163,6 +163,7 @@ class VoiceChatActivity : BaseActivity() {
         binding.btnAgain.setOnClickListener { resetSession() }
         binding.btnHangup.setOnClickListener { endSession() }
         binding.btnType.setOnClickListener { toggleTypeRow() }
+        binding.btnTypeClose.setOnClickListener { toggleTypeRow() }
         binding.btnTypeSend.setOnClickListener { sendTypedText() }
         binding.typeInput.setOnEditorActionListener { _, actionId, _ ->
             if (actionId == android.view.inputmethod.EditorInfo.IME_ACTION_SEND) {

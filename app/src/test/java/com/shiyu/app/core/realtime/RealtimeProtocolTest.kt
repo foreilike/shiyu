@@ -186,7 +186,7 @@ class RealtimeProtocolTest {
     @Test
     fun gender_instruction_is_appended_at_the_end() {
         val out = RealtimeProtocol.withGenderInstruction(
-            "你是一个日语语伴。", RealtimeProtocol.VOICE_FEMALE
+            "你是一个日语语伴。", RealtimeProtocol.VOICE_FEMALE, MINI_MODEL
         )
         // 别在这里写转义换行：本机跨工具写文件会把 \\n 折成真换行，把 Kotlin 源码写坏。
         // 用常量拼出期望值，既避开这个坑，也把「追加在末尾」这件事讲得更直白。
@@ -199,16 +199,38 @@ class RealtimeProtocolTest {
     @Test
     fun gender_instruction_is_not_duplicated() {
         val once = RealtimeProtocol.withGenderInstruction(
-            "prompt", RealtimeProtocol.VOICE_FEMALE
+            "prompt", RealtimeProtocol.VOICE_FEMALE, MINI_MODEL
         )
-        assertEquals(once, RealtimeProtocol.withGenderInstruction(once, RealtimeProtocol.VOICE_FEMALE))
+        assertEquals(
+            once,
+            RealtimeProtocol.withGenderInstruction(once, RealtimeProtocol.VOICE_FEMALE, MINI_MODEL)
+        )
     }
 
     @Test
     fun cloned_voice_leaves_instructions_alone() {
         assertEquals(
             "prompt",
-            RealtimeProtocol.withGenderInstruction("prompt", "my-cloned-voice")
+            RealtimeProtocol.withGenderInstruction("prompt", "my-cloned-voice", MINI_MODEL)
         )
+    }
+
+    @Test
+    fun gender_instruction_is_skipped_on_other_models() {
+        // 那句性别提示是官方针对 step-audio-2-mini 写的。换到别的模型就不该再追加 ——
+        // 音色 ID 恰好重名（实测 stepaudio-3 也收了 qingchunshaonv），不代表规则相同。
+        assertEquals(
+            "prompt",
+            RealtimeProtocol.withGenderInstruction("prompt", RealtimeProtocol.VOICE_FEMALE, "stepaudio-3-realtime-preview")
+        )
+        assertEquals(
+            "prompt",
+            RealtimeProtocol.withGenderInstruction("prompt", RealtimeProtocol.VOICE_MALE, "step-audio-2")
+        )
+    }
+
+    private companion object {
+        /** 官方对性别提示句的约束只针对这个模型 */
+        const val MINI_MODEL = "step-audio-2-mini"
     }
 }

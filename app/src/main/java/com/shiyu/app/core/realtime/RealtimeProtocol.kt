@@ -55,11 +55,23 @@ object RealtimeProtocol {
     }
 
     /** 把性别提示追加到 systemPrompt 末尾；已经有就不重复追加 */
-    fun withGenderInstruction(instructions: String, voice: String): String {
+    /**
+     * 把性别提示追加到 systemPrompt 末尾；已经有就不重复追加。
+     *
+     * **只在 step-audio-2-mini 系上追加**：这句要求是官方文档针对该模型写的，
+     * 换到别的模型（如 stepaudio-3-realtime-preview）没有这条约束，无脑追加可能反而干扰。
+     * 音色 ID 恰好重名，不代表模型规则相同。
+     */
+    fun withGenderInstruction(instructions: String, voice: String, model: String): String {
+        if (!needsVoiceGenderLine(model)) return instructions
         val line = genderInstructionFor(voice) ?: return instructions
         if (instructions.contains(line)) return instructions
         return instructions.trimEnd() + "\n" + line
     }
+
+    /** 需要用「性别提示句」配音色的模型（目前已知只有 step-audio-2-mini 系） */
+    private fun needsVoiceGenderLine(model: String): Boolean =
+        model.contains("step-audio-2-mini", ignoreCase = true)
 
     // ---------- 客户端 → 服务端 ----------
 

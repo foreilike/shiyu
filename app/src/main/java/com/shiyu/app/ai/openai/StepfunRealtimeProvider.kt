@@ -86,7 +86,7 @@ class StepfunRealtimeProvider(
                 webSocket.send(
                     RealtimeProtocol.sessionUpdate(
                         // step-audio-2-mini 要求在 instructions 末尾追加性别提示
-                        instructions = RealtimeProtocol.withGenderInstruction(instructions, voice),
+                        instructions = RealtimeProtocol.withGenderInstruction(instructions, voice, config.model),
                         voice = voice,
                         serverVad = options.serverVad,
                         silenceDurationMs = options.silenceDurationMs,
@@ -128,6 +128,13 @@ class StepfunRealtimeProvider(
                             "<- first audio after ${System.currentTimeMillis() - responseStartedAt}ms"
                         )
                     }
+                } else if (type == "response.audio_transcript.done") {
+                    // 记下这一轮 AI 实际说了什么。之前只记事件类型不记内容，
+                    // 排「她到底会不会说这门语言」时完全没有依据 —— 只能靠用户复述。
+                    android.util.Log.i(
+                        TAG,
+                        "<- AI said: " + org.json.JSONObject(text).optString("transcript")
+                    )
                 } else if (type == "response.audio.done") {
                     android.util.Log.i(
                         TAG,
@@ -214,7 +221,7 @@ class StepfunRealtimeProvider(
         android.util.Log.i(TAG, "-> session.update(改写提示词) 尾部=${instructions.takeLast(80)}")
         socket?.send(
             RealtimeProtocol.sessionUpdate(
-                instructions = RealtimeProtocol.withGenderInstruction(instructions, voice),
+                instructions = RealtimeProtocol.withGenderInstruction(instructions, voice, config.model),
                 voice = voice,
                 serverVad = options.serverVad,
                 silenceDurationMs = options.silenceDurationMs,

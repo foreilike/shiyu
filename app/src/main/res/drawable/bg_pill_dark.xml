@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  深色沉浸页上的胶囊按钮底（实时语音页的「收起」用它）。
+
+  **别用 bg_btn_ghost**：那是浅色页的白底描边胶囊，配深色页的奶油色文字 =
+  白底浅字，等于看不见。这个坑在本工程出现过四次（MaterialButton 那批、
+  语音页 AI 气泡、收起按钮……），本质都是把浅色页的资源拿到深色页上用。
+
+  做法：极淡的浅色底 + 暖金细描边，在夜幕上够分辨、又不抢视线。
+-->
+<shape xmlns:android="http://schemas.android.com/apk/res/android"
+    android:shape="rectangle">
+    <solid android:color="#26F4EDE5" />
+    <stroke
+        android:width="1dp"
+        android:color="#40C89B72" />
+    <corners android:radius="999dp" />
+</shape>

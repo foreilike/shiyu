@@ -170,6 +170,7 @@
     <string name="voice_btn_end">结束</string>
     <string name="voice_btn_interrupt">打断</string>
     <string name="voice_btn_hold">按住说</string>
+    <string name="voice_type_close">收起</string>
     <string name="voice_type_hint">输入想说的话…</string>
     <string name="voice_type_send">发送</string>
     <string name="voice_state_idle">待开始</string>
