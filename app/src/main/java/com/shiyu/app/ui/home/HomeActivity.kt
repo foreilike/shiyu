@@ -9,6 +9,7 @@ import com.shiyu.app.R
 import com.shiyu.app.core.lang.LangId
 import com.shiyu.app.core.lang.LanguageModule
 import com.shiyu.app.core.lang.LanguageRegistry
+import com.shiyu.app.core.srs.DailyQuota
 import com.shiyu.app.databinding.ActivityHomeBinding
 import com.shiyu.app.ui.BaseActivity
 import com.shiyu.app.ui.LangStyle
@@ -135,9 +136,12 @@ class HomeActivity : BaseActivity() {
         val deck = module.buildDeck(AppGraph.assetRepository.deckJson(module))
         val progress = AppGraph.studyStore.progressFor(lang)
         val epochDay = LocalDate.now().toEpochDay()
-        val due = AppGraph.studyStore
-            .selectToday(lang, deck.map { it.id }, epochDay)
-            .size
+        // 与复习页同一口径（DailyQuota），否则会出现首页 20 / 复习页 19 的矛盾
+        val due = DailyQuota.remaining(
+            availableCards = AppGraph.studyStore
+                .selectToday(lang, deck.map { it.id }, epochDay).size,
+            reviewedToday = AppGraph.dailyStatsStore.dayOf(epochDay).reviewedCards
+        )
         val mastered = progress.values.count { it.reps >= MASTERED_REPS }
         val pct = if (deck.isEmpty()) 0 else mastered * 100 / deck.size
 

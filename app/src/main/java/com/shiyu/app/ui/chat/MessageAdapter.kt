@@ -35,9 +35,11 @@ class MessageAdapter(
         val ctx = holder.itemView.context
         val isUser = item.role == "user"
 
-        val lp = holder.binding.root.layoutParams as LinearLayout.LayoutParams
-        lp.gravity = if (isUser) Gravity.END else Gravity.START
-        holder.binding.root.layoutParams = lp
+        val lp = holder.binding.bubble.layoutParams as? LinearLayout.LayoutParams
+        if (lp != null) {
+            lp.gravity = if (isUser) Gravity.END else Gravity.START
+            holder.binding.bubble.layoutParams = lp
+        }
 
         holder.binding.roleLabel.text = if (isUser) "我" else "AI"
         holder.binding.bubble.setBackgroundResource(

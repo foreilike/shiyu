@@ -1,6 +1,7 @@
 package com.shiyu.app.data.store
 
 import com.shiyu.app.core.lang.LangId
+import com.shiyu.app.core.srs.DailyQuota
 import com.shiyu.app.core.srs.ReviewOutcome
 import com.shiyu.app.data.model.CardProgress
 import org.json.JSONArray
@@ -172,7 +173,7 @@ class StudyStore(private val progressFile: File) {
         lang: LangId,
         deckIds: List<String>,
         todayEpochDay: Long,
-        limit: Int = 20,
+        limit: Int = DailyQuota.CARDS_PER_DAY,
         data: StudyData = load()
     ): List<String> {
         val progress = data.forLang(lang.tag).cards

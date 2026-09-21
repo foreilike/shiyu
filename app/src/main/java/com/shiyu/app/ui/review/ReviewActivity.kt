@@ -14,6 +14,7 @@ import com.shiyu.app.core.answer.AnswerJudge
 import com.shiyu.app.core.lang.LanguageModule
 import com.shiyu.app.core.lang.LanguageRegistry
 import com.shiyu.app.core.srs.CardState
+import com.shiyu.app.core.srs.DailyQuota
 import com.shiyu.app.core.srs.Sm2Scheduler
 import com.shiyu.app.data.model.Card
 import com.shiyu.app.databinding.ActivityReviewBinding
@@ -107,14 +108,18 @@ class ReviewActivity : BaseActivity() {
     }
 
     /**
-     * 两枚胶囊。「今日待复习」用的是今日队列的剩余张数，与首页
-     * [com.shiyu.app.ui.home.HomeActivity] 完全同源（都走 selectToday），
-     * 不是「进度表里 due<=today 的条数」—— 后者对从没学过的新卡恒为 0，
+     * 两枚胶囊。「今日待复习」走 [DailyQuota]，与首页
+     * [com.shiyu.app.ui.home.HomeActivity] 完全同源，两屏显示的数字永远一致。
+     *
+     * 不能用「进度表里 due<=today 的条数」—— 那个对从没学过的新卡恒为 0，
      * 会出现首页说 20 张、复习页说 0 张的矛盾。
      */
     private fun renderChips() {
         val progress = AppGraph.studyStore.progressFor(module.id)
-        val remaining = (queue.size - queueIndex).coerceAtLeast(0)
+        val remaining = DailyQuota.remaining(
+            availableCards = queue.size - queueIndex,
+            reviewedToday = AppGraph.dailyStatsStore.dayOf(today).reviewedCards
+        )
         val mastered = progress.values.count { it.reps >= MASTERED_REPS }
         binding.chipDue.text = "${getString(R.string.today_due)} $remaining"
         binding.chipMastered.text = "${getString(R.string.mastered)} $mastered"
