@@ -4,6 +4,7 @@ import android.content.Intent
 import android.content.res.ColorStateList
 import android.os.Bundle
 import android.text.InputFilter
+import android.text.InputType
 import android.view.LayoutInflater
 import android.view.View
 import android.widget.EditText
@@ -19,6 +20,7 @@ import com.shiyu.app.R
 import com.shiyu.app.core.lang.LangId
 import com.shiyu.app.core.lang.LanguageRegistry
 import com.shiyu.app.core.stats.Achievements
+import com.shiyu.app.data.model.AppSettings
 import com.shiyu.app.data.model.DayStat
 import com.shiyu.app.data.store.SettingsRepository
 import com.shiyu.app.databinding.ActivityProfileBinding
@@ -66,6 +68,7 @@ class ProfileActivity : BaseActivity() {
         binding.btnEditName.setOnClickListener { editName() }
         binding.nameBlock.setOnClickListener { editName() }
         binding.avatar.setOnClickListener { editName() }
+        binding.btnDailyGoal.setOnClickListener { editDailyGoal() }
         binding.autoPlaySwitch.setOnCheckedChangeListener { _, isChecked ->
             AppGraph.settingsRepository.setAutoPlayTts(isChecked)
         }
@@ -97,6 +100,10 @@ class ProfileActivity : BaseActivity() {
         val totalTurns = LangId.entries.sumOf { AppGraph.sessionStore.turnsCountByLang(it) }
         val voiceSeconds = stats.days.values.sumOf { it.voiceSeconds }
 
+        binding.dailyGoalValue.text = getString(
+            R.string.profile_daily_goal_value,
+            AppGraph.settingsRepository.dailyGoalMinutes()
+        )
         binding.statStreak.text = streak.toString()
         binding.statWords.text = mastered.toString()
         binding.statHours.text = String.format("%.1f", totalSeconds / 3600.0)
@@ -263,6 +270,57 @@ class ProfileActivity : BaseActivity() {
                     this,
                     if (value.isEmpty()) getString(R.string.profile_name_cleared)
                     else getString(R.string.profile_name_saved, value),
+                    Toast.LENGTH_SHORT
+                ).show()
+                render()
+            }
+            .show()
+    }
+
+    /**
+     * 改每日目标时长。
+     *
+     * 留空或填 0 → 回到默认 30 分钟；超出 5–180 会被 [SettingsRepository] 钳制，
+     * 这里也顺手提示一下实际生效的值，免得用户以为没保存。
+     */
+    private fun editDailyGoal() {
+        val current = AppGraph.settingsRepository.dailyGoalMinutes()
+        val input = EditText(this).apply {
+            setText(current.toString())
+            setHint(AppSettings.DEFAULT_DAILY_GOAL_MINUTES.toString())
+            setSingleLine()
+            inputType = InputType.TYPE_CLASS_NUMBER
+            filters = arrayOf(InputFilter.LengthFilter(3))
+            setSelection(text.length)
+        }
+        val pad = (20 * resources.displayMetrics.density).toInt()
+        val wrapper = LinearLayout(this).apply {
+            orientation = LinearLayout.VERTICAL
+            setPadding(pad, pad / 2, pad, 0)
+            addView(input)
+            addView(
+                TextView(this@ProfileActivity).apply {
+                    text = getString(R.string.profile_daily_goal_hint)
+                    textSize = 11.5f
+                    setTextColor(ContextCompat.getColor(this@ProfileActivity, R.color.mute))
+                    setPadding(0, pad / 2, 0, 0)
+                }
+            )
+        }
+        AlertDialog.Builder(this)
+            .setTitle(R.string.profile_daily_goal_title)
+            .setView(wrapper)
+            .setNegativeButton(R.string.cancel, null)
+            .setPositiveButton(R.string.save) { _, _ ->
+                val typed = input.text.toString().trim().toIntOrNull() ?: 0
+                val reset = typed <= 0
+                val value = if (reset) AppSettings.DEFAULT_DAILY_GOAL_MINUTES else typed
+                AppGraph.settingsRepository.setDailyGoalMinutes(value)
+                val applied = AppGraph.settingsRepository.dailyGoalMinutes()
+                Toast.makeText(
+                    this,
+                    if (reset) getString(R.string.profile_daily_goal_reset, applied)
+                    else getString(R.string.profile_daily_goal_saved, applied),
                     Toast.LENGTH_SHORT
                 ).show()
                 render()

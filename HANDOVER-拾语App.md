@@ -18,7 +18,7 @@
 | 学习语言 | 日语 + 英语双语，可切换，进度/配置全隔离；韩/西/法在「课程」页标为即将支持 |
 | 工程根目录 | `D:\AI project\lang-partner`（目录名保留，未随应用改名） |
 | 主源码规模 | 72 个 `.kt`（6,519 行）+ 16 个布局 + 36 个 drawable + 6 份 assets JSON |
-| 测试 | **26 个测试类 / 362 个单测，全绿**（fail=0 err=0 skip=0），`lintDebug` 0 error |
+| 测试 | **26 个测试类 / 367 个单测，全绿**（fail=0 err=0 skip=0），`lintDebug` 0 error |
 | 交付 APK | `Shiyu-v1.0.0-release.apk`（约 5.70 MB，已签名） |
 | 构建命令 | 见 §2.2（**必须显式设置 `JAVA_HOME=D:\a\jbr`**） |
 | 联网能力 | 4 种 AI 能力（对话 / 识别 / 合成 / 实时语音）；**未配置凭证时全部降级为本地 Mock，App 照常可跑完流程** |
@@ -70,7 +70,7 @@
 |---|---|
 | `TASK-语言陪练App-从零实现.md` | 原始任务书（74 KB，含 §0–§14 与附录 A–D），**本次交接的验收依据** |
 | `REPORT-step-5-preview.md` | 实现方的交付报告：需求对照表、自查原始输出、已知缺陷、三轮补充节 |
-| `ui-preview.html` | v1.0 时期的界面预览，**已过时**；新设计稿为桌面上的 `shiyu-ui-prototype.html` |
+| `shiyu-ui-prototype.html` | **当前设计稿**（在桌面，不在工程内）—— UI 验收以它为准 |
 | `HANDOVER-拾语App.md` | **本文档** |
 
 ### 1.3 产物与凭据（**不入版本库，须单独备份**）
@@ -680,7 +680,7 @@ $env:JAVA_HOME = "D:\a\jbr"; .\gradlew.bat :app:testDebugUnitTest --console=plai
 # 原始：app\build\test-results\testDebugUnitTest\*.xml
 ```
 
-### 11.2 明细（26 类 / **362 例**，全绿）
+### 11.2 明细（26 类 / **367 例**，全绿）
 
 | 测试类 | 例数 | | 测试类 | 例数 |
 |---|---|---|---|---|
@@ -694,10 +694,10 @@ $env:JAVA_HOME = "D:\a\jbr"; .\gradlew.bat :app:testDebugUnitTest --console=plai
 | `core.lang.LanguageModuleTest` | 13 | | `data.asset.AssetContentTest` | 9 |
 | `core.lang.MockProviderTest` | 7 | | **`data.store.DailyStatsStoreTest`** | **21** |
 | `core.lang.en.EnNormalizerTest` | 26 | | `data.store.SessionStoreTest` | 8 |
-| `core.lang.en.EnSentenceSplitterTest` | 25 | | `data.store.SettingsRepositoryTest` | 17 |
+| `core.lang.en.EnSentenceSplitterTest` | 25 | | `data.store.SettingsRepositoryTest` | 22 |
 | `core.lang.en.EnTokenizerTest` | 27 | | `data.store.StudyStoreTest` | 12 |
 | `core.lang.ja.KanaConverterTest` | 40 | | `core.lang.ja.KanaNormalizerTest` | 7 |
-| `core.log.LogRedactorTest` | 5 | | **合计** | **362** |
+| `core.log.LogRedactorTest` | 5 | | **合计** | **367** |
 
 加粗为本次改造新增：`AchievementsTest`（成就判定）、`DailyStatsStoreTest`（每日统计 / 连续天数 /
 本周切片 / 坏 JSON 隔离），另外 `SettingsRepositoryTest` 从 12 例加到 17 例（新增 nickname 的
@@ -1099,9 +1099,12 @@ if (lp != null) {
 
 ### 17.9 这次没做 / 仍然欠着
 
-- 「今日目标 30 分钟」是 `HomeActivity.GOAL_MINUTES` 常量，未做成可配置项；
+- ~~「今日目标」写死成常量~~ → 2026-09-21 已做成可配置：
+  我的页 →「偏好与设置」→「每日目标」，区间 5–180 分钟，填 0 或留空回默认 30；
+  存在 `AppSettings.dailyGoalMinutes`，首页读它画进度环。
 - 实时语音的四个老问题原样保留：**无端上 AEC、断线不自动重连、切后台即中断、实时会话不落盘**（详见 §12.3、§13.3）；
-- `ui-preview.html` 是 v1.0 的旧预览，已过时，未删除也未更新；
+- ~~`ui-preview.html`~~ 已于 2026-09-21 删除（v1.0 旧预览，与现 UI 对不上）；
+  当前设计稿是桌面上的 `shiyu-ui-prototype.html`。
 - §13.1 里有 3 条**需要真实 API 凭据**才能验（测试连接 / stepfun realtime 实际握手 /
   回合制录音链路），本次没有凭据，未验。
 

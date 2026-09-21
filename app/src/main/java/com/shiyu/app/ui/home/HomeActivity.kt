@@ -113,16 +113,17 @@ class HomeActivity : BaseActivity() {
     private fun renderGoal(epochDay: Long) {
         val stat = AppGraph.dailyStatsStore.dayOf(epochDay)
         val minutes = stat.totalMinutes
+        val goal = AppGraph.settingsRepository.dailyGoalMinutes()
         binding.goalMinutes.text = minutes.toString()
-        binding.goalRing.progress = minutes.toFloat() / GOAL_MINUTES
-        binding.goalTitle.text = getString(R.string.home_goal_title, GOAL_MINUTES)
+        binding.goalRing.progress = minutes.toFloat() / goal
+        binding.goalTitle.text = getString(R.string.home_goal_title, goal)
         binding.goalSub.text = when {
-            minutes >= GOAL_MINUTES -> getString(R.string.home_goal_done)
+            minutes >= goal -> getString(R.string.home_goal_done)
             // 已经学了一点但不足一分钟：说「今天还没开始」会让人以为记录丢了，
             // 目标环只有分钟粒度，这里用文案把"其实记上了"讲清楚
             minutes == 0 && stat.totalSeconds > 0 -> getString(R.string.home_goal_just_started)
             minutes == 0 -> getString(R.string.home_goal_start)
-            else -> getString(R.string.home_goal_left, GOAL_MINUTES - minutes)
+            else -> getString(R.string.home_goal_left, goal - minutes)
         }
         binding.goalStat1.text = getString(R.string.home_stat_reviewed, stat.reviewedCards)
         binding.goalStat2.text = getString(R.string.home_stat_turns, stat.chatTurns)
@@ -163,9 +164,6 @@ class HomeActivity : BaseActivity() {
     }
 
     private companion object {
-        /** 今日目标固定 30 分钟；做成可配置项是 P2，见交接文档 */
-        const val GOAL_MINUTES = 30
-
         /** 与 ReviewActivity/ProfileActivity 同一口径：复习 5 次以上算掌握 */
         const val MASTERED_REPS = 5
     }

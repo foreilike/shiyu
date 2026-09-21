@@ -280,4 +280,45 @@ class SettingsRepositoryTest {
         assertEquals(LangId.EN, repo.activeLang())
         assertFalse(repo.autoPlayTts())
     }
+
+    // ---------- 每日目标（后加字段，老文件缺字段要能自愈） ----------
+
+    @Test
+    fun daily_goal_defaults_to_thirty() {
+        assertEquals(30, SettingsRepository(InMemoryStore()).dailyGoalMinutes())
+    }
+
+    @Test
+    fun daily_goal_round_trips() {
+        val store = InMemoryStore()
+        SettingsRepository(store).setDailyGoalMinutes(45)
+        assertEquals(45, SettingsRepository(store).dailyGoalMinutes())
+    }
+
+    @Test
+    fun daily_goal_is_clamped_to_a_sane_range() {
+        val repo = SettingsRepository(InMemoryStore())
+        repo.setDailyGoalMinutes(1)
+        assertEquals(SettingsRepository.MIN_GOAL_MINUTES, repo.dailyGoalMinutes())
+        repo.setDailyGoalMinutes(9999)
+        assertEquals(SettingsRepository.MAX_GOAL_MINUTES, repo.dailyGoalMinutes())
+    }
+
+    @Test
+    fun missing_daily_goal_field_falls_back_to_default() {
+        // 模拟改造前写下的文件：没有 dailyGoalMinutes
+        val store = InMemoryStore(
+            """{"version":2,"activeLang":"ja","autoPlayTts":true,"nickname":"a","langs":{}}"""
+        )
+        assertEquals(30, SettingsRepository(store).dailyGoalMinutes())
+    }
+
+    @Test
+    fun out_of_range_value_in_file_is_clamped_on_read() {
+        // 手改文件写了个荒唐值，读出来也不能是荒唐值
+        val store = InMemoryStore(
+            """{"version":2,"activeLang":"ja","autoPlayTts":true,"dailyGoalMinutes":99999,"langs":{}}"""
+        )
+        assertEquals(SettingsRepository.MAX_GOAL_MINUTES, SettingsRepository(store).dailyGoalMinutes())
+    }
 }

@@ -86,6 +86,14 @@ class SettingsRepository(private val store: SecretStore) {
         save(settings.copy(autoPlayTts = value))
     }
 
+    /** 每日目标分钟数（我的页可改），越界值会被钳到 [MIN_GOAL_MINUTES]..[MAX_GOAL_MINUTES] */
+    fun dailyGoalMinutes(): Int = load().dailyGoalMinutes
+
+    fun setDailyGoalMinutes(minutes: Int) {
+        val settings = load()
+        save(settings.copy(dailyGoalMinutes = clampGoalMinutes(minutes)))
+    }
+
     /** 昵称，未设置时为空串 */
     fun nickname(): String = load().nickname
 
@@ -129,6 +137,13 @@ class SettingsRepository(private val store: SecretStore) {
         val autoPlayTts = if (root.has("autoPlayTts")) root.optBoolean("autoPlayTts", true) else true
         // 后加字段：老文件没有 nickname，按空串处理（UI 会用占位名兜底）
         val nickname = root.optString("nickname", "").trim().take(MAX_NICKNAME_LENGTH)
+        val dailyGoalMinutes = clampGoalMinutes(
+            if (root.has("dailyGoalMinutes")) {
+                root.optInt("dailyGoalMinutes", AppSettings.DEFAULT_DAILY_GOAL_MINUTES)
+            } else {
+                AppSettings.DEFAULT_DAILY_GOAL_MINUTES
+            }
+        )
 
         val langs = mutableMapOf<LangId, LanguageConfig>()
         val langsObj = root.optJSONObject("langs")
@@ -151,6 +166,7 @@ class SettingsRepository(private val store: SecretStore) {
             activeLang = activeLang,
             autoPlayTts = autoPlayTts,
             nickname = nickname,
+            dailyGoalMinutes = dailyGoalMinutes,
             langs = langs
         )
     }
@@ -183,6 +199,7 @@ class SettingsRepository(private val store: SecretStore) {
         root.put("activeLang", settings.activeLang.tag)
         root.put("autoPlayTts", settings.autoPlayTts)
         root.put("nickname", settings.nickname)
+        root.put("dailyGoalMinutes", settings.dailyGoalMinutes)
         val langs = JSONObject()
         for ((lang, langConfig) in settings.langs) {
             val langObj = JSONObject()
@@ -212,8 +229,15 @@ class SettingsRepository(private val store: SecretStore) {
         return o
     }
 
+    private fun clampGoalMinutes(value: Int): Int =
+        value.coerceIn(MIN_GOAL_MINUTES, MAX_GOAL_MINUTES)
+
     companion object {
         /** 昵称长度上限，超出即截断（首页问候语与头像只需要短名） */
         const val MAX_NICKNAME_LENGTH = 12
+
+        /** 每日目标的合法区间：太短没意义，太长会让进度环永远填不满 */
+        const val MIN_GOAL_MINUTES = 5
+        const val MAX_GOAL_MINUTES = 180
     }
 }

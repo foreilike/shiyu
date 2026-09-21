@@ -63,6 +63,12 @@
     <string name="lang_fr">法语</string>
 
     <!-- 我的（统计 / 周柱状图 / 成就） -->
+    <string name="profile_daily_goal">每日目标</string>
+    <string name="profile_daily_goal_value">%1$d 分钟</string>
+    <string name="profile_daily_goal_title">每日目标时长</string>
+    <string name="profile_daily_goal_hint">5 到 180 分钟。填 0 或留空会回到默认 30 分钟。</string>
+    <string name="profile_daily_goal_saved">每日目标已设为 %1$d 分钟</string>
+    <string name="profile_daily_goal_reset">已回到默认 %1$d 分钟</string>
     <string name="profile_name_default">拾语学习者</string>
     <string name="profile_edit_name">修改名字</string>
     <string name="profile_name_hint">写个你喜欢的称呼</string>

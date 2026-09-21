@@ -271,6 +271,38 @@
                         android:background="@color/line" />
 
                     <LinearLayout
+                        android:id="@+id/btnDailyGoal"
+                        android:layout_width="match_parent"
+                        android:layout_height="52dp"
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal">
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:text="@string/profile_daily_goal"
+                            android:textColor="@color/ink"
+                            android:textSize="14sp" />
+                        <TextView
+                            android:id="@+id/dailyGoalValue"
+                            style="@style/ShiyuSubtitle"
+                            android:textSize="13sp"
+                            tools:text="30 分钟" />
+                        <ImageView
+                            android:layout_width="14dp"
+                            android:layout_height="14dp"
+                            android:layout_marginStart="6dp"
+                            android:contentDescription="@null"
+                            android:src="@drawable/ic_chevron_right"
+                            app:tint="@color/mute" />
+                    </LinearLayout>
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:background="@color/line" />
+
+                    <LinearLayout
                         android:id="@+id/btnSettings"
                         android:layout_width="match_parent"
                         android:layout_height="52dp"
