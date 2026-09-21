@@ -116,7 +116,32 @@ class VoiceChatActivity : BaseActivity() {
 
         binding.btnBack.setOnClickListener { endSession() }
         binding.btnStartVoice.setOnClickListener { requestMicAndStart() }
-        binding.btnMic.setOnClickListener { toggleListening() }
+        // 麦克风按钮两种语义：
+        // · 自动模式（默认）——点一下 = 打断，让 AI 立刻停
+        // · 按住说话模式——按住才收音，松开就交给服务端断句；此时不再兼任打断
+        //   （旁人说话的根本不进麦克风，也就不需要靠打断来救）
+        if (AppGraph.settingsRepository.voicePushToTalk()) {
+            binding.btnMic.setOnTouchListener { view, event ->
+                when (event.actionMasked) {
+                    android.view.MotionEvent.ACTION_DOWN -> {
+                        audio?.pushing = true
+                        view.isPressed = true
+                        binding.voiceState.text = getString(R.string.voice_release_to_send)
+                        true
+                    }
+                    android.view.MotionEvent.ACTION_UP,
+                    android.view.MotionEvent.ACTION_CANCEL -> {
+                        audio?.pushing = false
+                        view.isPressed = false
+                        binding.voiceState.text = getString(R.string.voice_listening)
+                        true
+                    }
+                    else -> false
+                }
+            }
+        } else {
+            binding.btnMic.setOnClickListener { toggleListening() }
+        }
         binding.btnCc.setOnClickListener {
             binding.transcriptScroll.visibility =
                 if (binding.transcriptScroll.visibility == View.VISIBLE) View.GONE else View.VISIBLE
@@ -140,6 +165,10 @@ class VoiceChatActivity : BaseActivity() {
             !AppGraph.providerRegistry.isChatEnabled(module.id)
         ) {
             appendAiLine(getString(R.string.voice_translate_unavailable))
+        }
+
+        if (AppGraph.settingsRepository.voicePushToTalk()) {
+            binding.voiceState.text = getString(R.string.voice_hold_to_talk)
         }
 
         if (!AppGraph.providerRegistry.isRealtimeEnabled(module.id)) {
@@ -296,6 +325,7 @@ class VoiceChatActivity : BaseActivity() {
         provider = p
         p.setListener(listener)
 
+        val pushToTalk = AppGraph.settingsRepository.voicePushToTalk()
         audio = RealtimeAudioController(
             onAudioFrame = { pcm -> p.sendAudio(pcm) },
             onSpeechStateChanged = { active ->
@@ -304,7 +334,7 @@ class VoiceChatActivity : BaseActivity() {
                 }
             },
             onAmplitude = { amp -> runOnUiThread { pushAmplitude(amp) } }
-        )
+        ).also { it.pushToTalkMode = pushToTalk }
         p.connect(voicePrompt)
         audio?.startCapture()
     }

@@ -39,6 +39,6 @@ data class RealtimeOptions(
 ) {
     companion object {
         /** 服务端 VAD 默认能量阈值，见 [energyAwakenessThreshold] 的注释 */
-        const val DEFAULT_ENERGY_THRESHOLD = 1600
+        const val DEFAULT_ENERGY_THRESHOLD = 1300
     }
 }

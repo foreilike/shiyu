@@ -80,6 +80,9 @@ class ProfileActivity : BaseActivity() {
                 Toast.makeText(this, R.string.translate_need_chat, Toast.LENGTH_LONG).show()
             }
         }
+        binding.pushToTalkSwitch.setOnCheckedChangeListener { _, isChecked ->
+            AppGraph.settingsRepository.setVoicePushToTalk(isChecked)
+        }
         binding.btnHistory.setOnClickListener {
             startActivity(Intent(this, HistoryActivity::class.java))
         }
@@ -92,6 +95,7 @@ class ProfileActivity : BaseActivity() {
         super.onResume()
         binding.autoPlaySwitch.isChecked = AppGraph.settingsRepository.autoPlayTts()
         binding.translateSwitch.isChecked = AppGraph.settingsRepository.realtimeTranslate()
+        binding.pushToTalkSwitch.isChecked = AppGraph.settingsRepository.voicePushToTalk()
         render()
     }
 

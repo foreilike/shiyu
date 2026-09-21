@@ -52,6 +52,17 @@ class RealtimeAudioController(
     /** 打断后到新一轮响应开始之间，丢弃下行的残留音频 */
     @Volatile private var droppingAudio = false
 
+    /**
+     * 「按住说话」模式：只有 [pushing] 为真时才把真实麦克风数据往上推，
+     * 松手时推**等长静音**而不是干脆不推。
+     *
+     * 为什么松手要推静音：服务端 VAD 靠"听到声音停了"来断句（speech_stopped）。
+     * 如果松手就不推流，服务端收不到"结束"的信号，只能干等超时，回复会明显变慢。
+     * 推静音能让它照常断句，同时保证旁人说话进不了服务端。
+     */
+    @Volatile var pushToTalkMode = false
+    @Volatile var pushing = false
+
     /** 端上音频效果器（回声消除 / 降噪），best-effort，设备不支持时为 null */
     private var echoCanceler: android.media.audiofx.AcousticEchoCanceler? = null
     private var noiseSuppressor: android.media.audiofx.NoiseSuppressor? = null
@@ -134,6 +145,11 @@ class RealtimeAudioController(
         noiseSuppressor = null
     }
 
+    private var silent: ByteArray? = null
+
+    private fun silentFrame(): ByteArray =
+        silent ?: ByteArray(FRAME_BYTES).also { silent = it }
+
     private fun captureLoop() {
         val buf = ByteArray(FRAME_BYTES)
         val shorts = ShortArray(FRAME_SAMPLES)
@@ -170,7 +186,12 @@ class RealtimeAudioController(
                     continue // 静音门控：本帧及后续静音帧都不推流
                 }
             }
-            if (speechActive) onAudioFrame(buf.copyOf())
+            if (pushToTalkMode) {
+                // 按住说话：流保持连续，没按的时候推静音帧
+                onAudioFrame(if (pushing) buf.copyOf() else silentFrame())
+            } else if (speechActive) {
+                onAudioFrame(buf.copyOf())
+            }
             // 只在「响/静」翻转时记一笔。之前每秒一条，排「服务端听不见」时有用，
             // 但平时就是噪音；翻转日志已经足够回答「麦克风到底有没有在收声音」。
             if (loud != lastLoud) {

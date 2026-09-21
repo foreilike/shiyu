@@ -18,6 +18,14 @@ data class AppSettings(
     val dailyGoalMinutes: Int = DEFAULT_DAILY_GOAL_MINUTES,
     /** 实时语音是否显示中文翻译（默认关：中文字幕会占掉沉浸页的视线） */
     val realtimeTranslate: Boolean = false,
+    /**
+     * 实时语音是否用「按住说话」（默认关）。
+     *
+     * 开着的时候，只有按住麦克风按钮的那段时间你的声音才会进服务端，松开就推静音。
+     * 这是**唯一能挡住"旁人说话"的办法** —— 服务端 VAD 只测响度，分不出是谁在说，
+     * 半米外的人声和本人电平只差几个 dB，靠调阈值无解（实测踩过）。
+     */
+    val voicePushToTalk: Boolean = false,
     val langs: Map<LangId, LanguageConfig> = mapOf(
         LangId.JA to LanguageConfig(),
         LangId.EN to LanguageConfig()

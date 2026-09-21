@@ -75,6 +75,10 @@
     <string name="history_detail_title">对话详情</string>
     <string name="history_role_me">我</string>
     <string name="history_role_ai">AI 语伴</string>
+    <string name="profile_push_to_talk">按住说话</string>
+    <string name="profile_push_to_talk_sub">只在你按住麦克风时收音，旁人说话不会被收进去</string>
+    <string name="voice_hold_to_talk">按住麦克风说话</string>
+    <string name="voice_release_to_send">松开就发送</string>
     <string name="translate_need_chat">中文翻译走的是「对话服务」，请先在 API 设置里配好那一组</string>
     <string name="voice_translate_unavailable">（未配置「对话服务」，中文翻译暂不可用）</string>
     <string name="profile_history">历史对话</string>
