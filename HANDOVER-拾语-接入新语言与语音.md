@@ -22,6 +22,7 @@
 | 常见小改动怎么改（配方） | §9 |
 | 出问题怎么排查 | §10 |
 | 新语言验收清单 | §11 |
+| **接一门语言的实操 Checklist（含耗时）** | **§12** |
 
 ---
 
@@ -768,3 +769,83 @@ docs/ja-translation/
 - [ ] 杀掉进程重开，配置与进度都还在
 - [ ] 「我的」页各项统计数字合理（没有负数、没有暴涨）
 - [ ] `./gradlew :app:testDebugUnitTest` 全绿
+
+---
+
+## 12. 附：接一门新语言的实操 Checklist（以韩语为例）
+
+> 把 §4 的清单摊成可打勾的待办，**带预估耗时和验收标准**。
+> 总预估：**代码 4–6 小时可跑通**；真正的时间花在词库与翻译上（取决于目标词量）。
+
+### 阶段 0：开工前的决策（约 0.5 小时）
+
+- [ ] **确认目标语言与分级**：韩语建议按 **TOPIK I（1–2 级）/ TOPIK II（3–6 级）** 分，各做一本词书
+- [ ] **确认字段映射**：韩语照 §4.10 走 `JaModule` 路线 —— `front`=韩文、`back`=罗马字、`meaningZh`=中文
+- [ ] **确认词量目标**：自用阶段建议先 **500–1000 词**（TOPIK I 的高频词），够用且翻译量可控
+- [ ] **确认数据源并核实授权**（§5.2 的候选表），记下来源与许可，将来要写进 App 的署名
+
+> 💡 **别一上来就追求 8000 词。** 先用 **20 个词**把整条链路（数据 → 代码 → 真机）跑通，
+> 再接全量数据。这样万一字段映射或 UI 有问题，你不会是在 8000 词的数据上才发现。
+
+### 阶段 1：造最小样例数据（约 1 小时）
+
+- [ ] 写脚本抓/整理 **20 个韩语词**，字段照 §8.1 的格式
+- [ ] 每条都要有：韩文词、罗马字转写、中文释义、一条例句 + 例句中文译文
+- [ ] 存成 `app/src/main/assets/ko_topik1.json`
+- [ ] **立刻校验**：`python -c "import json; json.load(open('...','encoding=utf-8'))"` 能过
+- [ ] 发音表 `ko_chart.json`：先放 20 个基本字母（谚文），格式照 `kana.json`
+- [ ] 场景 `scenarios_ko.json`：先抄 `scenarios_ja.json` 改 2–3 个场景的文案
+
+> ⚠️ 大 JSON **一律脚本生成**，不要手写（本机大块手写会乱码）。
+
+### 阶段 2：代码（约 3–5 小时）
+
+- [ ] **步骤 1** `core/lang/LangId.kt`：加 `KO("ko", "韩语", "ko")`
+- [ ] 🔴 **同时把 `fromTag` 改成** `entries.firstOrNull { it.tag == tag } ?: JA` ← **最容易漏**
+- [ ] **步骤 2** 新建 `core/lang/ko/KoModule.kt`（照 §4.12 的骨架）
+- [ ] 新建 `core/lang/ko/KoNormalizer.kt`（**记得先做 Unicode NFC**，见 §4.11 ①）
+- [ ] **步骤 3** `LanguageRegistry` 注册 `LangId.KO to KoModule()`
+- [ ] **步骤 4** 🔴 `ui/Speaker.kt` 的 `setLanguage` 加 `Locale.KOREAN` 分支 ← **最容易漏**
+- [ ] **步骤 5** `ui/LangStyle.kt` 的 `accentRes` 加 `LangId.KO -> R.color.lang_ko`（编译器会报错提醒）
+- [ ] 确认 `res/values/colors.xml` 里 `lang_ko` 已存在（**已经有了**）
+- [ ] **步骤 6** `ui/langs/LanguagesActivity.kt`：把 `KO` 从 `COMING` 里删掉
+- [ ] **步骤 7** 编译：`./gradlew :app:compileReleaseKotlin` 通过
+
+> 🔧 顺手把 `ScenarioParser` / `str` / `WesternSentenceSplitter` 挪到 `core/lang/common/`
+> （见 §4.12 的重构提示），否则跨包 import 会越来越别扭。
+
+### 阶段 3：真机跑通样例（约 1 小时）
+
+- [ ] `./gradlew :app:clean :app:assembleRelease` —— **必须 clean**（§6.1）
+- [ ] 装机
+- [ ] 课程页能看到「韩语」，能切过去
+- [ ] 首页：语伴名/语言名/配色都变了，数字**没有**串到日语
+- [ ] 复习页：正面是韩文词 → 点开有中文释义 + 罗马字 + 例句 + 译文
+- [ ] 点喇叭，读的是**韩语音色**（不是英语）→ 这一步专门验 §4 步骤 4 那个坑
+- [ ] 拼写考试：拼一个词，判对、判错都正常
+- [ ] 切回日语，一切照旧
+
+> ⛔ **这一步不过，不要进入阶段 4。** 20 个词上发现的问题，在 8000 个词上是同样的修法，
+> 但排查成本高得多。
+
+### 阶段 4：灌全量数据 + 翻译（耗时取决于词量）
+
+- [ ] 抓全量词表 → 转成 `input/ko_all.json`（结构照 `docs/ja-translation/input/ja_n5.json`）
+- [ ] 改 `docs/ja-translation/PRD-日语翻译.md` 的语种说明，交给模型跑
+- [ ] 改 `merge.py` 指向韩语 → 生成 `assets/ko_topik1.json`
+- [ ] **校验**：id 全覆盖、无空释义、空译文恰好对应「本来就没例句」的词
+- [ ] **抽检 15–20 条**（各级都抽）：释义准、例句通顺、无英文残留、无错位
+- [ ] 放进 assets，`books()` 里登记（多本词书就多条 `WordBook`）
+
+### 阶段 5：终验与收尾（约 0.5 小时）
+
+- [ ] 跑 **§11 的 16 项验收清单**，逐条真机点过
+- [ ] `./gradlew :app:testDebugUnitTest` 全绿（记得补 `LanguageModuleTest` 的断言）
+- [ ] `./gradlew :app:clean :app:assembleRelease` 出包
+- [ ] 提交，并**把新文档/代码同步进 `D:\AI project\项目备份\拾语\`**
+- [ ] 在 App 内补**数据来源署名**（如果打算公开发布）
+
+### 一句话总结优先级
+
+**先跑通链路，再堆数据。** 代码部分有本章两份清单兜着，不太会翻车；
+真正会拖垮你的是「用 8000 词的数据调试一个字段映射错误」。
