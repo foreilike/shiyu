@@ -52,6 +52,26 @@ class LanguageModuleTest {
         )
     }
 
+    /** 拼写考试：英语只认单词；日语假名读音与汉字写法都算对。 */
+    @Test
+    fun exam_answers_per_language() {
+        val enCard = Card(
+            id = "cet4_1", front = "abruptly", frontSub = "A1 · adv.",
+            back = "/əˈbrʌptli/", backSub = "", meaningZh = "突然地", speakText = "abruptly"
+        )
+        assertEquals(listOf("abruptly"), en.examAnswers(enCard))
+
+        val jaCard = Card(
+            id = "n5_1", front = "私", frontSub = "JLPT N5",
+            back = "わたし", backSub = "watashi", meaningZh = "我", speakText = "わたし"
+        )
+        assertEquals(listOf("わたし", "私"), ja.examAnswers(jaCard))
+
+        // 无汉字时 front == back，去重后只剩一条
+        val kanaOnly = jaCard.copy(front = "わたし")
+        assertEquals(listOf("わたし"), ja.examAnswers(kanaOnly))
+    }
+
     @Test
     fun ja_deck_mapping() {
         val json = """[
@@ -82,14 +102,14 @@ class LanguageModuleTest {
         ]"""
         val deck = en.buildDeck(json)
         val card = deck.single()
-        assertEquals("早餐", card.front)
+        // 与日语统一：front=外语词、back=读音、meaningZh=中文释义（跬步模式：看词回忆释义）
+        assertEquals("breakfast", card.front)
         assertEquals("A1 · n.", card.frontSub)
-        assertEquals("breakfast", card.back)
-        assertEquals("/ˈbrekfəst/", card.backSub)
-        // 英语的释义已在正面，meaningZh 为空串
-        assertEquals("", card.meaningZh)
+        assertEquals("/ˈbrekfəst/", card.back)
+        assertEquals("", card.backSub)
+        assertEquals("早餐", card.meaningZh)
         assertEquals("breakfast", card.speakText)
-        // 例句挖空：首次出现替换为 ____
+        // 例句挖空：首次出现替换为 ____（历史字段，当前学习模式已不展示）
         assertEquals("I eat ____ at seven.", card.exampleBlank)
     }
 

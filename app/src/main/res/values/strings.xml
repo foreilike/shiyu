@@ -41,6 +41,23 @@
     <string name="home_entry_review_sub">%1$d 张卡片待复习</string>
     <string name="home_entry_chart">发音表</string>
     <string name="home_entry_chart_sub">点格子即可跟读</string>
+    <string name="home_entry_exam">拼写考试</string>
+    <string name="home_entry_exam_sub">随机 20 词</string>
+    <string name="exam_title">拼写考试</string>
+    <string name="exam_sub">看释义，拼出%1$s</string>
+    <string name="exam_progress">第 %1$d / %2$d 题</string>
+    <string name="exam_hint">输入后点「提交」</string>
+    <string name="exam_submit">提交</string>
+    <string name="exam_next">下一题</string>
+    <string name="exam_correct">答对了</string>
+    <string name="exam_wrong">答错了，正确答案是「%1$s」</string>
+    <string name="exam_done_title">本次考试结束</string>
+    <string name="exam_score">答对 %1$d / %2$d</string>
+    <string name="exam_score_praise">很棒，这批词掌握得不错</string>
+    <string name="exam_score_ok">还行，错的多看两遍</string>
+    <string name="exam_score_low">再复习一轮再来考</string>
+    <string name="exam_again">再考一次</string>
+    <string name="exam_empty">当前词书没有可考的卡</string>
     <!-- 课程（语种切换） -->
     <string name="langs_title">课程</string>
     <string name="langs_sub">切换语种后，全站内容与进度随之切换</string>
@@ -130,8 +147,7 @@
     <!-- 复习页补充 -->
     <string name="review_title">复习</string>
     <string name="review_sub">来自课程与对话场景的记忆卡片</string>
-    <string name="review_tap_hint">输入答案后点「确认」翻面</string>
-    <string name="review_progress">第 %1$d / %2$d 张</string>
+    <string name="review_tap_hint">点卡片看释义</string>    <string name="review_progress">第 %1$d / %2$d 张</string>
     <string name="review_chart_entry">发音表</string>
     <string name="review_pick_book">选择词书</string>
     <string name="review_speak">朗读这个单词</string>
@@ -176,11 +192,7 @@
     <!-- 学习页 -->
         <string name="today_due">今日待复习</string>
     <string name="mastered">已掌握</string>
-        <string name="answer_input">在此输入答案</string>
-    <string name="confirm_answer">确认</string>
         <string name="today_finished">今日已完成</string>
-    <string name="correct_answer">回答正确</string>
-    <string name="wrong_answer">回答错误</string>
     <string name="quality_forgot">完全不会</string>
     <string name="quality_vague">有点模糊</string>
     <string name="quality_recalled">想起来了</string>

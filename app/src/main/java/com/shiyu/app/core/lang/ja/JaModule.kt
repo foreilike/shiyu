@@ -36,6 +36,10 @@ class JaModule : LanguageModule {
     override fun assetNames(): Triple<String, String, String> =
         Triple("kana.json", "n5_vocab.json", "scenarios_ja.json")
 
+    /** 日语考试作答：假名读音（back）或汉字写法（front，有汉字时）都算对。 */
+    override fun examAnswers(card: Card): List<String> =
+        listOf(card.back, card.front).filter { it.isNotBlank() }.distinct()
+
     // 日语词书：OpenJLPT N5–N1 共 8334 词，中文释义/例句译文由外部模型翻译后按 id 合并
     // （见 docs/ja-translation/）。旧的 138 词 n5_vocab.json 已被完整 N5(662 词) 取代。
     override fun books(): List<WordBook> = listOf(

@@ -90,12 +90,15 @@ class EnModule : LanguageModule {
             out.add(
                 Card(
                     id = id,
-                    front = meaningZh,
+                    // 与日语统一的字段约定（跬步模式）：front=外语词、back=读音、meaningZh=中文释义。
+                    // 原先英语是反的（front 放释义、back 放单词），只有打字作答时讲得通；
+                    // 改成「看词回忆释义」的自评模式后必须与日语一致。
+                    front = word,
                     frontSub = listOf(o.str("level"), o.str("pos"))
                         .filter { it.isNotEmpty() }.joinToString(" · "),
-                    back = word,
-                    backSub = o.str("ipa"),
-                    meaningZh = "",
+                    back = o.str("ipa"),
+                    backSub = "",
+                    meaningZh = meaningZh,
                     speakText = word,
                     exampleBlank = blankExample(word, example),
                     example = example,

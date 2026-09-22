@@ -419,6 +419,39 @@
                             android:layout_marginTop="2dp"
                             android:text="@string/home_entry_chart_sub" />
                     </LinearLayout>
+
+                    <LinearLayout
+                        android:id="@+id/entryExam"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="14dp"
+                        android:layout_weight="1"
+                        android:background="@drawable/bg_card"
+                        android:orientation="vertical"
+                        android:padding="16dp">
+                        <ImageView
+                            android:layout_width="34dp"
+                            android:layout_height="34dp"
+                            android:background="@drawable/bg_round12"
+                            android:backgroundTint="@color/violet_soft"
+                            android:contentDescription="@null"
+                            android:padding="7dp"
+                            android:src="@drawable/ic_exam"
+                            app:tint="@color/lang_en" />
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="10dp"
+                            android:text="@string/home_entry_exam"
+                            android:textColor="@color/ink"
+                            android:textSize="14sp"
+                            android:textStyle="bold" />
+                        <TextView
+                            android:id="@+id/entryExamSub"
+                            style="@style/ShiyuSubtitle"
+                            android:layout_marginTop="2dp"
+                            android:text="@string/home_entry_exam_sub" />
+                    </LinearLayout>
                 </LinearLayout>
             </LinearLayout>
         </ScrollView>

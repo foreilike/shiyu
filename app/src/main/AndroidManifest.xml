@@ -63,6 +63,11 @@
             android:name=".ui.chart.ChartActivity"
             android:exported="false" />
         <activity
+            android:name=".ui.exam.ExamActivity"
+            android:configChanges="orientation|screenSize|keyboardHidden|screenLayout|smallestScreenSize"
+            android:exported="false"
+            android:windowSoftInputMode="adjustResize" />
+        <activity
             android:name=".ui.chat.ChatActivity"
             android:configChanges="orientation|screenSize|keyboardHidden|screenLayout|smallestScreenSize"
             android:exported="false"

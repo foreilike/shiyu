@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="24dp"
+    android:height="24dp"
+    android:viewportWidth="24"
+    android:viewportHeight="24">
+    <!-- 卷面 -->
+    <path
+        android:pathData="M6,3 h9 l4,4 v14 a1,1 0 0 1 -1,1 H6 a1,1 0 0 1 -1,-1 V4 a1,1 0 0 1 1,-1 z"
+        android:strokeColor="#FF000000"
+        android:strokeWidth="1.8"
+        android:strokeLineJoin="round" />
+    <!-- 对勾 -->
+    <path
+        android:pathData="M8.6,13.4 l2.3,2.3 l4.5,-4.9"
+        android:strokeColor="#FF000000"
+        android:strokeWidth="1.8"
+        android:strokeLineCap="round"
+        android:strokeLineJoin="round" />
+</vector>

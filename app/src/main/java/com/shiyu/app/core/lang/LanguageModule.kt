@@ -38,4 +38,12 @@ interface LanguageModule {
 
     /** 分句（两种语言共用逐句朗读 UI；英语为 EnSentenceSplitter，日语按 。！？ 切分） */
     fun splitSentences(text: String): List<String>
+
+    /**
+     * 拼写考试（进阶模式）里**可接受**的作答，任一命中即算对。
+     *
+     * 默认只有 [Card.front]；日语覆写为「假名读音 + 汉字写法」都可——
+     * 初学者记的是读音，认汉字的人写汉字也该算对，不该硬卡一种写法。
+     */
+    fun examAnswers(card: Card): List<String> = listOf(card.front)
 }

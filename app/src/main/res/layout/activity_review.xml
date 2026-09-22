@@ -266,16 +266,6 @@
                         android:visibility="gone" />
 
                     <TextView
-                        android:id="@+id/judgeResult"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:gravity="center"
-                        android:paddingTop="14dp"
-                        android:textSize="14sp"
-                        android:textStyle="bold"
-                        android:visibility="gone" />
-
-                    <TextView
                         android:id="@+id/tapHint"
                         style="@style/ShiyuSubtitle"
                         android:layout_gravity="center_horizontal"
@@ -338,49 +328,6 @@
                 </LinearLayout>
             </LinearLayout>
         </ScrollView>
-
-        <!-- 作答 -->
-        <LinearLayout
-            android:id="@+id/inputRow"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:gravity="center_vertical"
-            android:orientation="horizontal"
-            android:paddingStart="20dp"
-            android:paddingTop="10dp"
-            android:paddingEnd="20dp">
-
-            <EditText
-                android:id="@+id/answerInput"
-                android:layout_width="0dp"
-                android:layout_height="46dp"
-                android:layout_weight="1"
-                android:background="@drawable/bg_input"
-                android:hint="@string/answer_input"
-                android:imeOptions="actionDone"
-                android:importantForAutofill="no"
-                android:inputType="text"
-                android:maxLines="1"
-                android:paddingStart="14dp"
-                android:paddingEnd="14dp"
-                android:textColor="@color/ink"
-                android:textColorHint="@color/mute"
-                android:textSize="15sp" />
-
-            <TextView
-                android:id="@+id/btnConfirm"
-                android:layout_width="wrap_content"
-                android:layout_height="46dp"
-                android:layout_marginStart="10dp"
-                android:background="@drawable/bg_btn_clay"
-                android:gravity="center"
-                android:paddingStart="22dp"
-                android:paddingEnd="22dp"
-                android:text="@string/confirm_answer"
-                android:textColor="@color/cream"
-                android:textSize="14sp"
-                android:textStyle="bold" />
-        </LinearLayout>
     </LinearLayout>
 
     <include

@@ -14,6 +14,7 @@ import com.shiyu.app.databinding.ActivityHomeBinding
 import com.shiyu.app.ui.BaseActivity
 import com.shiyu.app.ui.LangStyle
 import com.shiyu.app.ui.chart.ChartActivity
+import com.shiyu.app.ui.exam.ExamActivity
 import com.shiyu.app.ui.nav.BottomNav
 import com.shiyu.app.ui.review.ReviewActivity
 import com.shiyu.app.ui.voice.VoiceChatActivity
@@ -47,6 +48,9 @@ class HomeActivity : BaseActivity() {
         binding.entryReview.setOnClickListener { openReview() }
         binding.entryChart.setOnClickListener {
             startActivity(Intent(this, ChartActivity::class.java))
+        }
+        binding.entryExam.setOnClickListener {
+            startActivity(Intent(this, ExamActivity::class.java))
         }
         binding.voiceCard.setOnClickListener { openVoice() }
     }

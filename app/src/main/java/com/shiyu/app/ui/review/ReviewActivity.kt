@@ -6,14 +6,11 @@ import android.content.Intent
 import android.os.Bundle
 import android.os.SystemClock
 import android.view.View
-import android.view.inputmethod.EditorInfo
 import android.widget.Toast
-import androidx.core.content.ContextCompat
 import androidx.lifecycle.lifecycleScope
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.shiyu.app.AppGraph
 import com.shiyu.app.R
-import com.shiyu.app.core.answer.AnswerJudge
 import com.shiyu.app.core.lang.LanguageModule
 import com.shiyu.app.core.lang.LanguageRegistry
 import com.shiyu.app.core.srs.CardState
@@ -78,15 +75,8 @@ class ReviewActivity : BaseActivity() {
             startActivity(Intent(this, ChartActivity::class.java))
         }
         binding.btnBook.setOnClickListener { showBookPicker() }
-        binding.btnConfirm.setOnClickListener { onConfirm() }
-        binding.answerInput.setOnEditorActionListener { _, actionId, _ ->
-            if (actionId == EditorInfo.IME_ACTION_DONE) {
-                onConfirm()
-                true
-            } else {
-                false
-            }
-        }
+        // 点卡片任意处揭示答案（跬步模式：先自测后揭示，不用打字）
+        binding.flipCard.setOnClickListener { reveal() }
         binding.btnQ2.setOnClickListener { onRate(2) }
         binding.btnQ3.setOnClickListener { onRate(3) }
         binding.btnQ4.setOnClickListener { onRate(4) }
@@ -185,13 +175,14 @@ class ReviewActivity : BaseActivity() {
             binding.cardFront.text = getString(R.string.today_finished)
             binding.cardFront.textSize = 24f
             binding.cardFrontSub.text = ""
-            binding.cardMeaning.text = ""
+            binding.cardMeaning.visibility = View.GONE
             binding.cardBack.visibility = View.GONE
             binding.cardBackSub.visibility = View.GONE
-            binding.judgeResult.visibility = View.GONE
+            binding.cardExample.visibility = View.GONE
+            binding.cardExampleZh.visibility = View.GONE
             binding.ratingRow.visibility = View.GONE
             binding.tapHint.visibility = View.GONE
-            binding.inputRow.visibility = View.GONE
+            binding.btnSpeak.visibility = View.GONE
             binding.chipIndex.text = ""
             return
         }
@@ -202,65 +193,46 @@ class ReviewActivity : BaseActivity() {
             return
         }
         currentCard = card
-        binding.inputRow.visibility = View.VISIBLE
         binding.cardSource.visibility = View.VISIBLE
         binding.cardSource.text = module.id.displayName
+        binding.btnSpeak.visibility = View.VISIBLE
+        // 正面只给外语词 + 副标题，释义/读音/例句全部藏起来，先让学习者自己回忆 ——
+        // 这是跬步的模式（先自测后揭示）。之前要求打字，对初学者不现实。
         binding.cardFront.textSize = 38f
         binding.cardFront.text = card.front
         binding.cardFrontSub.text = card.frontSub
-        binding.cardMeaning.text = card.exampleBlank.ifEmpty { card.meaningZh }
+        binding.cardMeaning.text = card.meaningZh
+        binding.cardMeaning.visibility = View.GONE
+        binding.cardBack.text = card.back
         binding.cardBack.visibility = View.GONE
+        binding.cardBackSub.text = card.backSub
         binding.cardBackSub.visibility = View.GONE
+        binding.cardExample.text = card.example
         binding.cardExample.visibility = View.GONE
+        binding.cardExampleZh.text = card.exampleZh
         binding.cardExampleZh.visibility = View.GONE
-        binding.judgeResult.visibility = View.GONE
         binding.ratingRow.visibility = View.GONE
         binding.tapHint.visibility = View.VISIBLE
-        binding.answerInput.setText("")
-        binding.answerInput.hint = module.answerHint
-        binding.btnConfirm.isEnabled = true
-        binding.btnConfirm.alpha = 1f
         binding.chipIndex.text =
             getString(R.string.review_progress, queueIndex + 1, queue.size)
     }
 
-    private fun onConfirm() {
+    /** 揭示答案：点卡片即触发，翻面动画后把释义/读音/例句与自评按钮一并显示。 */
+    private fun reveal() {
         val card = currentCard ?: return
         if (flipped) return
-        val input = binding.answerInput.text.toString()
-        val result = AnswerJudge.judge(module, card.back, input)
         flipped = true
-        binding.btnConfirm.isEnabled = false
-        binding.btnConfirm.alpha = 0.5f
-
         flip {
-            binding.cardBack.text = card.back
-            binding.cardBackSub.text = card.backSub
-            binding.cardBack.visibility = View.VISIBLE
-            binding.cardBackSub.visibility = View.VISIBLE
-            // 翻面后给出完整例句 + 中文译文（参照跬步：发音在 backSub，例句在这里）。
-            // 没有例句的卡（旧数据）就不显示，不留空行。
+            if (card.meaningZh.isNotBlank()) binding.cardMeaning.visibility = View.VISIBLE
+            // 读音：日语给假名（back）+ 罗马音（backSub），英语给音标（back）
+            if (card.back.isNotBlank()) binding.cardBack.visibility = View.VISIBLE
+            if (card.backSub.isNotBlank()) binding.cardBackSub.visibility = View.VISIBLE
+            // 例句/译文没有的卡（旧数据）就不显示，不留空行
             if (card.example.isNotBlank()) {
-                binding.cardExample.text = card.example
                 binding.cardExample.visibility = View.VISIBLE
-                if (card.exampleZh.isNotBlank()) {
-                    binding.cardExampleZh.text = card.exampleZh
-                    binding.cardExampleZh.visibility = View.VISIBLE
-                }
+                if (card.exampleZh.isNotBlank()) binding.cardExampleZh.visibility = View.VISIBLE
             }
             binding.tapHint.visibility = View.GONE
-            binding.judgeResult.visibility = View.VISIBLE
-            binding.judgeResult.text = if (result.correct) {
-                getString(R.string.correct_answer)
-            } else {
-                getString(R.string.wrong_answer) + "：" + result.reason
-            }
-            binding.judgeResult.setTextColor(
-                ContextCompat.getColor(
-                    this,
-                    if (result.correct) R.color.ok_green else R.color.bad_red
-                )
-            )
             binding.ratingRow.visibility = View.VISIBLE
         }
     }
