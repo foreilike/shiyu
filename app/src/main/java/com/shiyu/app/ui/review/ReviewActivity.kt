@@ -70,6 +70,10 @@ class ReviewActivity : BaseActivity() {
         binding.btnSpeak.setOnClickListener {
             speaker?.speak(currentCard?.speakText.orEmpty())
         }
+        // 整句朗读：单词会了不等于句子听得懂，例句也给一条朗读
+        binding.btnSpeakExample.setOnClickListener {
+            speaker?.speak(currentCard?.example.orEmpty())
+        }
 
         binding.btnChart.setOnClickListener {
             startActivity(Intent(this, ChartActivity::class.java))
@@ -180,6 +184,7 @@ class ReviewActivity : BaseActivity() {
             binding.cardBackSub.visibility = View.GONE
             binding.cardExample.visibility = View.GONE
             binding.cardExampleZh.visibility = View.GONE
+            binding.btnSpeakExample.visibility = View.GONE
             binding.ratingRow.visibility = View.GONE
             binding.tapHint.visibility = View.GONE
             binding.btnSpeak.visibility = View.GONE
@@ -211,6 +216,7 @@ class ReviewActivity : BaseActivity() {
         binding.cardExample.visibility = View.GONE
         binding.cardExampleZh.text = card.exampleZh
         binding.cardExampleZh.visibility = View.GONE
+        binding.btnSpeakExample.visibility = View.GONE
         binding.ratingRow.visibility = View.GONE
         binding.tapHint.visibility = View.VISIBLE
         binding.chipIndex.text =
@@ -230,6 +236,7 @@ class ReviewActivity : BaseActivity() {
             // 例句/译文没有的卡（旧数据）就不显示，不留空行
             if (card.example.isNotBlank()) {
                 binding.cardExample.visibility = View.VISIBLE
+                binding.btnSpeakExample.visibility = View.VISIBLE
                 if (card.exampleZh.isNotBlank()) binding.cardExampleZh.visibility = View.VISIBLE
             }
             binding.tapHint.visibility = View.GONE

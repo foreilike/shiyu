@@ -44,7 +44,7 @@
     <string name="home_entry_exam">拼写考试</string>
     <string name="home_entry_exam_sub">随机 20 词</string>
     <string name="exam_title">拼写考试</string>
-    <string name="exam_sub">看释义，拼出%1$s</string>
+    <string name="exam_sub">看释义，%1$s</string>
     <string name="exam_progress">第 %1$d / %2$d 题</string>
     <string name="exam_hint">输入后点「提交」</string>
     <string name="exam_submit">提交</string>
@@ -151,6 +151,7 @@
     <string name="review_chart_entry">发音表</string>
     <string name="review_pick_book">选择词书</string>
     <string name="review_speak">朗读这个单词</string>
+    <string name="review_speak_example">听例句</string>
     <string name="review_speak_no_tts">设备缺少%1$s语音包，无法朗读</string>
     <!-- 对话中心 -->
     <string name="talk_title">对话</string>

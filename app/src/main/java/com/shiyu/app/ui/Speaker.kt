@@ -29,6 +29,12 @@ class Speaker(context: Context) : TextToSpeech.OnInitListener {
     /** 抑制开关：录音期间置 true，阻断一切朗读，从根上避免「外放被录进麦克风」的回环。 */
     private var suppressed = false
 
+    /**
+     * 朗读语速。系统默认 1.0，对学习者偏快 —— 音节糊在一起，跟不上也听不清。
+     * 放慢到 0.7（比默认慢 30%），音节之间拉开，方便跟读。
+     */
+    private var rate = SLOW_RATE
+
     fun setLanguage(langId: LangId) {
         val target = if (langId == LangId.JA) Locale.JAPANESE else Locale.ENGLISH
         locale = target
@@ -43,11 +49,22 @@ class Speaker(context: Context) : TextToSpeech.OnInitListener {
     override fun onInit(status: Int) {
         ready = status == TextToSpeech.SUCCESS
         if (ready) {
+            applyRate(rate)
             // 引擎连上后才真正生效：把调用方早先设过的语言补上
             locale?.let { applyLanguage(it) }
             val text = pendingText
             pendingText = null
             if (text != null) speakNow(text)
+        }
+    }
+
+    /** 语速：引擎就绪后才能设，设不上也不影响朗读（失败静默按默认走） */
+    private fun applyRate(value: Float) {
+        rate = value
+        try {
+            tts?.setSpeechRate(value)
+        } catch (e: Exception) {
+            // 忽略
         }
     }
 
@@ -80,5 +97,10 @@ class Speaker(context: Context) : TextToSpeech.OnInitListener {
         tts?.shutdown()
         tts = null
         ready = false
+    }
+
+    companion object {
+        /** 朗读语速：0.5 = 系统默认的一半。默认 1.0 对初学者太快，0.7 仍偏快（实测反馈） */
+        const val SLOW_RATE = 0.5f
     }
 }
