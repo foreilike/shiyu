@@ -30,12 +30,16 @@ class Speaker(context: Context) : TextToSpeech.OnInitListener {
     private var suppressed = false
 
     /**
-     * 朗读语速。系统默认 1.0，对学习者偏快 —— 音节糊在一起，跟不上也听不清。
-     * 放慢到 0.7（比默认慢 30%），音节之间拉开，方便跟读。
+     * 单词朗读语速。系统默认 1.0，对学习者偏快 —— 音节糊在一起，跟不上也听不清。
+     * 0.5 是实测听感调出来的值（0.7 仍偏快）。
      */
     private var rate = SLOW_RATE
 
+    /** 当前朗读语言；例句语速要按语言分，所以得记住 */
+    private var currentLang: LangId? = null
+
     fun setLanguage(langId: LangId) {
+        currentLang = langId
         val target = if (langId == LangId.JA) Locale.JAPANESE else Locale.ENGLISH
         locale = target
         if (ready) applyLanguage(target)
@@ -84,11 +88,16 @@ class Speaker(context: Context) : TextToSpeech.OnInitListener {
     fun speak(text: String) = speak(text, rate)
 
     /**
-     * 指定语速朗读。[rate] 默认沿用实例语速（单词用 [SLOW_RATE]）；
-     * 整句例句可以传更慢的值 —— 句子更长、连读更多，跟单词一个速度来不及听清。
+     * 整句例句朗读：语速**按语言分**（英语 0.3、日语 0.4，均为实测听感调出的值）。
+     * 整句更长、连读更多，跟单词一个速度来不及听清。
+     */
+    fun speakExample(text: String) = speak(text, exampleRateFor(currentLang))
+
+    /**
+     * 指定语速朗读。
      *
      * 每次都显式 setSpeechRate：引擎的语速是「状态」而非「每句参数」，
-     * 不重设的话上一句的语速会漏到下一句。
+     * 不重设的话上一句的语速会漏到下一句（读完慢速例句，单词也跟着变慢）。
      */
     fun speak(text: String, rate: Float) {
         if (text.isBlank()) return
@@ -117,7 +126,13 @@ class Speaker(context: Context) : TextToSpeech.OnInitListener {
         /** 单词朗读语速：0.5 = 系统默认的一半。默认 1.0 对初学者太快，0.7 仍偏快（实测反馈） */
         const val SLOW_RATE = 0.5f
 
-        /** 例句语速：在单词语速基础上再降一半（0.25）。整句更长、连读更多，更慢才听得清 */
-        const val SENTENCE_RATE = SLOW_RATE * 0.5f
+        /** 例句语速——英语。整句更长、连读更多，比单词再慢一档才听得清 */
+        const val EXAMPLE_RATE_EN = 0.3f
+
+        /** 例句语速——日语。日语音节短、语速本身快，0.3 太拖，0.4 更自然（实测听感） */
+        const val EXAMPLE_RATE_JA = 0.4f
+
+        private fun exampleRateFor(langId: LangId?): Float =
+            if (langId == LangId.JA) EXAMPLE_RATE_JA else EXAMPLE_RATE_EN
     }
 }
