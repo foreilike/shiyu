@@ -308,7 +308,11 @@ class ChatActivity : BaseActivity() {
                 is AiResult.Ok -> {
                     val parsed = ReplyParser.parse(module, result.value)
                     appendAssistantText(result.value, parsed)
-                    AppGraph.sessionStore.appendTurn(sessionId, "assistant", result.value)
+                    // 落盘挪到 IO：appendTurn 会 load+整文件重写会话 JSON（随对话变长 O(n)），
+                    // 主线程同步写会卡 UI。用户轮早已挪到 IO，助手轮之前漏了。
+                    withContext(Dispatchers.IO) {
+                        AppGraph.sessionStore.appendTurn(sessionId, "assistant", result.value)
+                    }
                     maybeAutoPlay(parsed)
                 }
                 is AiResult.Err -> showHint(AiErrorMessages.describe(this@ChatActivity, result.error))

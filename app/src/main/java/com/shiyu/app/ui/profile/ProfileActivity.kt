@@ -14,6 +14,7 @@ import android.widget.TextView
 import android.widget.Toast
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import androidx.core.content.ContextCompat
+import androidx.lifecycle.lifecycleScope
 import com.shiyu.app.AppGraph
 import com.shiyu.app.BuildConfig
 import com.shiyu.app.R
@@ -31,6 +32,9 @@ import com.shiyu.app.ui.LangStyle
 import com.shiyu.app.ui.history.HistoryActivity
 import com.shiyu.app.ui.nav.BottomNav
 import com.shiyu.app.ui.settings.SettingsActivity
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import java.time.LocalDate
 
 /**
@@ -80,9 +84,6 @@ class ProfileActivity : BaseActivity() {
                 Toast.makeText(this, R.string.translate_need_chat, Toast.LENGTH_LONG).show()
             }
         }
-        binding.pushToTalkSwitch.setOnCheckedChangeListener { _, isChecked ->
-            AppGraph.settingsRepository.setVoicePushToTalk(isChecked)
-        }
         binding.btnHistory.setOnClickListener {
             startActivity(Intent(this, HistoryActivity::class.java))
         }
@@ -95,7 +96,6 @@ class ProfileActivity : BaseActivity() {
         super.onResume()
         binding.autoPlaySwitch.isChecked = AppGraph.settingsRepository.autoPlayTts()
         binding.translateSwitch.isChecked = AppGraph.settingsRepository.realtimeTranslate()
-        binding.pushToTalkSwitch.isChecked = AppGraph.settingsRepository.voicePushToTalk()
         render()
     }
 
@@ -106,44 +106,96 @@ class ProfileActivity : BaseActivity() {
         val nickname = AppGraph.settingsRepository.nickname()
         val shown = nickname.ifBlank { getString(R.string.profile_name_default) }
         binding.profileName.text = shown
-        // 头像取名字首字（emoji / 代理对也按完整字符取，不会切成乱码）
-        binding.avatar.text = shown.firstOrNull()?.toString().orEmpty()
+        // 头像取名字首字。按 codePoint 取而不是 firstOrNull()：后者返回单个 UTF-16 Char，
+        // emoji/生僻字是代理对，只取到高位代理会渲染成豆腐块。
+        binding.avatar.text = firstGrapheme(shown)
         binding.avatar.backgroundTintList = ColorStateList.valueOf(accent)
         binding.profileSub.text = "主学${active.displayName} · 辅修${other.displayName}"
-
-        val epochDay = LocalDate.now().toEpochDay()
-        val stats = AppGraph.dailyStatsStore.load()
-        val streak = AppGraph.dailyStatsStore.streak(epochDay, stats)
-        val totalSeconds = AppGraph.dailyStatsStore.totalSeconds(stats)
-        val mastered = LangId.entries.sumOf { masteredCount(it) }
-        val totalTurns = LangId.entries.sumOf { AppGraph.sessionStore.turnsCountByLang(it) }
-        val voiceSeconds = stats.days.values.sumOf { it.voiceSeconds }
-
         binding.dailyGoalValue.text = getString(
             R.string.profile_daily_goal_value,
             AppGraph.settingsRepository.dailyGoalMinutes()
         )
-        binding.statStreak.text = streak.toString()
-        binding.statWords.text = mastered.toString()
-        binding.statHours.text = String.format(java.util.Locale.US, "%.1f", totalSeconds / 3600.0)
 
-        renderWeek(AppGraph.dailyStatsStore.currentWeek(epochDay, stats), epochDay)
-        renderBadges(
-            Achievements.evaluate(
-                Achievements.Input(
-                    voiceSeconds = voiceSeconds,
-                    streakDays = streak,
-                    masteredWords = mastered,
-                    totalSeconds = totalSeconds,
-                    totalTurns = totalTurns
-                )
-            )
-        )
-        renderLangStats(epochDay)
+        // 统计区要整目录扫会话 + 解析多份 JSON。之前直接在主线程 render 里跑，且
+        // turnsCountByLang/masteredCount 被「求和」与「分语言」各调一次 —— 全盘扫描重复 4 遍，
+        // 会话攒多后进页面明显卡顿甚至 ANR。改成后台一次性算好快照，回主线程只做渲染。
+        val epochDay = LocalDate.now().toEpochDay()
+        lifecycleScope.launch {
+            val snap = withContext(Dispatchers.IO) { computeSnapshot(epochDay) }
+            binding.statStreak.text = snap.streak.toString()
+            binding.statWords.text = snap.mastered.toString()
+            binding.statHours.text =
+                String.format(java.util.Locale.US, "%.1f", snap.totalSeconds / 3600.0)
+            renderWeek(snap.week, epochDay)
+            renderBadges(snap.badges)
+            renderLangStats(snap.langStats)
+        }
     }
 
-    private fun masteredCount(lang: LangId): Int =
-        AppGraph.studyStore.progressFor(lang).values.count { it.reps >= MASTERED_REPS }
+    /** 头像/首字母：按 Unicode 码点取首个完整字符（emoji、代理对不被切半）。 */
+    private fun firstGrapheme(s: String): String {
+        if (s.isEmpty()) return ""
+        val cp = s.codePointAt(0)
+        return String(Character.toChars(cp))
+    }
+
+    /**
+     * 后台线程算好一屏统计所需的全部数据。整个会话目录**只扫一次**并按语言分桶，
+     * StudyStore 每语言只读一次，杜绝原来的重复全盘扫描。
+     */
+    private fun computeSnapshot(epochDay: Long): ProfileSnapshot {
+        val stats = AppGraph.dailyStatsStore.load()
+        val streak = AppGraph.dailyStatsStore.streak(epochDay, stats)
+        val totalSeconds = AppGraph.dailyStatsStore.totalSeconds(stats)
+        val voiceSeconds = stats.days.values.sumOf { it.voiceSeconds }
+
+        val progressByLang = LangId.entries.associateWith { AppGraph.studyStore.progressFor(it) }
+        val turnsByLang = HashMap<String, Int>()
+        for (record in AppGraph.sessionStore.allSessions()) {
+            val n = record.turns.count { it.role == "user" }
+            turnsByLang[record.langId] = (turnsByLang[record.langId] ?: 0) + n
+        }
+        val mastered =
+            progressByLang.values.sumOf { m -> m.values.count { it.reps >= MASTERED_REPS } }
+        val totalTurns = turnsByLang.values.sum()
+
+        val langStats = LangId.entries.map { lang ->
+            val progress = progressByLang.getValue(lang)
+            LangStatRow(
+                lang = lang,
+                due = progress.values.count { it.dueEpochDay <= epochDay },
+                mastered = progress.values.count { it.reps >= MASTERED_REPS },
+                turns = turnsByLang[lang.tag] ?: 0
+            )
+        }
+        val badges = Achievements.evaluate(
+            Achievements.Input(
+                voiceSeconds = voiceSeconds,
+                streakDays = streak,
+                masteredWords = mastered,
+                totalSeconds = totalSeconds,
+                totalTurns = totalTurns
+            )
+        )
+        return ProfileSnapshot(streak, totalSeconds, mastered, badges, langStats,
+            AppGraph.dailyStatsStore.currentWeek(epochDay, stats))
+    }
+
+    private data class ProfileSnapshot(
+        val streak: Int,
+        val totalSeconds: Long,
+        val mastered: Int,
+        val badges: List<Achievements.Badge>,
+        val langStats: List<LangStatRow>,
+        val week: List<DayStat>
+    )
+
+    private data class LangStatRow(
+        val lang: LangId,
+        val due: Int,
+        val mastered: Int,
+        val turns: Int
+    )
 
     private fun renderWeek(week: List<DayStat>, todayEpochDay: Long) {
         binding.weekBars.removeAllViews()
@@ -247,18 +299,14 @@ class ProfileActivity : BaseActivity() {
     private fun displayValue(id: Achievements.Id, raw: Long): Int =
         if (id == Achievements.Id.HOURS_10) (raw / 3600L).toInt() else raw.toInt()
 
-    private fun renderLangStats(epochDay: Long) {
+    private fun renderLangStats(rows: List<LangStatRow>) {
         binding.langStats.removeAllViews()
-        for (lang in LangId.entries) {
-            val progress = AppGraph.studyStore.progressFor(lang)
-            val due = progress.values.count { it.dueEpochDay <= epochDay }
-            val mastered = progress.values.count { it.reps >= MASTERED_REPS }
-            val turns = AppGraph.sessionStore.turnsCountByLang(lang)
+        for (row in rows) {
             binding.langStats.addView(
                 TextView(this).apply {
                     text = getString(
                         R.string.profile_lang_stats,
-                        lang.displayName, due, mastered, turns
+                        row.lang.displayName, row.due, row.mastered, row.turns
                     )
                     textSize = 13.5f
                     setTextColor(ContextCompat.getColor(this@ProfileActivity, R.color.ink2))

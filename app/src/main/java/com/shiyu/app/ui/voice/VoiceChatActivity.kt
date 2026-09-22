@@ -49,13 +49,18 @@ class VoiceChatActivity : BaseActivity() {
     private lateinit var scenario: Scenario
 
     private var provider: RealtimeVoiceProvider? = null
-    private var audio: RealtimeAudioController? = null
+    // WS 回调线程（onAudioDelta）会读它，主线程 startSession/endSession 写它 —— 加 @Volatile，
+    // 否则 onDestroy 置 null 后回调线程可能仍读到过期的非 null 引用，往已释放的控制器推音频。
+    @Volatile private var audio: RealtimeAudioController? = null
     private var running = false
 
     private val handler = Handler(Looper.getMainLooper())
     private var startElapsed = 0L
     private var turns = 0
     private var recorded = false
+
+    /** 单键收音开关：true=正在收音（麦克风热），false=已暂停（推静音等 AI 回复） */
+    private var speaking = false
 
     /** 本轮的完整往返，结束时整条写入 SessionStore（实时语音不逐轮落盘） */
     private val recordedTurns = mutableListOf<SessionTurn>()
@@ -119,41 +124,13 @@ class VoiceChatActivity : BaseActivity() {
 
         buildWave()
 
-        // 中间大圆按钮的语义随模式变，标签必须跟着变 —— 否则「按住说话」模式下
-        // 按钮还写着"打断"，用户按下去发现是在说话，只会更困惑
-        val pushToTalk = AppGraph.settingsRepository.voicePushToTalk()
-        binding.micLabel.text = getString(
-            if (pushToTalk) R.string.voice_btn_hold else R.string.voice_btn_interrupt
-        )
+        // 中间大圆按钮：单键切换收音。点「开始说话」= 麦克风开始收音（并打断 AI）；
+        // 再点「暂停说话」= 停止收音、推静音让服务端断句并回复。合并了旧的「自动/按住」两套模式。
+        binding.micLabel.text = getString(R.string.voice_btn_start)
 
         binding.btnBack.setOnClickListener { endSession() }
         binding.btnStartVoice.setOnClickListener { requestMicAndStart() }
-        // 麦克风按钮两种语义：
-        // · 自动模式（默认）——点一下 = 打断，让 AI 立刻停
-        // · 按住说话模式——按住才收音，松开就交给服务端断句；此时不再兼任打断
-        //   （旁人说话的根本不进麦克风，也就不需要靠打断来救）
-        if (AppGraph.settingsRepository.voicePushToTalk()) {
-            binding.btnMic.setOnTouchListener { view, event ->
-                when (event.actionMasked) {
-                    android.view.MotionEvent.ACTION_DOWN -> {
-                        audio?.pushing = true
-                        view.isPressed = true
-                        binding.voiceState.text = getString(R.string.voice_release_to_send)
-                        true
-                    }
-                    android.view.MotionEvent.ACTION_UP,
-                    android.view.MotionEvent.ACTION_CANCEL -> {
-                        audio?.pushing = false
-                        view.isPressed = false
-                        binding.voiceState.text = getString(R.string.voice_listening)
-                        true
-                    }
-                    else -> false
-                }
-            }
-        } else {
-            binding.btnMic.setOnClickListener { toggleListening() }
-        }
+        binding.btnMic.setOnClickListener { toggleSpeaking() }
         // 字幕开关：关掉字幕 = 纯听不看，适合练听力。按钮要能看出当前状态，
         // 否则用户点完发现"什么都没发生"（其实只是字幕区没了，而它本来就可能是空的）
         binding.btnCc.setOnClickListener { toggleSubtitles() }
@@ -188,10 +165,6 @@ class VoiceChatActivity : BaseActivity() {
             !AppGraph.providerRegistry.isChatEnabled(module.id)
         ) {
             appendAiLine(getString(R.string.voice_translate_unavailable))
-        }
-
-        if (AppGraph.settingsRepository.voicePushToTalk()) {
-            binding.voiceState.text = getString(R.string.voice_hold_to_talk)
         }
 
         if (!AppGraph.providerRegistry.isRealtimeEnabled(module.id)) {
@@ -385,7 +358,7 @@ class VoiceChatActivity : BaseActivity() {
         aiBubble = null
         userBubble = null
         binding.transcriptContainer.removeAllViews()
-        binding.voiceState.text = getString(R.string.voice_listening)
+        binding.voiceState.text = getString(R.string.voice_tap_start)
         handler.post(ticker)
 
         // 语音模式必须用专门的提示词：场景自带的 systemPrompt 是给文字对话写的，
@@ -399,7 +372,10 @@ class VoiceChatActivity : BaseActivity() {
         provider = p
         p.setListener(listener)
 
-        val pushToTalk = AppGraph.settingsRepository.voicePushToTalk()
+        // 单键切换模式：始终按「按住说话」的底层链路走（pushing 控制真实音频/静音），
+        // 由 toggleSpeaking 切换 pushing。初始不收音，等用户点「开始说话」。
+        speaking = false
+        binding.micLabel.text = getString(R.string.voice_btn_start)
         audio = RealtimeAudioController(
             onAudioFrame = { pcm -> p.sendAudio(pcm) },
             onSpeechStateChanged = { active ->
@@ -408,18 +384,34 @@ class VoiceChatActivity : BaseActivity() {
                 }
             },
             onAmplitude = { amp -> runOnUiThread { pushAmplitude(amp) } }
-        ).also { it.pushToTalkMode = pushToTalk }
+        ).also {
+            it.pushToTalkMode = true
+            it.pushing = false
+        }
         p.connect(voicePrompt)
         audio?.startCapture()
     }
 
-    private fun toggleListening() {
+    /**
+     * 单键切换收音。点一下开始说话（打断 AI + 开麦收音），再点一下暂停说话
+     * （关麦，推静音让服务端断句并回复）。合并了旧的「自动打断 / 按住说话」两套交互。
+     */
+    private fun toggleSpeaking() {
         if (!running) return
-        // 手动打断：停播 + 清服务端音频缓冲，立即回到聆听
-        android.util.Log.i(TAG, "tap 打断：audio=${audio != null} provider=${provider != null}")
-        audio?.interrupt()
-        provider?.cancelResponse()
-        binding.voiceState.text = getString(R.string.voice_listening)
+        speaking = !speaking
+        if (speaking) {
+            // 开始说话：先打断 AI 当前播放与生成，再开麦
+            audio?.interrupt()
+            provider?.cancelResponse()
+            audio?.pushing = true
+            binding.micLabel.text = getString(R.string.voice_btn_pause)
+            binding.voiceState.text = getString(R.string.voice_speaking)
+        } else {
+            // 暂停说话：关麦，推静音，交给服务端断句 → AI 回复
+            audio?.pushing = false
+            binding.micLabel.text = getString(R.string.voice_btn_start)
+            binding.voiceState.text = getString(R.string.voice_thinking)
+        }
     }
 
     private fun resetSession() {
@@ -543,6 +535,18 @@ class VoiceChatActivity : BaseActivity() {
             }
         }
 
+        /**
+         * 服务端确认会话可用（收到 `session.created`）。语音页不需要额外动作，但**必须显式写出来**。
+         *
+         * 接口里 [RealtimeVoiceProvider.Listener.onReady] 带默认空实现，而 Kotlin 在
+         * jvm-default=disable 下会把它编成「abstract 方法 + `Listener$DefaultImpls`」，
+         * 没写它的实现类得靠编译器生成的桥接方法来转发。实测这个桥接会因为增量编译
+         * 没重编本文件而缺失（829e65e 引入 onReady 时正是如此），运行时
+         * `listener?.onReady()` 抛 AbstractMethodError，而且崩在 OkHttp 线程上没人接，
+         * 直接带崩整个进程。显式写一个空的，本类就再也不依赖编译器桥接。
+         */
+        override fun onReady() {}
+
         override fun onConnected() {
             runOnUiThread { binding.voiceState.text = getString(R.string.voice_listening) }
         }
@@ -557,7 +561,7 @@ class VoiceChatActivity : BaseActivity() {
         }
 
         override fun onUserSpeechStopped() {
-            runOnUiThread { binding.voiceState.text = "思考中…" }
+            runOnUiThread { binding.voiceState.text = getString(R.string.voice_thinking) }
         }
 
         override fun onAudioDelta(pcm: ByteArray) {
@@ -585,8 +589,10 @@ class VoiceChatActivity : BaseActivity() {
                 if (text.isNotBlank()) {
                     recordedTurns.add(SessionTurn("user", text))
                     applyLanguageSwitchIfRequested(text)
+                    // turns 计数必须与 recordedTurns 同步递增：服务端偶发回一条空/纯静音
+                    // 转写时，之前 turns++ 在 if 外照加，结算页轮数与 chatTurns 会虚高于会话文件。
+                    turns++
                 }
-                turns++
                 val bubble = newUserBubble()
                 userBuffer.append(text)
                 bubble.text = userBuffer.toString()
@@ -609,7 +615,8 @@ class VoiceChatActivity : BaseActivity() {
                 aiBubble = null
                 userBuffer.clear()
                 userBubble = null
-                binding.voiceState.text = getString(R.string.voice_listening)
+                // AI 回复完 → 提示用户点「开始说话」继续（单键模型下不自动收音）
+                binding.voiceState.text = getString(R.string.voice_tap_start)
             }
         }
 

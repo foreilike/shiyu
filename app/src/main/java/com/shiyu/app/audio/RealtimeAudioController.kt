@@ -49,6 +49,14 @@ class RealtimeAudioController(
     @Volatile private var player: android.media.AudioTrack? = null
     private val playing = AtomicBoolean(false)
 
+    /**
+     * 已释放标志。`release()` 之后若还有迟到的下行音频包（provider.close() 只是异步关
+     * socket，缓冲里的 onAudioDelta 可能在 release 之后才落地）打到 playPcm，
+     * 不加这道闸就会走 `player ?: newTrack()` **新建一个再没人释放的 AudioTrack**，
+     * 还会从已销毁的会话里冒出一声。置位后 playPcm 直接丢弃。
+     */
+    @Volatile private var released = false
+
     /** 只保护 player / playing 的读写；**不要用它包住 track.write**（会阻塞打断） */
     private val playerLock = Any()
 
@@ -204,7 +212,10 @@ class RealtimeAudioController(
                 if (speechActive && silenceFrames >= SILENCE_GATE_FRAMES) {
                     speechActive = false
                     onSpeechStateChanged(false)
-                    continue // 静音门控：本帧及后续静音帧都不推流
+                    // 静音门控只在自动 VAD 模式下切断推流。按住说话模式必须保持流连续
+                    // （松手推等长静音让服务端照常断句，见类头 pushToTalkMode 注释），
+                    // 否则这里一 continue 会把 PTT 的静音帧也吞掉，服务端提前断句吃掉后半句。
+                    if (!pushToTalkMode) continue
                 }
             }
             if (pushToTalkMode) {
@@ -268,13 +279,15 @@ class RealtimeAudioController(
      */
     fun playPcm(bytes: ByteArray) {
         if (bytes.isEmpty()) return
+        // 已释放：迟到的下行包直接丢，绝不能新建 track（否则泄漏 + 从死会话冒声）
+        if (released) return
         // 打断之后、服务端真正停下之前，还会飘来几百毫秒的音频包。
         // 不过滤的话，下一个包就会把刚暂停的播放重新拉起来 —— 表现就是
         // 「按了打断没反应，它停一下又接着说」。
         if (droppingAudio) return
         val track: android.media.AudioTrack
         synchronized(playerLock) {
-            if (droppingAudio) return
+            if (droppingAudio || released) return
             val t = player ?: newTrack().also { player = it }
             if (!playing.get()) {
                 try {
@@ -343,6 +356,7 @@ class RealtimeAudioController(
     }
 
     fun release() {
+        released = true
         droppingAudio = false
         stopCapture()
         stopPlayback()

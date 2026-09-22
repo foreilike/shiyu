@@ -29,7 +29,7 @@
                 android:layout_height="40dp"
                 android:background="?attr/selectableItemBackgroundBorderless"
                 android:contentDescription="@string/voice_back_home"
-                android:src="@drawable/ic_nav_chat"
+                android:src="@drawable/ic_chevron_left"
                 app:tint="@color/cream" />
 
             <LinearLayout

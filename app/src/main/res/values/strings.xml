@@ -133,13 +133,14 @@
     <string name="review_tap_hint">输入答案后点「确认」翻面</string>
     <string name="review_progress">第 %1$d / %2$d 张</string>
     <string name="review_chart_entry">发音表</string>
+    <string name="review_pick_book">选择词书</string>
     <!-- 对话中心 -->
     <string name="talk_title">对话</string>
     <string name="talk_sub">挑一个场景开口，或直接进实时语音</string>
     <string name="talk_scenarios">场景练习</string>
     <string name="back">返回</string>
     <!-- 实时语音（拾语设计稿） -->
-    <string name="voice_ready_sub">实时语音对话 · 说完自动断句\nAI 语伴会先开口，轮到你时说话即可</string>
+    <string name="voice_ready_sub">实时语音对话 · 点「开始说话」开口，说完点「暂停说话」交给 AI\nAI 语伴会先开口，轮到你时点开始</string>
     <string name="voice_entry_title">实时语音对话</string>
         <string name="voice_partner_online">AI 语伴 %1$s 在线 · 像朋友一样聊天</string>
     <string name="voice_kicker">REALTIME TALK</string>
@@ -147,7 +148,7 @@
         <string name="voice_ready_title">和 %1$s 聊聊天</string>
     <string name="voice_gated">已静默暂停推流 · 省流量计费</string>
     <string name="voice_start">开始对话</string>
-        <string name="voice_back_home">返回首页</string>
+        <string name="voice_back_home">结束对话</string>
     <string name="voice_again">再来一轮</string>
     <string name="voice_summary_title">对话完成</string>
     <string name="voice_summary_time">对话时长</string>
@@ -161,6 +162,11 @@
     <string name="voice_btn_end">结束</string>
     <string name="voice_btn_interrupt">打断</string>
     <string name="voice_btn_hold">按住说</string>
+    <string name="voice_btn_start">开始说话</string>
+    <string name="voice_btn_pause">暂停说话</string>
+    <string name="voice_speaking">说话中…点「暂停说话」结束</string>
+    <string name="voice_tap_start">点「开始说话」开口</string>
+    <string name="voice_thinking">AI 回复中…</string>
     <string name="voice_type_close">收起</string>
     <string name="voice_type_hint">输入想说的话…</string>
     <string name="voice_type_send">发送</string>

@@ -37,11 +37,23 @@ class StepfunRealtimeProvider(
     @Volatile private var connected = false
 
     /** 重连用：记住最后一次的 instructions；用户主动关闭后不再重连 */
-    private var lastInstructions: String? = null
-    private var closedByUser = false
+    @Volatile private var lastInstructions: String? = null
+
+    /**
+     * 用户主动关闭标志。**必须 @Volatile**：主线程 `close()` 写，OkHttp 回调线程
+     * `onFailure`/`onClosed` → `scheduleReconnect()` 读（同类里 socket/connected/retryCount
+     * 都因跨线程加了 volatile，这个漏了会读到过期的 false → 挂断后又偷偷重连一条没人关的连接，
+     * 服务端会话一直挂着还在计费）。
+     */
+    @Volatile private var closedByUser = false
     @Volatile private var retryCount = 0
     private val mainHandler = android.os.Handler(android.os.Looper.getMainLooper())
     private val reconnectTask = Runnable {
+        // 兜住 close() 与 scheduleReconnect() 的 TOCTOU：scheduleReconnect 在 WS 线程
+        // 分两步 removeCallbacks+postDelayed，若 close() 的 removeCallbacks 恰好夹在中间，
+        // 会漏掉一个已排上的重连任务。reconnectTask 与 close() 都在主线程序列化执行，
+        // 只要这里再查一次 closedByUser，漏网的任务 fire 时也不会真去重连。
+        if (closedByUser) return@Runnable
         val text = lastInstructions ?: return@Runnable
         android.util.Log.i(TAG, "reconnecting attempt=${retryCount}")
         openSocket(text)
