@@ -20,6 +20,9 @@ class AssetRepository(private val context: Context) {
 
     fun deckJson(module: LanguageModule): String = readAsset(module.assetNames().second)
 
+    /** 按词书 asset 名取牌堆原文（多词书：当前书的 asset）。 */
+    fun deckJson(assetName: String): String = readAsset(assetName)
+
     fun scenariosJson(module: LanguageModule): String = readAsset(module.assetNames().third)
 
     private fun readAsset(name: String): String = cache.getOrPut(name) {

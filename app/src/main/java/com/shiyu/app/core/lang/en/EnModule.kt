@@ -2,6 +2,7 @@ package com.shiyu.app.core.lang.en
 
 import com.shiyu.app.core.lang.LangId
 import com.shiyu.app.core.lang.LanguageModule
+import com.shiyu.app.core.lang.WordBook
 import com.shiyu.app.data.model.Card
 import com.shiyu.app.data.model.ChartEntry
 import com.shiyu.app.data.model.Scenario
@@ -35,6 +36,16 @@ class EnModule : LanguageModule {
 
     override fun assetNames(): Triple<String, String, String> =
         Triple("en_phonemes.json", "en_words.json", "scenarios_en.json")
+
+    override fun books(): List<WordBook> = listOf(
+        WordBook("basic", LangId.EN, "基础", "en_words.json"),
+        WordBook("cet4", LangId.EN, "CET4", "en_cet4.json"),
+        WordBook("cet6", LangId.EN, "CET6", "en_cet6.json"),
+        WordBook("kaoyan", LangId.EN, "考研", "en_kaoyan.json"),
+        WordBook("toefl", LangId.EN, "托福", "en_toefl.json"),
+        WordBook("ielts", LangId.EN, "雅思", "en_ielts.json"),
+        WordBook("gre", LangId.EN, "GRE", "en_gre.json")
+    )
 
     override fun buildChart(json: String): List<ChartEntry> {
         val arr: JSONArray = try {
@@ -80,12 +91,15 @@ class EnModule : LanguageModule {
                 Card(
                     id = id,
                     front = meaningZh,
-                    frontSub = o.str("level") + " · " + o.str("pos"),
+                    frontSub = listOf(o.str("level"), o.str("pos"))
+                        .filter { it.isNotEmpty() }.joinToString(" · "),
                     back = word,
                     backSub = o.str("ipa"),
                     meaningZh = "",
                     speakText = word,
-                    exampleBlank = blankExample(word, example)
+                    exampleBlank = blankExample(word, example),
+                    example = example,
+                    exampleZh = o.str("exampleZh")
                 )
             )
         }

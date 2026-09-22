@@ -2,6 +2,7 @@ package com.shiyu.app.core.lang.ja
 
 import com.shiyu.app.core.lang.LangId
 import com.shiyu.app.core.lang.LanguageModule
+import com.shiyu.app.core.lang.WordBook
 import com.shiyu.app.data.model.Card
 import com.shiyu.app.data.model.ChartEntry
 import com.shiyu.app.data.model.Scenario
@@ -34,6 +35,12 @@ class JaModule : LanguageModule {
 
     override fun assetNames(): Triple<String, String, String> =
         Triple("kana.json", "n5_vocab.json", "scenarios_ja.json")
+
+    // 日语词书：现有 138 词的 N5 先留着保底。OpenJLPT N5–N1（8334 词）的中文译文回收后，
+    // 换成 ja_n5.json … ja_n1.json 并在此登记（见 docs/ja-translation/PRD-日语翻译.md）。
+    override fun books(): List<WordBook> = listOf(
+        WordBook("n5", LangId.JA, "N5", "n5_vocab.json")
+    )
 
     override fun buildChart(json: String): List<ChartEntry> {
         val arr: JSONArray = try {
@@ -83,7 +90,9 @@ class JaModule : LanguageModule {
                     backSub = o.str("romaji"),
                     meaningZh = o.str("meaningZh"),
                     speakText = kana,
-                    exampleBlank = ""
+                    exampleBlank = "",
+                    example = o.str("example"),
+                    exampleZh = o.str("exampleZh")
                 )
             )
         }

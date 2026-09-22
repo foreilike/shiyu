@@ -142,7 +142,7 @@ class HomeActivity : BaseActivity() {
         binding.langTagText.setTextColor(accent)
         binding.langTagText.text = lang.displayName
 
-        val deck = module.buildDeck(AppGraph.assetRepository.deckJson(module))
+        val deck = module.buildDeck(AppGraph.activeDeckJson(module))
         val progress = AppGraph.studyStore.progressFor(lang)
         val epochDay = LocalDate.now().toEpochDay()
         // 与复习页同一口径（DailyQuota），且**按当前语言分桶** ——

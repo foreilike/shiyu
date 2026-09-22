@@ -44,6 +44,32 @@
             </LinearLayout>
 
             <LinearLayout
+                android:id="@+id/btnBook"
+                android:layout_width="wrap_content"
+                android:layout_height="34dp"
+                android:layout_marginEnd="8dp"
+                android:background="@drawable/bg_pill_white"
+                android:gravity="center_vertical"
+                android:orientation="horizontal"
+                android:paddingStart="12dp"
+                android:paddingEnd="12dp">
+                <TextView
+                    android:id="@+id/bookLabel"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/clay"
+                    android:textSize="12sp"
+                    tools:text="CET4" />
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="4dp"
+                    android:text="▾"
+                    android:textColor="@color/clay"
+                    android:textSize="12sp" />
+            </LinearLayout>
+
+            <LinearLayout
                 android:id="@+id/btnChart"
                 android:layout_width="wrap_content"
                 android:layout_height="34dp"
@@ -197,6 +223,32 @@
                         android:layout_height="wrap_content"
                         android:gravity="center"
                         android:paddingTop="4dp"
+                        android:textColor="@color/mute"
+                        android:textSize="13sp"
+                        android:visibility="gone" />
+
+                    <TextView
+                        android:id="@+id/cardExample"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="center"
+                        android:lineSpacingMultiplier="1.25"
+                        android:paddingTop="16dp"
+                        android:paddingStart="8dp"
+                        android:paddingEnd="8dp"
+                        android:textColor="@color/ink2"
+                        android:textSize="15sp"
+                        android:visibility="gone" />
+
+                    <TextView
+                        android:id="@+id/cardExampleZh"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="center"
+                        android:lineSpacingMultiplier="1.2"
+                        android:paddingTop="6dp"
+                        android:paddingStart="8dp"
+                        android:paddingEnd="8dp"
                         android:textColor="@color/mute"
                         android:textSize="13sp"
                         android:visibility="gone" />

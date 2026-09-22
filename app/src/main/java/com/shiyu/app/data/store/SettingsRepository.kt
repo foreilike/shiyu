@@ -90,6 +90,14 @@ class SettingsRepository(private val store: SecretStore) {
 
     fun activeLang(): LangId = load().activeLang
 
+    /** 当前语言选中的词书 id；未设过则返回空串（调用方回退到 books() 第一本）。 */
+    fun activeBook(lang: LangId): String = load().activeBooks[lang] ?: ""
+
+    fun setActiveBook(lang: LangId, bookId: String) {
+        val settings = load()
+        save(settings.copy(activeBooks = settings.activeBooks + (lang to bookId)))
+    }
+
     fun autoPlayTts(): Boolean = load().autoPlayTts
 
     @Synchronized
@@ -194,6 +202,14 @@ class SettingsRepository(private val store: SecretStore) {
                 )
             }
         }
+        // 后加字段：每语言当前词书。老文件无此键 → 空 map（UI 回退默认书）。
+        val activeBooks = mutableMapOf<LangId, String>()
+        root.optJSONObject("activeBooks")?.let { obj ->
+            for (lang in LangId.values()) {
+                val id = obj.optString(lang.tag, "")
+                if (id.isNotEmpty()) activeBooks[lang] = id
+            }
+        }
         return AppSettings(
             version = if (version >= 1) version else 1,
             activeLang = activeLang,
@@ -202,6 +218,7 @@ class SettingsRepository(private val store: SecretStore) {
             dailyGoalMinutes = dailyGoalMinutes,
             realtimeTranslate = realtimeTranslate,
             voicePushToTalk = voicePushToTalk,
+            activeBooks = activeBooks,
             langs = langs
         )
     }
@@ -253,6 +270,9 @@ class SettingsRepository(private val store: SecretStore) {
             langs.put(lang.tag, langObj)
         }
         root.put("langs", langs)
+        val books = JSONObject()
+        for ((lang, id) in settings.activeBooks) books.put(lang.tag, id)
+        root.put("activeBooks", books)
         return root.toString()
     }
 

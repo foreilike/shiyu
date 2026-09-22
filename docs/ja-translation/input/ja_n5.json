@@ -1,0 +1,5960 @@
+[
+ {
+  "id": "n5_0001",
+  "word": "あさって",
+  "kana": "あさって",
+  "romaji": "asatte",
+  "meaningEn": "day after tomorrow",
+  "exampleJa": "あさって来てください。",
+  "exampleEn": "Come the day after tomorrow."
+ },
+ {
+  "id": "n5_0002",
+  "word": "あそこ",
+  "kana": "あそこ",
+  "romaji": "asoko",
+  "meaningEn": "over there",
+  "exampleJa": "あそこを見て。",
+  "exampleEn": "Look over there."
+ },
+ {
+  "id": "n5_0003",
+  "word": "あちら",
+  "kana": "あちら",
+  "romaji": "achira",
+  "meaningEn": "there",
+  "exampleJa": "トイレはあちらにあります。",
+  "exampleEn": "The toilet is over there."
+ },
+ {
+  "id": "n5_0004",
+  "word": "あっち",
+  "kana": "あっち",
+  "romaji": "atchi",
+  "meaningEn": "over there",
+  "exampleJa": "あっち行け！",
+  "exampleEn": "Go to hell!"
+ },
+ {
+  "id": "n5_0005",
+  "word": "あなた",
+  "kana": "あなた",
+  "romaji": "anata",
+  "meaningEn": "you",
+  "exampleJa": "あなたの本？",
+  "exampleEn": "Is the book yours?"
+ },
+ {
+  "id": "n5_0006",
+  "word": "あの",
+  "kana": "あの",
+  "romaji": "ano",
+  "meaningEn": "that over there",
+  "exampleJa": "あの車です。",
+  "exampleEn": "It was that car."
+ },
+ {
+  "id": "n5_0007",
+  "word": "アパート",
+  "kana": "アパート",
+  "romaji": "apaato",
+  "meaningEn": "apartment",
+  "exampleJa": "いいアパートね。",
+  "exampleEn": "This is a great apartment."
+ },
+ {
+  "id": "n5_0008",
+  "word": "あびる",
+  "kana": "あびる",
+  "romaji": "abiru",
+  "meaningEn": "to bathe; to shower",
+  "exampleJa": "",
+  "exampleEn": ""
+ },
+ {
+  "id": "n5_0009",
+  "word": "あまり",
+  "kana": "あまり",
+  "romaji": "amari",
+  "meaningEn": "not very",
+  "exampleJa": "あまり見えない。",
+  "exampleEn": "I see it rarely."
+ },
+ {
+  "id": "n5_0010",
+  "word": "ある",
+  "kana": "ある",
+  "romaji": "aru",
+  "meaningEn": "to be; to have (used for inanimate objects)",
+  "exampleJa": "熱はあるの？",
+  "exampleEn": "Do you have a fever?"
+ },
+ {
+  "id": "n5_0011",
+  "word": "あれ",
+  "kana": "あれ",
+  "romaji": "are",
+  "meaningEn": "that",
+  "exampleJa": "何だあれは？",
+  "exampleEn": "What's that?"
+ },
+ {
+  "id": "n5_0012",
+  "word": "いい/よい",
+  "kana": "いい/よい",
+  "romaji": "ii/yoi",
+  "meaningEn": "good",
+  "exampleJa": "",
+  "exampleEn": ""
+ },
+ {
+  "id": "n5_0013",
+  "word": "いいえ",
+  "kana": "いいえ",
+  "romaji": "iie",
+  "meaningEn": "no",
+  "exampleJa": "いいえ、少しも。",
+  "exampleEn": "Not at all."
+ },
+ {
+  "id": "n5_0014",
+  "word": "いかが",
+  "kana": "いかが",
+  "romaji": "ikaga",
+  "meaningEn": "how",
+  "exampleJa": "一口いかが？",
+  "exampleEn": "How about a bite to eat?"
+ },
+ {
+  "id": "n5_0015",
+  "word": "いくつ",
+  "kana": "いくつ",
+  "romaji": "ikutsu",
+  "meaningEn": "how many?; how old?",
+  "exampleJa": "いくつですか？",
+  "exampleEn": "How old are you?"
+ },
+ {
+  "id": "n5_0016",
+  "word": "いくら",
+  "kana": "いくら",
+  "romaji": "ikura",
+  "meaningEn": "how much?",
+  "exampleJa": "いくらですか？",
+  "exampleEn": "How much is it?"
+ },
+ {
+  "id": "n5_0017",
+  "word": "いす",
+  "kana": "いす",
+  "romaji": "isu",
+  "meaningEn": "chair",
+  "exampleJa": "私は先払いする。",
+  "exampleEn": "I pay the money in advance."
+ },
+ {
+  "id": "n5_0018",
+  "word": "いちばん",
+  "kana": "いちばん",
+  "romaji": "ichiban",
+  "meaningEn": "best; first",
+  "exampleJa": "いちばん星みぃつけた。",
+  "exampleEn": "I found the first star."
+ },
+ {
+  "id": "n5_0019",
+  "word": "いつ",
+  "kana": "いつ",
+  "romaji": "itsu",
+  "meaningEn": "when",
+  "exampleJa": "いつ着くの？",
+  "exampleEn": "When do we arrive?"
+ },
+ {
+  "id": "n5_0020",
+  "word": "いつも",
+  "kana": "いつも",
+  "romaji": "itsumo",
+  "meaningEn": "always",
+  "exampleJa": "丘はいつも緑だ。",
+  "exampleEn": "The hill is always green."
+ },
+ {
+  "id": "n5_0021",
+  "word": "いろいろ",
+  "kana": "いろいろ",
+  "romaji": "iroiro",
+  "meaningEn": "various",
+  "exampleJa": "理由はいろいろある。",
+  "exampleEn": "There are many reasons."
+ },
+ {
+  "id": "n5_0022",
+  "word": "ええ",
+  "kana": "ええ",
+  "romaji": "ee",
+  "meaningEn": "yes",
+  "exampleJa": "ええと。。。",
+  "exampleEn": "Er..."
+ },
+ {
+  "id": "n5_0023",
+  "word": "エレベーター",
+  "kana": "エレベーター",
+  "romaji": "erebeetaa",
+  "meaningEn": "elevator",
+  "exampleJa": "エレベーター来たよ。",
+  "exampleEn": "The elevator arrived."
+ },
+ {
+  "id": "n5_0024",
+  "word": "おいしい",
+  "kana": "おいしい",
+  "romaji": "oishii",
+  "meaningEn": "delicious",
+  "exampleJa": "この魚おいしい。",
+  "exampleEn": "This fish is delicious."
+ },
+ {
+  "id": "n5_0025",
+  "word": "おなか",
+  "kana": "おなか",
+  "romaji": "onaka",
+  "meaningEn": "stomach",
+  "exampleJa": "おなか空いた！",
+  "exampleEn": "I'm starving!"
+ },
+ {
+  "id": "n5_0026",
+  "word": "おばあさん",
+  "kana": "おばあさん",
+  "romaji": "obaasan",
+  "meaningEn": "grandmother; female senior-citizen",
+  "exampleJa": "おばあさんはバスから降りた。",
+  "exampleEn": "The old lady got down from the bus."
+ },
+ {
+  "id": "n5_0027",
+  "word": "おまわりさん",
+  "kana": "おまわりさん",
+  "romaji": "omawarisan",
+  "meaningEn": "friendly term for policeman",
+  "exampleJa": "そのおまわりさんは勤務中です。",
+  "exampleEn": "The policeman is on duty."
+ },
+ {
+  "id": "n5_0028",
+  "word": "おもしろい",
+  "kana": "おもしろい",
+  "romaji": "omoshiroi",
+  "meaningEn": "interesting",
+  "exampleJa": "探偵小説はおもしろい。",
+  "exampleEn": "Detective stories are amusing."
+ },
+ {
+  "id": "n5_0029",
+  "word": "お菓子",
+  "kana": "おかし",
+  "romaji": "okashi",
+  "meaningEn": "sweets; candy",
+  "exampleJa": "お菓子買ってよ。",
+  "exampleEn": "Buy me a snack."
+ },
+ {
+  "id": "n5_0030",
+  "word": "お金",
+  "kana": "おかね",
+  "romaji": "okane",
+  "meaningEn": "money",
+  "exampleJa": "お金はどこ？",
+  "exampleEn": "Where's the money?"
+ },
+ {
+  "id": "n5_0031",
+  "word": "お兄さん",
+  "kana": "おにいさん",
+  "romaji": "oniisan",
+  "meaningEn": "(honorable) older brother",
+  "exampleJa": "お兄さん連れてきてね。",
+  "exampleEn": "Bring your brother."
+ },
+ {
+  "id": "n5_0032",
+  "word": "お皿",
+  "kana": "おさら",
+  "romaji": "osara",
+  "meaningEn": "plate; dish",
+  "exampleJa": "お皿洗って。",
+  "exampleEn": "Wash the dishes."
+ },
+ {
+  "id": "n5_0033",
+  "word": "お姉さん",
+  "kana": "おねえさん",
+  "romaji": "oneesan",
+  "meaningEn": "(honorable) older sister",
+  "exampleJa": "お姉さんのことよ。",
+  "exampleEn": "It's about your sister."
+ },
+ {
+  "id": "n5_0034",
+  "word": "お手洗い",
+  "kana": "おてあらい",
+  "romaji": "otearai",
+  "meaningEn": "bathroom",
+  "exampleJa": "お手洗いはどこですか。",
+  "exampleEn": "Where is the bathroom?"
+ },
+ {
+  "id": "n5_0035",
+  "word": "お酒",
+  "kana": "おさけ",
+  "romaji": "osake",
+  "meaningEn": "alcohol; rice wine",
+  "exampleJa": "お酒を飲もうよ。",
+  "exampleEn": "Let's have sake."
+ },
+ {
+  "id": "n5_0036",
+  "word": "お茶",
+  "kana": "おちゃ",
+  "romaji": "ocha",
+  "meaningEn": "green tea",
+  "exampleJa": "お茶の時間よ。",
+  "exampleEn": "It's time for tea."
+ },
+ {
+  "id": "n5_0037",
+  "word": "お父さん",
+  "kana": "おとうさん",
+  "romaji": "otousan",
+  "meaningEn": "(honorable) father",
+  "exampleJa": "お父さんはどこ？",
+  "exampleEn": "Where's your father?"
+ },
+ {
+  "id": "n5_0038",
+  "word": "お風呂",
+  "kana": "おふろ",
+  "romaji": "ofuro",
+  "meaningEn": "bath",
+  "exampleJa": "お風呂にする？",
+  "exampleEn": "Do you want a bath?"
+ },
+ {
+  "id": "n5_0039",
+  "word": "お弁当",
+  "kana": "おべんとう",
+  "romaji": "obentou",
+  "meaningEn": "boxed lunch",
+  "exampleJa": "普通のお弁当にしてね。",
+  "exampleEn": "Make it a normal packed lunch, OK?"
+ },
+ {
+  "id": "n5_0040",
+  "word": "お母さん",
+  "kana": "おかあさん",
+  "romaji": "okaasan",
+  "meaningEn": "(honorable) mother",
+  "exampleJa": "お母さんはどこ？",
+  "exampleEn": "Where is mother?"
+ },
+ {
+  "id": "n5_0041",
+  "word": "かかる",
+  "kana": "かかる",
+  "romaji": "kakaru",
+  "meaningEn": "to take time or money",
+  "exampleJa": "体重が気にかかる。",
+  "exampleEn": "I'm worried about my weight."
+ },
+ {
+  "id": "n5_0042",
+  "word": "かぎ",
+  "kana": "かぎ",
+  "romaji": "kagi",
+  "meaningEn": "key",
+  "exampleJa": "門にかぎを掛けなさい。",
+  "exampleEn": "Fasten the gate."
+ },
+ {
+  "id": "n5_0043",
+  "word": "かける",
+  "kana": "かける",
+  "romaji": "kakeru",
+  "meaningEn": "to call by phone",
+  "exampleJa": "出かけるの？",
+  "exampleEn": "Are you going out?"
+ },
+ {
+  "id": "n5_0044",
+  "word": "カップ",
+  "kana": "カップ",
+  "romaji": "kappu",
+  "meaningEn": "cup",
+  "exampleJa": "カップが割れた。",
+  "exampleEn": "The cup broke."
+ },
+ {
+  "id": "n5_0045",
+  "word": "かばん",
+  "kana": "かばん",
+  "romaji": "kaban",
+  "meaningEn": "bag; basket",
+  "exampleJa": "かばんを返せ。",
+  "exampleEn": "Give me back my bag."
+ },
+ {
+  "id": "n5_0046",
+  "word": "カメラ",
+  "kana": "カメラ",
+  "romaji": "kamera",
+  "meaningEn": "camera",
+  "exampleJa": "いいカメラだね。",
+  "exampleEn": "You have a good camera."
+ },
+ {
+  "id": "n5_0047",
+  "word": "カレー",
+  "kana": "カレー",
+  "romaji": "karee",
+  "meaningEn": "curry",
+  "exampleJa": "今日もカレーよ。",
+  "exampleEn": "Today it will also be Japanese curry."
+ },
+ {
+  "id": "n5_0048",
+  "word": "カレンダー",
+  "kana": "カレンダー",
+  "romaji": "karendaa",
+  "meaningEn": "calendar",
+  "exampleJa": "カレンダーはどこ？",
+  "exampleEn": "Where is the calendar?"
+ },
+ {
+  "id": "n5_0049",
+  "word": "かわいい",
+  "kana": "かわいい",
+  "romaji": "kawaii",
+  "meaningEn": "cute",
+  "exampleJa": "かわいいなー。",
+  "exampleEn": "It's so cute."
+ },
+ {
+  "id": "n5_0050",
+  "word": "ギター",
+  "kana": "ギター",
+  "romaji": "gitaa",
+  "meaningEn": "guitar",
+  "exampleJa": "君はギター弾く？",
+  "exampleEn": "Do you play the guitar?"
+ },
+ {
+  "id": "n5_0051",
+  "word": "きれい",
+  "kana": "きれい",
+  "romaji": "kirei",
+  "meaningEn": "pretty; clean",
+  "exampleJa": "きれいだね。",
+  "exampleEn": "She is beautiful."
+ },
+ {
+  "id": "n5_0052",
+  "word": "キロ/キログラム",
+  "kana": "キロ/キログラム",
+  "romaji": "kiro/kiroguramu",
+  "meaningEn": "kilogram",
+  "exampleJa": "",
+  "exampleEn": ""
+ },
+ {
+  "id": "n5_0053",
+  "word": "キロ/キロメートル",
+  "kana": "キロ/キロメートル",
+  "romaji": "kiro/kiromeetoru",
+  "meaningEn": "kilometre",
+  "exampleJa": "",
+  "exampleEn": ""
+ },
+ {
+  "id": "n5_0054",
+  "word": "ください",
+  "kana": "ください",
+  "romaji": "kudasai",
+  "meaningEn": "please",
+  "exampleJa": "塩ください。",
+  "exampleEn": "The salt, if you please."
+ },
+ {
+  "id": "n5_0055",
+  "word": "クラス",
+  "kana": "クラス",
+  "romaji": "kurasu",
+  "meaningEn": "class",
+  "exampleJa": "クラスに友達いる？",
+  "exampleEn": "Do you have friends in your class?"
+ },
+ {
+  "id": "n5_0056",
+  "word": "グラム",
+  "kana": "グラム",
+  "romaji": "guramu",
+  "meaningEn": "gram",
+  "exampleJa": "パングラムって面白い！",
+  "exampleEn": "I find pangrams amusing."
+ },
+ {
+  "id": "n5_0057",
+  "word": "コート",
+  "kana": "コート",
+  "romaji": "kooto",
+  "meaningEn": "coat; tennis court",
+  "exampleJa": "いいコートだね。",
+  "exampleEn": "That's a nice coat."
+ },
+ {
+  "id": "n5_0058",
+  "word": "コーヒー",
+  "kana": "コーヒー",
+  "romaji": "koohii",
+  "meaningEn": "coffee",
+  "exampleJa": "コーヒー作るわ。",
+  "exampleEn": "I will make some coffee."
+ },
+ {
+  "id": "n5_0059",
+  "word": "ここ",
+  "kana": "ここ",
+  "romaji": "koko",
+  "meaningEn": "here",
+  "exampleJa": "ここが痛い。",
+  "exampleEn": "It hurts here."
+ },
+ {
+  "id": "n5_0060",
+  "word": "こちら",
+  "kana": "こちら",
+  "romaji": "kochira",
+  "meaningEn": "this person or way",
+  "exampleJa": "こちらこそ。",
+  "exampleEn": "The pleasure is mine."
+ },
+ {
+  "id": "n5_0061",
+  "word": "こっち",
+  "kana": "こっち",
+  "romaji": "kotchi",
+  "meaningEn": "this person or way",
+  "exampleJa": "早く、こっち！",
+  "exampleEn": "Come here, fast!"
+ },
+ {
+  "id": "n5_0062",
+  "word": "コップ",
+  "kana": "コップ",
+  "romaji": "koppu",
+  "meaningEn": "a glass",
+  "exampleJa": "これ誰のコップ？",
+  "exampleEn": "Whose glass is this?"
+ },
+ {
+  "id": "n5_0063",
+  "word": "この",
+  "kana": "この",
+  "romaji": "kono",
+  "meaningEn": "this",
+  "exampleJa": "この本です。",
+  "exampleEn": "It's this book."
+ },
+ {
+  "id": "n5_0064",
+  "word": "コピーする",
+  "kana": "コピーする",
+  "romaji": "kopiisuru",
+  "meaningEn": "to copy",
+  "exampleJa": "著者の許可なしに本をコピーすることは違法です。",
+  "exampleEn": "It is illegal to copy from books without the author's permission."
+ },
+ {
+  "id": "n5_0065",
+  "word": "これ",
+  "kana": "これ",
+  "romaji": "kore",
+  "meaningEn": "this",
+  "exampleJa": "これ本当さ！",
+  "exampleEn": "It's true."
+ },
+ {
+  "id": "n5_0066",
+  "word": "こんな",
+  "kana": "こんな",
+  "romaji": "konna",
+  "meaningEn": "such",
+  "exampleJa": "こんな所出よう！",
+  "exampleEn": "I wanna get out of here!"
+ },
+ {
+  "id": "n5_0067",
+  "word": "さあ",
+  "kana": "さあ",
+  "romaji": "saa",
+  "meaningEn": "well…",
+  "exampleJa": "さあ乗って。",
+  "exampleEn": "Hop in."
+ },
+ {
+  "id": "n5_0068",
+  "word": "さ来年",
+  "kana": "さらいねん",
+  "romaji": "sarainen",
+  "meaningEn": "year after next",
+  "exampleJa": "",
+  "exampleEn": ""
+ },
+ {
+  "id": "n5_0069",
+  "word": "しかし",
+  "kana": "しかし",
+  "romaji": "shikashi",
+  "meaningEn": "however",
+  "exampleJa": "しかし、なぜ？",
+  "exampleEn": "But why?"
+ },
+ {
+  "id": "n5_0070",
+  "word": "じゃ/じゃあ",
+  "kana": "じゃ/じゃあ",
+  "romaji": "ja/jaa",
+  "meaningEn": "well then…",
+  "exampleJa": "",
+  "exampleEn": ""
+ },
+ {
+  "id": "n5_0071",
+  "word": "シャツ",
+  "kana": "シャツ",
+  "romaji": "shatsu",
+  "meaningEn": "shirt",
+  "exampleJa": "シャツを脱いだ。",
+  "exampleEn": "He removed his shirt."
+ },
+ {
+  "id": "n5_0072",
+  "word": "シャワー",
+  "kana": "シャワー",
+  "romaji": "shawaa",
+  "meaningEn": "shower",
+  "exampleJa": "シャワーするの？",
+  "exampleEn": "Are you going to shower?"
+ },
+ {
+  "id": "n5_0073",
+  "word": "しょうゆ",
+  "kana": "しょうゆ",
+  "romaji": "shouyu",
+  "meaningEn": "soy sauce",
+  "exampleJa": "",
+  "exampleEn": ""
+ },
+ {
+  "id": "n5_0074",
+  "word": "スカート",
+  "kana": "スカート",
+  "romaji": "sukaato",
+  "meaningEn": "skirt",
+  "exampleJa": "スカート短すぎよ。",
+  "exampleEn": "Your skirt is too short."
+ },
+ {
+  "id": "n5_0075",
+  "word": "すぐに",
+  "kana": "すぐに",
+  "romaji": "suguni",
+  "meaningEn": "instantly",
+  "exampleJa": "すぐに戻るよ。",
+  "exampleEn": "I will be back soon."
+ },
+ {
+  "id": "n5_0076",
+  "word": "ストーブ",
+  "kana": "ストーブ",
+  "romaji": "sutoobu",
+  "meaningEn": "heater",
+  "exampleJa": "ストーブ切った？",
+  "exampleEn": "Did you turn the stove off?"
+ },
+ {
+  "id": "n5_0077",
+  "word": "スプーン",
+  "kana": "スプーン",
+  "romaji": "supuun",
+  "meaningEn": "spoon",
+  "exampleJa": "スプーンがありません。",
+  "exampleEn": "There is a spoon missing."
+ },
+ {
+  "id": "n5_0078",
+  "word": "スポーツ",
+  "kana": "スポーツ",
+  "romaji": "supootsu",
+  "meaningEn": "sport",
+  "exampleJa": "スポーツは好き？",
+  "exampleEn": "Do you like sports?"
+ },
+ {
+  "id": "n5_0079",
+  "word": "ズボン",
+  "kana": "ズボン",
+  "romaji": "zubon",
+  "meaningEn": "trousers",
+  "exampleJa": "ズボン返してよ。",
+  "exampleEn": "Give me back my pants."
+ },
+ {
+  "id": "n5_0080",
+  "word": "スリッパ",
+  "kana": "スリッパ",
+  "romaji": "surippa",
+  "meaningEn": "slippers",
+  "exampleJa": "僕のスリッパがない。",
+  "exampleEn": "I can't find my slippers."
+ },
+ {
+  "id": "n5_0081",
+  "word": "する",
+  "kana": "する",
+  "romaji": "suru",
+  "meaningEn": "to do",
+  "exampleJa": "頭痛がする。",
+  "exampleEn": "I have a headache."
+ },
+ {
+  "id": "n5_0082",
+  "word": "セーター",
+  "kana": "セーター",
+  "romaji": "seetaa",
+  "meaningEn": "sweater; jumper",
+  "exampleJa": "セーター後ろ前だよ。",
+  "exampleEn": "Your sweater is on backwards."
+ },
+ {
+  "id": "n5_0083",
+  "word": "せっけん",
+  "kana": "せっけん",
+  "romaji": "sekken",
+  "meaningEn": "economy",
+  "exampleJa": "せっけんで手を洗いました。",
+  "exampleEn": "I washed my hands with soap."
+ },
+ {
+  "id": "n5_0084",
+  "word": "ゼロ",
+  "kana": "ゼロ",
+  "romaji": "zero",
+  "meaningEn": "zero",
+  "exampleJa": "リズム感ゼロね。",
+  "exampleEn": "You have no sense of rhythm."
+ },
+ {
+  "id": "n5_0085",
+  "word": "そうして/そして",
+  "kana": "そうして/そして",
+  "romaji": "soushite/soshite",
+  "meaningEn": "and",
+  "exampleJa": "",
+  "exampleEn": ""
+ },
+ {
+  "id": "n5_0086",
+  "word": "そこ",
+  "kana": "そこ",
+  "romaji": "soko",
+  "meaningEn": "that place",
+  "exampleJa": "そこにいて。",
+  "exampleEn": "Stay there."
+ },
+ {
+  "id": "n5_0087",
+  "word": "そちら",
+  "kana": "そちら",
+  "romaji": "sochira",
+  "meaningEn": "over there",
+  "exampleJa": "そちらこそお疲れ。",
+  "exampleEn": "Thank you for your work as well."
+ },
+ {
+  "id": "n5_0088",
+  "word": "そっち",
+  "kana": "そっち",
+  "romaji": "sotchi",
+  "meaningEn": "over there",
+  "exampleJa": "そっちの天気は？",
+  "exampleEn": "How's the weather there?"
+ },
+ {
+  "id": "n5_0089",
+  "word": "その",
+  "kana": "その",
+  "romaji": "sono",
+  "meaningEn": "that",
+  "exampleJa": "その内訳は？",
+  "exampleEn": "Give me the details."
+ },
+ {
+  "id": "n5_0090",
+  "word": "そば",
+  "kana": "そば",
+  "romaji": "soba",
+  "meaningEn": "near; beside",
+  "exampleJa": "そばにいたいな。",
+  "exampleEn": "I want to be with you."
+ },
+ {
+  "id": "n5_0091",
+  "word": "それ",
+  "kana": "それ",
+  "romaji": "sore",
+  "meaningEn": "that",
+  "exampleJa": "話がそれた。",
+  "exampleEn": "The story wandered."
+ },
+ {
+  "id": "n5_0092",
+  "word": "それから",
+  "kana": "それから",
+  "romaji": "sorekara",
+  "meaningEn": "after that",
+  "exampleJa": "それから家に急いだ。",
+  "exampleEn": "Then she hurried home."
+ },
+ {
+  "id": "n5_0093",
+  "word": "それでは",
+  "kana": "それでは",
+  "romaji": "soredeha",
+  "meaningEn": "in that situation",
+  "exampleJa": "それでは本末転倒だ。",
+  "exampleEn": "That's reversing the logical order of things."
+ },
+ {
+  "id": "n5_0094",
+  "word": "たいへん",
+  "kana": "たいへん",
+  "romaji": "taihen",
+  "meaningEn": "very",
+  "exampleJa": "彼はたいへん勇敢だ。",
+  "exampleEn": "He is very brave."
+ },
+ {
+  "id": "n5_0095",
+  "word": "たくさん",
+  "kana": "たくさん",
+  "romaji": "takusan",
+  "meaningEn": "many",
+  "exampleJa": "もうたくさんだ。",
+  "exampleEn": "I have had it."
+ },
+ {
+  "id": "n5_0096",
+  "word": "タクシー",
+  "kana": "タクシー",
+  "romaji": "takushii",
+  "meaningEn": "taxi",
+  "exampleJa": "タクシーを拾って。",
+  "exampleEn": "Hail a taxi."
+ },
+ {
+  "id": "n5_0097",
+  "word": "たて",
+  "kana": "たて",
+  "romaji": "tate",
+  "meaningEn": "length; height",
+  "exampleJa": "音をたてるな。",
+  "exampleEn": "Don't make a noise."
+ },
+ {
+  "id": "n5_0098",
+  "word": "たばこ",
+  "kana": "たばこ",
+  "romaji": "tabako",
+  "meaningEn": "tobacco; cigarettes",
+  "exampleJa": "たばこ止めたら？",
+  "exampleEn": "Why don't you give up smoking?"
+ },
+ {
+  "id": "n5_0099",
+  "word": "たぶん",
+  "kana": "たぶん",
+  "romaji": "tabun",
+  "meaningEn": "probably",
+  "exampleJa": "たぶん遅れる。",
+  "exampleEn": "I may be late."
+ },
+ {
+  "id": "n5_0100",
+  "word": "だんだん",
+  "kana": "だんだん",
+  "romaji": "dandan",
+  "meaningEn": "gradually",
+  "exampleJa": "日はだんだん長くなる。",
+  "exampleEn": "The day is getting longer and longer."
+ },
+ {
+  "id": "n5_0101",
+  "word": "ちゃわん",
+  "kana": "ちゃわん",
+  "romaji": "chawan",
+  "meaningEn": "rice bowl",
+  "exampleJa": "",
+  "exampleEn": ""
+ },
+ {
+  "id": "n5_0102",
+  "word": "ちょうど",
+  "kana": "ちょうど",
+  "romaji": "choudo",
+  "meaningEn": "exactly",
+  "exampleJa": "ちょうど五時です。",
+  "exampleEn": "It is just five o'clock."
+ },
+ {
+  "id": "n5_0103",
+  "word": "ちょっと",
+  "kana": "ちょっと",
+  "romaji": "chotto",
+  "meaningEn": "somewhat",
+  "exampleJa": "ちょっと来て。",
+  "exampleEn": "Come here."
+ },
+ {
+  "id": "n5_0104",
+  "word": "つける",
+  "kana": "つける",
+  "romaji": "tsukeru",
+  "meaningEn": "to turn on",
+  "exampleJa": "格好つけるな。",
+  "exampleEn": "Come off it!"
+ },
+ {
+  "id": "n5_0105",
+  "word": "つまらない",
+  "kana": "つまらない",
+  "romaji": "tsumaranai",
+  "meaningEn": "boring",
+  "exampleJa": "つまらないの？",
+  "exampleEn": "Are you bored?"
+ },
+ {
+  "id": "n5_0106",
+  "word": "テープ",
+  "kana": "テープ",
+  "romaji": "teepu",
+  "meaningEn": "tape",
+  "exampleJa": "私はテープを買います。",
+  "exampleEn": "I buy a tape."
+ },
+ {
+  "id": "n5_0107",
+  "word": "テーブル",
+  "kana": "テーブル",
+  "romaji": "teeburu",
+  "meaningEn": "table",
+  "exampleJa": "テーブルの下よ。",
+  "exampleEn": "It's under the table."
+ },
+ {
+  "id": "n5_0108",
+  "word": "テープレコーダー",
+  "kana": "テープレコーダー",
+  "romaji": "teepurekoodaa",
+  "meaningEn": "tape recorder",
+  "exampleJa": "テープレコーダーは有用な教具です。",
+  "exampleEn": "The tape recorder is a useful aid to teaching."
+ },
+ {
+  "id": "n5_0109",
+  "word": "できる",
+  "kana": "できる",
+  "romaji": "dekiru",
+  "meaningEn": "to be able to",
+  "exampleJa": "それできる？",
+  "exampleEn": "Can you do that?"
+ },
+ {
+  "id": "n5_0110",
+  "word": "テスト",
+  "kana": "テスト",
+  "romaji": "tesuto",
+  "meaningEn": "test",
+  "exampleJa": "テスト文です。",
+  "exampleEn": "This is a test sentence."
+ },
+ {
+  "id": "n5_0111",
+  "word": "では",
+  "kana": "では",
+  "romaji": "deha",
+  "meaningEn": "with that...",
+  "exampleJa": "では誰ですか。",
+  "exampleEn": "Then who?"
+ },
+ {
+  "id": "n5_0112",
+  "word": "デパート",
+  "kana": "デパート",
+  "romaji": "depaato",
+  "meaningEn": "department store",
+  "exampleJa": "デパートで買った。",
+  "exampleEn": "I bought it at a department store."
+ },
+ {
+  "id": "n5_0113",
+  "word": "でも",
+  "kana": "でも",
+  "romaji": "demo",
+  "meaningEn": "but",
+  "exampleJa": "何でもない。",
+  "exampleEn": "Never mind!"
+ },
+ {
+  "id": "n5_0114",
+  "word": "テレビ",
+  "kana": "テレビ",
+  "romaji": "terebi",
+  "meaningEn": "television",
+  "exampleJa": "テレビを消して。",
+  "exampleEn": "Turn off the TV."
+ },
+ {
+  "id": "n5_0115",
+  "word": "ドア",
+  "kana": "ドア",
+  "romaji": "doa",
+  "meaningEn": "Western style door",
+  "exampleJa": "ドア閉めて。",
+  "exampleEn": "Close the door."
+ },
+ {
+  "id": "n5_0116",
+  "word": "トイレ",
+  "kana": "トイレ",
+  "romaji": "toire",
+  "meaningEn": "toilet",
+  "exampleJa": "お前はトイレだ！",
+  "exampleEn": "You are a toilet!"
+ },
+ {
+  "id": "n5_0117",
+  "word": "どう",
+  "kana": "どう",
+  "romaji": "dou",
+  "meaningEn": "how; in what way",
+  "exampleJa": "是非どうぞ。",
+  "exampleEn": "By all means."
+ },
+ {
+  "id": "n5_0118",
+  "word": "どうして",
+  "kana": "どうして",
+  "romaji": "doushite",
+  "meaningEn": "for what reason",
+  "exampleJa": "でもどうして？",
+  "exampleEn": "But why?"
+ },
+ {
+  "id": "n5_0119",
+  "word": "どうぞ",
+  "kana": "どうぞ",
+  "romaji": "douzo",
+  "meaningEn": "please",
+  "exampleJa": "是非どうぞ。",
+  "exampleEn": "By all means."
+ },
+ {
+  "id": "n5_0120",
+  "word": "どうも",
+  "kana": "どうも",
+  "romaji": "doumo",
+  "meaningEn": "thanks",
+  "exampleJa": "どうも失礼。",
+  "exampleEn": "I'm sorry."
+ },
+ {
+  "id": "n5_0121",
+  "word": "どこ",
+  "kana": "どこ",
+  "romaji": "doko",
+  "meaningEn": "where",
+  "exampleJa": "ジムはどこ？",
+  "exampleEn": "Where is Jim?"
+ },
+ {
+  "id": "n5_0122",
+  "word": "どちら",
+  "kana": "どちら",
+  "romaji": "dochira",
+  "meaningEn": "which of two",
+  "exampleJa": "どちら様ですか。",
+  "exampleEn": "Who is this, please?"
+ },
+ {
+  "id": "n5_0123",
+  "word": "どっち",
+  "kana": "どっち",
+  "romaji": "dotchi",
+  "meaningEn": "which",
+  "exampleJa": "どっち取る？",
+  "exampleEn": "Which one do you take?"
+ },
+ {
+  "id": "n5_0124",
+  "word": "とても",
+  "kana": "とても",
+  "romaji": "totemo",
+  "meaningEn": "very",
+  "exampleJa": "とても高い。",
+  "exampleEn": "It's very high."
+ },
+ {
+  "id": "n5_0125",
+  "word": "どなた",
+  "kana": "どなた",
+  "romaji": "donata",
+  "meaningEn": "who",
+  "exampleJa": "どなたですか。",
+  "exampleEn": "Who are you?"
+ },
+ {
+  "id": "n5_0126",
+  "word": "どの",
+  "kana": "どの",
+  "romaji": "dono",
+  "meaningEn": "which",
+  "exampleJa": "どの犬が黒い？",
+  "exampleEn": "Which dog is black?"
+ },
+ {
+  "id": "n5_0127",
+  "word": "とり肉",
+  "kana": "とりにく",
+  "romaji": "toriniku",
+  "meaningEn": "chicken meat",
+  "exampleJa": "",
+  "exampleEn": ""
+ },
+ {
+  "id": "n5_0128",
+  "word": "どれ",
+  "kana": "どれ",
+  "romaji": "dore",
+  "meaningEn": "which (of three or more)",
+  "exampleJa": "私のはどれ？",
+  "exampleEn": "Which is mine?"
+ },
+ {
+  "id": "n5_0129",
+  "word": "ナイフ",
+  "kana": "ナイフ",
+  "romaji": "naifu",
+  "meaningEn": "knife",
+  "exampleJa": "ナイフがない。",
+  "exampleEn": "There is a knife missing."
+ },
+ {
+  "id": "n5_0130",
+  "word": "なぜ",
+  "kana": "なぜ",
+  "romaji": "naze",
+  "meaningEn": "why",
+  "exampleJa": "本当？なぜ？",
+  "exampleEn": "Do you? Why?"
+ },
+ {
+  "id": "n5_0131",
+  "word": "など",
+  "kana": "など",
+  "romaji": "nado",
+  "meaningEn": "et cetera",
+  "exampleJa": "神などいない。",
+  "exampleEn": "There is no god."
+ },
+ {
+  "id": "n5_0132",
+  "word": "なる",
+  "kana": "なる",
+  "romaji": "naru",
+  "meaningEn": "to become",
+  "exampleJa": "なるほどね。",
+  "exampleEn": "I see."
+ },
+ {
+  "id": "n5_0133",
+  "word": "ニュース",
+  "kana": "ニュース",
+  "romaji": "nyuusu",
+  "meaningEn": "news",
+  "exampleJa": "ニュースがもれた。",
+  "exampleEn": "The news leaked out."
+ },
+ {
+  "id": "n5_0134",
+  "word": "ネクタイ",
+  "kana": "ネクタイ",
+  "romaji": "nekutai",
+  "meaningEn": "tie; necktie",
+  "exampleJa": "ネクタイは？",
+  "exampleEn": "Where is your tie?"
+ },
+ {
+  "id": "n5_0135",
+  "word": "ノート",
+  "kana": "ノート",
+  "romaji": "nooto",
+  "meaningEn": "notebook; exercise book",
+  "exampleJa": "ノートは収めて。",
+  "exampleEn": "Put your notebook away."
+ },
+ {
+  "id": "n5_0136",
+  "word": "パーティー",
+  "kana": "パーティー",
+  "romaji": "paateィ",
+  "meaningEn": "party",
+  "exampleJa": "パーティーに出たい。",
+  "exampleEn": "I would love to attend the party."
+ },
+ {
+  "id": "n5_0137",
+  "word": "はい",
+  "kana": "はい",
+  "romaji": "hai",
+  "meaningEn": "yes",
+  "exampleJa": "はいどうぞ。",
+  "exampleEn": "Here it is."
+ },
+ {
+  "id": "n5_0138",
+  "word": "はく",
+  "kana": "はく",
+  "romaji": "haku",
+  "meaningEn": "to wear; to put on trousers",
+  "exampleJa": "彼はくつろいだ。",
+  "exampleEn": "He felt at home."
+ },
+ {
+  "id": "n5_0139",
+  "word": "はし",
+  "kana": "はし",
+  "romaji": "hashi",
+  "meaningEn": "chopsticks",
+  "exampleJa": "損はしないよ。",
+  "exampleEn": "You cannot lose."
+ },
+ {
+  "id": "n5_0140",
+  "word": "バス",
+  "kana": "バス",
+  "romaji": "basu",
+  "meaningEn": "bus",
+  "exampleJa": "バスケ得意？",
+  "exampleEn": "Are you good at basketball?"
+ },
+ {
+  "id": "n5_0141",
+  "word": "バター",
+  "kana": "バター",
+  "romaji": "bataa",
+  "meaningEn": "butter",
+  "exampleJa": "バターはどこ？",
+  "exampleEn": "Where's the butter?"
+ },
+ {
+  "id": "n5_0142",
+  "word": "パン",
+  "kana": "パン",
+  "romaji": "pan",
+  "meaningEn": "bread",
+  "exampleJa": "きみはパンダ。",
+  "exampleEn": "You are a panda."
+ },
+ {
+  "id": "n5_0143",
+  "word": "ハンカチ",
+  "kana": "ハンカチ",
+  "romaji": "hankachi",
+  "meaningEn": "handkerchief",
+  "exampleJa": "彼はハンカチを取り出した。",
+  "exampleEn": "He took out his handkerchief."
+ },
+ {
+  "id": "n5_0144",
+  "word": "フィルム",
+  "kana": "フィルム",
+  "romaji": "fuィrumu",
+  "meaningEn": "roll of film",
+  "exampleJa": "フィルムが切れた。",
+  "exampleEn": "My film has run out."
+ },
+ {
+  "id": "n5_0145",
+  "word": "プール",
+  "kana": "プール",
+  "romaji": "puuru",
+  "meaningEn": "swimming pool",
+  "exampleJa": "プールがあるの？",
+  "exampleEn": "Do you have a pool?"
+ },
+ {
+  "id": "n5_0146",
+  "word": "フォーク",
+  "kana": "フォーク",
+  "romaji": "fuォku",
+  "meaningEn": "fork",
+  "exampleJa": "フォークを下さい。",
+  "exampleEn": "I'd like a fork."
+ },
+ {
+  "id": "n5_0147",
+  "word": "ふろ",
+  "kana": "ふろ",
+  "romaji": "furo",
+  "meaningEn": "bath",
+  "exampleJa": "彼はふろに水を入れた。",
+  "exampleEn": "He ran water into the bathtub."
+ },
+ {
+  "id": "n5_0148",
+  "word": "ページ",
+  "kana": "ページ",
+  "romaji": "peeji",
+  "meaningEn": "page",
+  "exampleJa": "１ページ足りない。",
+  "exampleEn": "There is a page missing."
+ },
+ {
+  "id": "n5_0149",
+  "word": "ベッド",
+  "kana": "ベッド",
+  "romaji": "beddo",
+  "meaningEn": "bed",
+  "exampleJa": "ベッドへいけ。",
+  "exampleEn": "Get to bed."
+ },
+ {
+  "id": "n5_0150",
+  "word": "ペット",
+  "kana": "ペット",
+  "romaji": "petto",
+  "meaningEn": "pet",
+  "exampleJa": "彼はペットに優しい。",
+  "exampleEn": "He's gentle with our pets."
+ },
+ {
+  "id": "n5_0151",
+  "word": "ペン",
+  "kana": "ペン",
+  "romaji": "pen",
+  "meaningEn": "pen",
+  "exampleJa": "ペンはある？",
+  "exampleEn": "Do you have a pen?"
+ },
+ {
+  "id": "n5_0152",
+  "word": "ボールペン",
+  "kana": "ボールペン",
+  "romaji": "boorupen",
+  "meaningEn": "ball-point pen",
+  "exampleJa": "ボールペンで書いてください。",
+  "exampleEn": "Write with a ballpoint pen."
+ },
+ {
+  "id": "n5_0153",
+  "word": "ほか",
+  "kana": "ほか",
+  "romaji": "hoka",
+  "meaningEn": "other; the rest",
+  "exampleJa": "ほかの意見もある。",
+  "exampleEn": "There are other opinions, too."
+ },
+ {
+  "id": "n5_0154",
+  "word": "ポケット",
+  "kana": "ポケット",
+  "romaji": "poketto",
+  "meaningEn": "pocket",
+  "exampleJa": "ポケットを見せろ。",
+  "exampleEn": "Show me your pockets."
+ },
+ {
+  "id": "n5_0155",
+  "word": "ポスト",
+  "kana": "ポスト",
+  "romaji": "posuto",
+  "meaningEn": "post",
+  "exampleJa": "ポスト争いは厳しい。",
+  "exampleEn": "Competition for the position is very intense."
+ },
+ {
+  "id": "n5_0156",
+  "word": "ボタン",
+  "kana": "ボタン",
+  "romaji": "botan",
+  "meaningEn": "button",
+  "exampleJa": "ボタンを押す。",
+  "exampleEn": "Press the button."
+ },
+ {
+  "id": "n5_0157",
+  "word": "ホテル",
+  "kana": "ホテル",
+  "romaji": "hoteru",
+  "meaningEn": "hotel",
+  "exampleJa": "今、ホテル。",
+  "exampleEn": "I'm at the hotel."
+ },
+ {
+  "id": "n5_0158",
+  "word": "ほんとう",
+  "kana": "ほんとう",
+  "romaji": "hontou",
+  "meaningEn": "truth",
+  "exampleJa": "ほんとうに男らしくないよね。",
+  "exampleEn": "He really does have small dick energy."
+ },
+ {
+  "id": "n5_0159",
+  "word": "まずい",
+  "kana": "まずい",
+  "romaji": "mazui",
+  "meaningEn": "unpleasant",
+  "exampleJa": "まずいぞ、トム。",
+  "exampleEn": "That's no good, Tom."
+ },
+ {
+  "id": "n5_0160",
+  "word": "また",
+  "kana": "また",
+  "romaji": "mata",
+  "meaningEn": "again; and",
+  "exampleJa": "じゃまたね。",
+  "exampleEn": "I'll see you later."
+ },
+ {
+  "id": "n5_0161",
+  "word": "まだ",
+  "kana": "まだ",
+  "romaji": "mada",
+  "meaningEn": "yet; still",
+  "exampleJa": "まだ怖いの？",
+  "exampleEn": "Are you still scared?"
+ },
+ {
+  "id": "n5_0162",
+  "word": "まっすぐ",
+  "kana": "まっすぐ",
+  "romaji": "massugu",
+  "meaningEn": "straight ahead; direct",
+  "exampleJa": "まっすぐ行け。",
+  "exampleEn": "Go straight on."
+ },
+ {
+  "id": "n5_0163",
+  "word": "マッチ",
+  "kana": "マッチ",
+  "romaji": "matchi",
+  "meaningEn": "match",
+  "exampleJa": "マッチありますか。",
+  "exampleEn": "Do you have a match?"
+ },
+ {
+  "id": "n5_0164",
+  "word": "みんな",
+  "kana": "みんな",
+  "romaji": "minna",
+  "meaningEn": "everyone",
+  "exampleJa": "みんな嫌い。",
+  "exampleEn": "I don't like any of them."
+ },
+ {
+  "id": "n5_0165",
+  "word": "メートル",
+  "kana": "メートル",
+  "romaji": "meetoru",
+  "meaningEn": "metre",
+  "exampleJa": "彼は７０メートル投げた。",
+  "exampleEn": "He achieved a throw of seventy meters."
+ },
+ {
+  "id": "n5_0166",
+  "word": "もう",
+  "kana": "もう",
+  "romaji": "mou",
+  "meaningEn": "already",
+  "exampleJa": "もうだめだ。",
+  "exampleEn": "It's all over."
+ },
+ {
+  "id": "n5_0167",
+  "word": "もう一度",
+  "kana": "もういちど",
+  "romaji": "mouichido",
+  "meaningEn": "again",
+  "exampleJa": "もう一度おやり。",
+  "exampleEn": "Do it again!"
+ },
+ {
+  "id": "n5_0168",
+  "word": "もっと",
+  "kana": "もっと",
+  "romaji": "motto",
+  "meaningEn": "more",
+  "exampleJa": "もっと欲しい。",
+  "exampleEn": "I want more."
+ },
+ {
+  "id": "n5_0169",
+  "word": "やる",
+  "kana": "やる",
+  "romaji": "yaru",
+  "meaningEn": "to do",
+  "exampleJa": "訴えてやる！",
+  "exampleEn": "I'll sue you."
+ },
+ {
+  "id": "n5_0170",
+  "word": "ゆっくりと",
+  "kana": "ゆっくりと",
+  "romaji": "yukkurito",
+  "meaningEn": "slowly",
+  "exampleJa": "ゆっくりと急げ。",
+  "exampleEn": "Make haste slowly."
+ },
+ {
+  "id": "n5_0171",
+  "word": "よく",
+  "kana": "よく",
+  "romaji": "yoku",
+  "meaningEn": "often; well",
+  "exampleJa": "よく言うよ。",
+  "exampleEn": "Don't make me laugh."
+ },
+ {
+  "id": "n5_0172",
+  "word": "より、ほう",
+  "kana": "より、ほう",
+  "romaji": "yori、hou",
+  "meaningEn": "Used for comparison.",
+  "exampleJa": "",
+  "exampleEn": ""
+ },
+ {
+  "id": "n5_0173",
+  "word": "ラジオ",
+  "kana": "ラジオ",
+  "romaji": "rajio",
+  "meaningEn": "radio",
+  "exampleJa": "ラジオ、切った？",
+  "exampleEn": "Did you turn off the radio?"
+ },
+ {
+  "id": "n5_0174",
+  "word": "ラジカセ / ラジオカセット",
+  "kana": "ラジカセ / ラジオカセット",
+  "romaji": "rajikase / rajiokasetto",
+  "meaningEn": "radio cassette player",
+  "exampleJa": "",
+  "exampleEn": ""
+ },
+ {
+  "id": "n5_0175",
+  "word": "りっぱ",
+  "kana": "りっぱ",
+  "romaji": "rippa",
+  "meaningEn": "splendid",
+  "exampleJa": "彼はりっぱに振る舞った。",
+  "exampleEn": "He bore himself well."
+ },
+ {
+  "id": "n5_0176",
+  "word": "レコード",
+  "kana": "レコード",
+  "romaji": "rekoodo",
+  "meaningEn": "record",
+  "exampleJa": "彼らは、レコードを買います。",
+  "exampleEn": "They will buy a record."
+ },
+ {
+  "id": "n5_0177",
+  "word": "レストラン",
+  "kana": "レストラン",
+  "romaji": "resutoran",
+  "meaningEn": "restaurant",
+  "exampleJa": "あのレストランは好き。",
+  "exampleEn": "I like that restaurant."
+ },
+ {
+  "id": "n5_0178",
+  "word": "ワイシャツ",
+  "kana": "ワイシャツ",
+  "romaji": "waishatsu",
+  "meaningEn": "business shirt",
+  "exampleJa": "俺の白のワイシャツ、どこ？",
+  "exampleEn": "Where's my white dress shirt?"
+ },
+ {
+  "id": "n5_0179",
+  "word": "悪い",
+  "kana": "わるい",
+  "romaji": "warui",
+  "meaningEn": "bad",
+  "exampleJa": "体に悪いよ。",
+  "exampleEn": "It's not healthy for you."
+ },
+ {
+  "id": "n5_0180",
+  "word": "飴",
+  "kana": "あめ",
+  "romaji": "ame",
+  "meaningEn": "candy",
+  "exampleJa": "飴がほしい。",
+  "exampleEn": "I want a piece of candy."
+ },
+ {
+  "id": "n5_0181",
+  "word": "安い",
+  "kana": "やすい",
+  "romaji": "yasui",
+  "meaningEn": "cheap",
+  "exampleJa": "今日は魚が安い。",
+  "exampleEn": "Fish is cheap today."
+ },
+ {
+  "id": "n5_0182",
+  "word": "暗い",
+  "kana": "くらい",
+  "romaji": "kurai",
+  "meaningEn": "gloomy",
+  "exampleJa": "戸外は暗い。",
+  "exampleEn": "It is dark out of doors."
+ },
+ {
+  "id": "n5_0183",
+  "word": "意味",
+  "kana": "いみ",
+  "romaji": "imi",
+  "meaningEn": "meaning",
+  "exampleJa": "どういう意味？",
+  "exampleEn": "What do you mean?"
+ },
+ {
+  "id": "n5_0184",
+  "word": "易しい",
+  "kana": "やさしい",
+  "romaji": "yasashii",
+  "meaningEn": "easy; simple",
+  "exampleJa": "第２課は易しい。",
+  "exampleEn": "Lesson Two is easy."
+ },
+ {
+  "id": "n5_0185",
+  "word": "違う",
+  "kana": "ちがう",
+  "romaji": "chigau",
+  "meaningEn": "to differ",
+  "exampleJa": "違うってば。",
+  "exampleEn": "I said no."
+ },
+ {
+  "id": "n5_0186",
+  "word": "医者",
+  "kana": "いしゃ",
+  "romaji": "isha",
+  "meaningEn": "medical doctor",
+  "exampleJa": "彼は医者だ。",
+  "exampleEn": "He is a doctor."
+ },
+ {
+  "id": "n5_0187",
+  "word": "一",
+  "kana": "いち",
+  "romaji": "ichi",
+  "meaningEn": "one",
+  "exampleJa": "美は皮一重。",
+  "exampleEn": "Beauty is but skin deep."
+ },
+ {
+  "id": "n5_0188",
+  "word": "一つ",
+  "kana": "ひとつ",
+  "romaji": "hitotsu",
+  "meaningEn": "one",
+  "exampleJa": "一つ選んで。",
+  "exampleEn": "Choose one."
+ },
+ {
+  "id": "n5_0189",
+  "word": "一月",
+  "kana": "ひとつき",
+  "romaji": "hitotsuki",
+  "meaningEn": "one month",
+  "exampleJa": "一月に彼に会いました。",
+  "exampleEn": "I met him in January."
+ },
+ {
+  "id": "n5_0190",
+  "word": "一昨日",
+  "kana": "おととい",
+  "romaji": "ototoi",
+  "meaningEn": "day before yesterday",
+  "exampleJa": "一昨日風が吹いた。",
+  "exampleEn": "Two days ago the wind blew."
+ },
+ {
+  "id": "n5_0191",
+  "word": "一昨年",
+  "kana": "おととし",
+  "romaji": "ototoshi",
+  "meaningEn": "year before last",
+  "exampleJa": "私は一昨年この山に登りました。",
+  "exampleEn": "I climbed this mountain the year before last."
+ },
+ {
+  "id": "n5_0192",
+  "word": "一緒",
+  "kana": "いっしょ",
+  "romaji": "issho",
+  "meaningEn": "together",
+  "exampleJa": "一緒に来て。",
+  "exampleEn": "Come with me."
+ },
+ {
+  "id": "n5_0193",
+  "word": "一人",
+  "kana": "ひとり",
+  "romaji": "hitori",
+  "meaningEn": "one person",
+  "exampleJa": "私は一人だ。",
+  "exampleEn": "I'm alone."
+ },
+ {
+  "id": "n5_0194",
+  "word": "一日",
+  "kana": "いちにち",
+  "romaji": "ichinichi",
+  "meaningEn": "(1) one day; (2) first of month",
+  "exampleJa": "良い一日を。",
+  "exampleEn": "Have a nice day."
+ },
+ {
+  "id": "n5_0195",
+  "word": "引く",
+  "kana": "ひく",
+  "romaji": "hiku",
+  "meaningEn": "to pull",
+  "exampleJa": "風邪引くよ。",
+  "exampleEn": "You'll catch a cold."
+ },
+ {
+  "id": "n5_0196",
+  "word": "飲み物",
+  "kana": "のみもの",
+  "romaji": "nomimono",
+  "meaningEn": "a drink",
+  "exampleJa": "何か飲み物をくれ。",
+  "exampleEn": "Give me something to drink."
+ },
+ {
+  "id": "n5_0197",
+  "word": "飲む",
+  "kana": "のむ",
+  "romaji": "nomu",
+  "meaningEn": "to drink",
+  "exampleJa": "ビール飲む？",
+  "exampleEn": "Do you want to drink some beer?"
+ },
+ {
+  "id": "n5_0198",
+  "word": "右",
+  "kana": "みぎ",
+  "romaji": "migi",
+  "meaningEn": "right side",
+  "exampleJa": "右肩が痛い。",
+  "exampleEn": "My right shoulder hurts."
+ },
+ {
+  "id": "n5_0199",
+  "word": "雨",
+  "kana": "あめ",
+  "romaji": "ame",
+  "meaningEn": "rain",
+  "exampleJa": "雨は止んだ。",
+  "exampleEn": "It has stopped raining."
+ },
+ {
+  "id": "n5_0200",
+  "word": "映画",
+  "kana": "えいが",
+  "romaji": "eiga",
+  "meaningEn": "movie",
+  "exampleJa": "映画に行くの？",
+  "exampleEn": "You're going to a movie?"
+ },
+ {
+  "id": "n5_0201",
+  "word": "映画館",
+  "kana": "えいがかん",
+  "romaji": "eigakan",
+  "meaningEn": "cinema",
+  "exampleJa": "映画館にいたんだ。",
+  "exampleEn": "I was at a movie theater."
+ },
+ {
+  "id": "n5_0202",
+  "word": "泳ぐ",
+  "kana": "およぐ",
+  "romaji": "oyogu",
+  "meaningEn": "to swim",
+  "exampleJa": "彼は泳ぐのが怖い。",
+  "exampleEn": "He is afraid of swimming."
+ },
+ {
+  "id": "n5_0203",
+  "word": "英語",
+  "kana": "えいご",
+  "romaji": "eigo",
+  "meaningEn": "English language",
+  "exampleJa": "英語で話せ！",
+  "exampleEn": "Speak English."
+ },
+ {
+  "id": "n5_0204",
+  "word": "駅",
+  "kana": "えき",
+  "romaji": "eki",
+  "meaningEn": "station",
+  "exampleJa": "東京駅なう。",
+  "exampleEn": "I'm at Tokyo Station now."
+ },
+ {
+  "id": "n5_0205",
+  "word": "遠い",
+  "kana": "とおい",
+  "romaji": "tooi",
+  "meaningEn": "far",
+  "exampleJa": "ここから遠いの？",
+  "exampleEn": "Is it far from here?"
+ },
+ {
+  "id": "n5_0206",
+  "word": "鉛筆",
+  "kana": "えんぴつ",
+  "romaji": "enpitsu",
+  "meaningEn": "pencil",
+  "exampleJa": "これは鉛筆。",
+  "exampleEn": "This is a pencil."
+ },
+ {
+  "id": "n5_0207",
+  "word": "塩",
+  "kana": "しお",
+  "romaji": "shio",
+  "meaningEn": "salt",
+  "exampleJa": "お塩とって。",
+  "exampleEn": "Pass me the salt."
+ },
+ {
+  "id": "n5_0208",
+  "word": "汚い",
+  "kana": "きたない",
+  "romaji": "kitanai",
+  "meaningEn": "dirty",
+  "exampleJa": "汚い手口ね。",
+  "exampleEn": "It's a dirty trick."
+ },
+ {
+  "id": "n5_0209",
+  "word": "奥さん",
+  "kana": "おくさん",
+  "romaji": "okusan",
+  "meaningEn": "(honorable) wife",
+  "exampleJa": "奥さんはお元気？",
+  "exampleEn": "How is the wife?"
+ },
+ {
+  "id": "n5_0210",
+  "word": "押す",
+  "kana": "おす",
+  "romaji": "osu",
+  "meaningEn": "to push; to stamp something",
+  "exampleJa": "ボタンを押す。",
+  "exampleEn": "Press the button."
+ },
+ {
+  "id": "n5_0211",
+  "word": "横",
+  "kana": "よこ",
+  "romaji": "yoko",
+  "meaningEn": "beside; side; width",
+  "exampleJa": "横に座って。",
+  "exampleEn": "Sit beside me."
+ },
+ {
+  "id": "n5_0212",
+  "word": "黄色",
+  "kana": "きいろ",
+  "romaji": "kiiro",
+  "meaningEn": "yellow",
+  "exampleJa": "花は黄色い。",
+  "exampleEn": "Flowers are yellow."
+ },
+ {
+  "id": "n5_0213",
+  "word": "黄色い",
+  "kana": "きいろい",
+  "romaji": "kiiroi",
+  "meaningEn": "yellow",
+  "exampleJa": "花は黄色い。",
+  "exampleEn": "Flowers are yellow."
+ },
+ {
+  "id": "n5_0214",
+  "word": "温い",
+  "kana": "ぬるい",
+  "romaji": "nurui",
+  "meaningEn": "luke warm",
+  "exampleJa": "ここはちょっと温いですね？",
+  "exampleEn": "It's a bit warm in here, isn't it?"
+ },
+ {
+  "id": "n5_0215",
+  "word": "音楽",
+  "kana": "おんがく",
+  "romaji": "ongaku",
+  "meaningEn": "music",
+  "exampleJa": "音楽は好き？",
+  "exampleEn": "Are you fond of music?"
+ },
+ {
+  "id": "n5_0216",
+  "word": "下",
+  "kana": "した",
+  "romaji": "shita",
+  "meaningEn": "below",
+  "exampleJa": "来て下さい。",
+  "exampleEn": "Please come."
+ },
+ {
+  "id": "n5_0217",
+  "word": "下手",
+  "kana": "へた",
+  "romaji": "heta",
+  "meaningEn": "unskillful",
+  "exampleJa": "彼は字が下手だ。",
+  "exampleEn": "His handwriting is poor."
+ },
+ {
+  "id": "n5_0218",
+  "word": "何",
+  "kana": "なん/なに",
+  "romaji": "nan/nani",
+  "meaningEn": "what",
+  "exampleJa": "何してるの？",
+  "exampleEn": "What are you doing?"
+ },
+ {
+  "id": "n5_0219",
+  "word": "夏",
+  "kana": "なつ",
+  "romaji": "natsu",
+  "meaningEn": "summer",
+  "exampleJa": "夏は過ぎた。",
+  "exampleEn": "The summer is over."
+ },
+ {
+  "id": "n5_0220",
+  "word": "夏休み",
+  "kana": "なつやすみ",
+  "romaji": "natsuyasumi",
+  "meaningEn": "summer holiday",
+  "exampleJa": "夏休みが過ぎた。",
+  "exampleEn": "The summer vacation is over."
+ },
+ {
+  "id": "n5_0221",
+  "word": "家",
+  "kana": "いえ",
+  "romaji": "ie",
+  "meaningEn": "house",
+  "exampleJa": "彼は画家だ。",
+  "exampleEn": "He is a painter."
+ },
+ {
+  "id": "n5_0222",
+  "word": "家族",
+  "kana": "かぞく",
+  "romaji": "kazoku",
+  "meaningEn": "family",
+  "exampleJa": "大家族なの？",
+  "exampleEn": "Do you have a big family?"
+ },
+ {
+  "id": "n5_0223",
+  "word": "家庭",
+  "kana": "かてい",
+  "romaji": "katei",
+  "meaningEn": "household",
+  "exampleJa": "家庭は円満だ。",
+  "exampleEn": "I have peace at home."
+ },
+ {
+  "id": "n5_0224",
+  "word": "暇",
+  "kana": "ひま",
+  "romaji": "hima",
+  "meaningEn": "free time",
+  "exampleJa": "良い休暇を。",
+  "exampleEn": "Have a nice vacation."
+ },
+ {
+  "id": "n5_0225",
+  "word": "果物",
+  "kana": "くだもの",
+  "romaji": "kudamono",
+  "meaningEn": "fruit",
+  "exampleJa": "好きな果物は？",
+  "exampleEn": "What's your favorite fruit?"
+ },
+ {
+  "id": "n5_0226",
+  "word": "歌",
+  "kana": "うた",
+  "romaji": "uta",
+  "meaningEn": "song",
+  "exampleJa": "私は今歌う。",
+  "exampleEn": "I sing now."
+ },
+ {
+  "id": "n5_0227",
+  "word": "歌う",
+  "kana": "うたう",
+  "romaji": "utau",
+  "meaningEn": "to sing",
+  "exampleJa": "私は今歌う。",
+  "exampleEn": "I sing now."
+ },
+ {
+  "id": "n5_0228",
+  "word": "火曜日",
+  "kana": "かようび",
+  "romaji": "kayoubi",
+  "meaningEn": "Tuesday",
+  "exampleJa": "今日は火曜日です。",
+  "exampleEn": "Today is Tuesday."
+ },
+ {
+  "id": "n5_0229",
+  "word": "花",
+  "kana": "はな",
+  "romaji": "hana",
+  "meaningEn": "flower",
+  "exampleJa": "言わぬが花。",
+  "exampleEn": "Speech is silver, silence is gold."
+ },
+ {
+  "id": "n5_0230",
+  "word": "花瓶",
+  "kana": "かびん",
+  "romaji": "kabin",
+  "meaningEn": "a vase",
+  "exampleJa": "花瓶割ったの誰？",
+  "exampleEn": "Who broke the vase?"
+ },
+ {
+  "id": "n5_0231",
+  "word": "荷物",
+  "kana": "にもつ",
+  "romaji": "nimotsu",
+  "meaningEn": "luggage",
+  "exampleJa": "荷物見ててね。",
+  "exampleEn": "Keep an eye on the bags."
+ },
+ {
+  "id": "n5_0232",
+  "word": "会う",
+  "kana": "あう",
+  "romaji": "au",
+  "meaningEn": "to meet",
+  "exampleJa": "よく彼に会う。",
+  "exampleEn": "I often see him."
+ },
+ {
+  "id": "n5_0233",
+  "word": "会社",
+  "kana": "かいしゃ",
+  "romaji": "kaisha",
+  "meaningEn": "company",
+  "exampleJa": "会社員です。",
+  "exampleEn": "I'm an office worker."
+ },
+ {
+  "id": "n5_0234",
+  "word": "海",
+  "kana": "うみ",
+  "romaji": "umi",
+  "meaningEn": "sea",
+  "exampleJa": "大海の一滴。",
+  "exampleEn": "A drop in the bucket."
+ },
+ {
+  "id": "n5_0235",
+  "word": "灰皿",
+  "kana": "はいざら",
+  "romaji": "haizara",
+  "meaningEn": "ashtray",
+  "exampleJa": "灰皿を下さい。",
+  "exampleEn": "I need an ashtray."
+ },
+ {
+  "id": "n5_0236",
+  "word": "皆さん",
+  "kana": "みなさん",
+  "romaji": "minasan",
+  "meaningEn": "everyone",
+  "exampleJa": "皆さんはお元気？",
+  "exampleEn": "How is everyone?"
+ },
+ {
+  "id": "n5_0237",
+  "word": "絵",
+  "kana": "え",
+  "romaji": "e",
+  "meaningEn": "picture",
+  "exampleJa": "壁の絵を見て。",
+  "exampleEn": "Look at the picture on the wall."
+ },
+ {
+  "id": "n5_0238",
+  "word": "開く",
+  "kana": "あく",
+  "romaji": "aku",
+  "meaningEn": "to open; to become open",
+  "exampleJa": "本を開くな。",
+  "exampleEn": "Don't open your book."
+ },
+ {
+  "id": "n5_0239",
+  "word": "開ける",
+  "kana": "あける",
+  "romaji": "akeru",
+  "meaningEn": "to open",
+  "exampleJa": "窓を開けるな。",
+  "exampleEn": "Don't open the window."
+ },
+ {
+  "id": "n5_0240",
+  "word": "階段",
+  "kana": "かいだん",
+  "romaji": "kaidan",
+  "meaningEn": "stairs",
+  "exampleJa": "階段がある。",
+  "exampleEn": "There are stairs."
+ },
+ {
+  "id": "n5_0241",
+  "word": "外",
+  "kana": "そと",
+  "romaji": "soto",
+  "meaningEn": "outside",
+  "exampleJa": "戸外は暗い。",
+  "exampleEn": "It is dark out of doors."
+ },
+ {
+  "id": "n5_0242",
+  "word": "外国",
+  "kana": "がいこく",
+  "romaji": "gaikoku",
+  "meaningEn": "foreign country",
+  "exampleJa": "外国に行く気？",
+  "exampleEn": "Do you plan to go overseas?"
+ },
+ {
+  "id": "n5_0243",
+  "word": "外国人",
+  "kana": "がいこくじん",
+  "romaji": "gaikokujin",
+  "meaningEn": "foreigner",
+  "exampleJa": "外国人って面白いなあ。",
+  "exampleEn": "Foreign people intrigue me."
+ },
+ {
+  "id": "n5_0244",
+  "word": "覚える",
+  "kana": "おぼえる",
+  "romaji": "oboeru",
+  "meaningEn": "to remember",
+  "exampleJa": "覚えるの、簡単よ。",
+  "exampleEn": "It's easy to learn."
+ },
+ {
+  "id": "n5_0245",
+  "word": "角",
+  "kana": "かど",
+  "romaji": "kado",
+  "meaningEn": "a corner",
+  "exampleJa": "氷山の一角だよ。",
+  "exampleEn": "It's the tip of the iceberg."
+ },
+ {
+  "id": "n5_0246",
+  "word": "学校",
+  "kana": "がっこう",
+  "romaji": "gakkou",
+  "meaningEn": "school",
+  "exampleJa": "学校はどう？",
+  "exampleEn": "How's school?"
+ },
+ {
+  "id": "n5_0247",
+  "word": "学生",
+  "kana": "がくせい",
+  "romaji": "gakusei",
+  "meaningEn": "student",
+  "exampleJa": "大学生です。",
+  "exampleEn": "I am a university student."
+ },
+ {
+  "id": "n5_0248",
+  "word": "楽しい",
+  "kana": "たのしい",
+  "romaji": "tanoshii",
+  "meaningEn": "enjoyable",
+  "exampleJa": "楽しい旅を。",
+  "exampleEn": "Enjoy your trip."
+ },
+ {
+  "id": "n5_0249",
+  "word": "寒い",
+  "kana": "さむい",
+  "romaji": "samui",
+  "meaningEn": "cold",
+  "exampleJa": "肌寒いです。",
+  "exampleEn": "It's chilly."
+ },
+ {
+  "id": "n5_0250",
+  "word": "漢字",
+  "kana": "かんじ",
+  "romaji": "kanji",
+  "meaningEn": "Chinese character",
+  "exampleJa": "漢字を書きます。",
+  "exampleEn": "I write kanji."
+ },
+ {
+  "id": "n5_0251",
+  "word": "甘い",
+  "kana": "あまい",
+  "romaji": "amai",
+  "meaningEn": "sweet",
+  "exampleJa": "それは甘いの？",
+  "exampleEn": "Is that sweet?"
+ },
+ {
+  "id": "n5_0252",
+  "word": "丸い/円い",
+  "kana": "まるい",
+  "romaji": "marui",
+  "meaningEn": "round; circular",
+  "exampleJa": "",
+  "exampleEn": ""
+ },
+ {
+  "id": "n5_0253",
+  "word": "眼鏡",
+  "kana": "めがね",
+  "romaji": "megane",
+  "meaningEn": "glasses",
+  "exampleJa": "私の眼鏡はどこ？",
+  "exampleEn": "Where are my glasses?"
+ },
+ {
+  "id": "n5_0254",
+  "word": "危ない",
+  "kana": "あぶない",
+  "romaji": "abunai",
+  "meaningEn": "dangerous",
+  "exampleJa": "危ない空模様だ。",
+  "exampleEn": "The weather is threatening."
+ },
+ {
+  "id": "n5_0255",
+  "word": "机",
+  "kana": "つくえ",
+  "romaji": "tsukue",
+  "meaningEn": "desk",
+  "exampleJa": "私の机は古い。",
+  "exampleEn": "My desk is old."
+ },
+ {
+  "id": "n5_0256",
+  "word": "帰る",
+  "kana": "かえる",
+  "romaji": "kaeru",
+  "meaningEn": "to go back",
+  "exampleJa": "家に帰るよ。",
+  "exampleEn": "I leave to go home."
+ },
+ {
+  "id": "n5_0257",
+  "word": "起きる",
+  "kana": "おきる",
+  "romaji": "okiru",
+  "meaningEn": "to get up",
+  "exampleJa": "起きる時間よ。",
+  "exampleEn": "Time to get up."
+ },
+ {
+  "id": "n5_0258",
+  "word": "喫茶店",
+  "kana": "きっさてん",
+  "romaji": "kissaten",
+  "meaningEn": "coffee lounge",
+  "exampleJa": "喫茶店に行きたい？",
+  "exampleEn": "Do you want to go to a coffee shop?"
+ },
+ {
+  "id": "n5_0259",
+  "word": "休み",
+  "kana": "やすみ",
+  "romaji": "yasumi",
+  "meaningEn": "rest; holiday",
+  "exampleJa": "良い休みを。",
+  "exampleEn": "Have a good vacation."
+ },
+ {
+  "id": "n5_0260",
+  "word": "休む",
+  "kana": "やすむ",
+  "romaji": "yasumu",
+  "meaningEn": "to rest",
+  "exampleJa": "仕事の途中で休む。",
+  "exampleEn": "I take a break while working."
+ },
+ {
+  "id": "n5_0261",
+  "word": "吸う",
+  "kana": "すう",
+  "romaji": "suu",
+  "meaningEn": "to smoke; to suck",
+  "exampleJa": "紙は油を吸うよ。",
+  "exampleEn": "Paper absorbs oil."
+ },
+ {
+  "id": "n5_0262",
+  "word": "牛肉",
+  "kana": "ぎゅうにく",
+  "romaji": "gyuuniku",
+  "meaningEn": "beef",
+  "exampleJa": "牛肉は高い。",
+  "exampleEn": "Beef is expensive."
+ },
+ {
+  "id": "n5_0263",
+  "word": "牛乳",
+  "kana": "ぎゅうにゅう",
+  "romaji": "gyuunyuu",
+  "meaningEn": "milk",
+  "exampleJa": "牛乳が腐った。",
+  "exampleEn": "The milk has gone bad."
+ },
+ {
+  "id": "n5_0264",
+  "word": "去年",
+  "kana": "きょねん",
+  "romaji": "kyonen",
+  "meaningEn": "last year",
+  "exampleJa": "去年の新人です。",
+  "exampleEn": "I was a freshman last year."
+ },
+ {
+  "id": "n5_0265",
+  "word": "居る",
+  "kana": "いる",
+  "romaji": "iru",
+  "meaningEn": "to be; to have (used for people and animals)",
+  "exampleJa": "彼は次の角に居る。",
+  "exampleEn": "He's at the next corner."
+ },
+ {
+  "id": "n5_0266",
+  "word": "魚",
+  "kana": "さかな",
+  "romaji": "sakana",
+  "meaningEn": "fish",
+  "exampleJa": "魚を食べる。",
+  "exampleEn": "I eat fish."
+ },
+ {
+  "id": "n5_0267",
+  "word": "強い",
+  "kana": "つよい",
+  "romaji": "tsuyoi",
+  "meaningEn": "powerful",
+  "exampleJa": "悪運が強い。",
+  "exampleEn": "Have the devil's own luck."
+ },
+ {
+  "id": "n5_0268",
+  "word": "教える",
+  "kana": "おしえる",
+  "romaji": "oshieru",
+  "meaningEn": "to teach; to tell",
+  "exampleJa": "彼に教えるな。",
+  "exampleEn": "Don't tell him."
+ },
+ {
+  "id": "n5_0269",
+  "word": "教室",
+  "kana": "きょうしつ",
+  "romaji": "kyoushitsu",
+  "meaningEn": "classroom",
+  "exampleJa": "彼は教室だよ。",
+  "exampleEn": "He is in the classroom."
+ },
+ {
+  "id": "n5_0270",
+  "word": "橋",
+  "kana": "はし",
+  "romaji": "hashi",
+  "meaningEn": "bridge",
+  "exampleJa": "橋は石造りだ。",
+  "exampleEn": "The bridge is made of stone."
+ },
+ {
+  "id": "n5_0271",
+  "word": "狭い",
+  "kana": "せまい",
+  "romaji": "semai",
+  "meaningEn": "narrow",
+  "exampleJa": "狭い部屋だね。",
+  "exampleEn": "It's a small room."
+ },
+ {
+  "id": "n5_0272",
+  "word": "曲る",
+  "kana": "まがる",
+  "romaji": "magaru",
+  "meaningEn": "to turn; to bend",
+  "exampleJa": "",
+  "exampleEn": ""
+ },
+ {
+  "id": "n5_0273",
+  "word": "勤める",
+  "kana": "つとめる",
+  "romaji": "tsutomeru",
+  "meaningEn": "to work for someone",
+  "exampleJa": "彼はコンサルティングファームに勤める。",
+  "exampleEn": "He works for a consulting firm."
+ },
+ {
+  "id": "n5_0274",
+  "word": "近い",
+  "kana": "ちかい",
+  "romaji": "chikai",
+  "meaningEn": "near",
+  "exampleJa": "決断の日は近い。",
+  "exampleEn": "The day of decision is at hand."
+ },
+ {
+  "id": "n5_0275",
+  "word": "近く",
+  "kana": "ちかく",
+  "romaji": "chikaku",
+  "meaningEn": "near",
+  "exampleJa": "７時近くだ。",
+  "exampleEn": "It is close to seven o'clock."
+ },
+ {
+  "id": "n5_0276",
+  "word": "金曜日",
+  "kana": "きんようび",
+  "romaji": "kinyoubi",
+  "meaningEn": "Friday",
+  "exampleJa": "花の金曜日だ！",
+  "exampleEn": "Thank God it's Friday!"
+ },
+ {
+  "id": "n5_0277",
+  "word": "銀行",
+  "kana": "ぎんこう",
+  "romaji": "ginkou",
+  "meaningEn": "bank",
+  "exampleJa": "彼は銀行員です。",
+  "exampleEn": "He is a bank clerk."
+ },
+ {
+  "id": "n5_0278",
+  "word": "九",
+  "kana": "きゅう / く",
+  "romaji": "kyuu / ku",
+  "meaningEn": "nine",
+  "exampleJa": "九時間寝た。",
+  "exampleEn": "I slept for 9 hours."
+ },
+ {
+  "id": "n5_0279",
+  "word": "九つ",
+  "kana": "ここのつ",
+  "romaji": "kokonotsu",
+  "meaningEn": "nine",
+  "exampleJa": "新二は九つのココナッツを食べました。",
+  "exampleEn": "Shinji ate nine coconuts."
+ },
+ {
+  "id": "n5_0280",
+  "word": "九日",
+  "kana": "ここのか",
+  "romaji": "kokonoka",
+  "meaningEn": "nine days; ninth day",
+  "exampleJa": "",
+  "exampleEn": ""
+ },
+ {
+  "id": "n5_0281",
+  "word": "空",
+  "kana": "そら",
+  "romaji": "sora",
+  "meaningEn": "sky",
+  "exampleJa": "空耳ですよ。",
+  "exampleEn": "You are hearing things."
+ },
+ {
+  "id": "n5_0282",
+  "word": "靴",
+  "kana": "くつ",
+  "romaji": "kutsu",
+  "meaningEn": "shoes",
+  "exampleJa": "靴を履いて。",
+  "exampleEn": "Put on your shoes."
+ },
+ {
+  "id": "n5_0283",
+  "word": "靴下",
+  "kana": "くつした",
+  "romaji": "kutsushita",
+  "meaningEn": "socks",
+  "exampleJa": "君の靴下臭いよ。",
+  "exampleEn": "Your socks stink."
+ },
+ {
+  "id": "n5_0284",
+  "word": "兄",
+  "kana": "あに",
+  "romaji": "ani",
+  "meaningEn": "(humble) older brother",
+  "exampleJa": "兄がいます。",
+  "exampleEn": "I have an older brother."
+ },
+ {
+  "id": "n5_0285",
+  "word": "兄弟",
+  "kana": "きょうだい",
+  "romaji": "kyoudai",
+  "meaningEn": "(humble) siblings",
+  "exampleJa": "兄弟はいるか。",
+  "exampleEn": "Do you have any brothers?"
+ },
+ {
+  "id": "n5_0286",
+  "word": "警官",
+  "kana": "けいかん",
+  "romaji": "keikan",
+  "meaningEn": "policeman",
+  "exampleJa": "私は警官だ。",
+  "exampleEn": "I'm a policeman."
+ },
+ {
+  "id": "n5_0287",
+  "word": "軽い",
+  "kana": "かるい",
+  "romaji": "karui",
+  "meaningEn": "light",
+  "exampleJa": "軽い風邪です。",
+  "exampleEn": "It's only a slight cold."
+ },
+ {
+  "id": "n5_0288",
+  "word": "結構",
+  "kana": "けっこう",
+  "romaji": "kekkou",
+  "meaningEn": "splendid; enough",
+  "exampleJa": "結構面白い。",
+  "exampleEn": "It's so exciting."
+ },
+ {
+  "id": "n5_0289",
+  "word": "結婚",
+  "kana": "けっこん",
+  "romaji": "kekkon",
+  "meaningEn": "marriage",
+  "exampleJa": "結婚しよう。",
+  "exampleEn": "Let's get married."
+ },
+ {
+  "id": "n5_0290",
+  "word": "月曜日",
+  "kana": "げつようび",
+  "romaji": "getsuyoubi",
+  "meaningEn": "Monday",
+  "exampleJa": "月曜日です。",
+  "exampleEn": "It's Monday."
+ },
+ {
+  "id": "n5_0291",
+  "word": "嫌",
+  "kana": "いや",
+  "romaji": "iya",
+  "meaningEn": "unpleasant",
+  "exampleJa": "みんな嫌い。",
+  "exampleEn": "I don't like any of them."
+ },
+ {
+  "id": "n5_0292",
+  "word": "嫌い",
+  "kana": "きらい",
+  "romaji": "kirai",
+  "meaningEn": "hate",
+  "exampleJa": "みんな嫌い。",
+  "exampleEn": "I don't like any of them."
+ },
+ {
+  "id": "n5_0293",
+  "word": "建物",
+  "kana": "たてもの",
+  "romaji": "tatemono",
+  "meaningEn": "building",
+  "exampleJa": "高い建物ですね。",
+  "exampleEn": "That is a high building, is it not?"
+ },
+ {
+  "id": "n5_0294",
+  "word": "犬",
+  "kana": "いぬ",
+  "romaji": "inu",
+  "meaningEn": "dog",
+  "exampleJa": "猛犬に注意！",
+  "exampleEn": "Beware of the dog!"
+ },
+ {
+  "id": "n5_0295",
+  "word": "見せる",
+  "kana": "みせる",
+  "romaji": "miseru",
+  "meaningEn": "to show",
+  "exampleJa": "手の内を見せるな。",
+  "exampleEn": "Don't show them your hand."
+ },
+ {
+  "id": "n5_0296",
+  "word": "見る 観る",
+  "kana": "みる",
+  "romaji": "miru",
+  "meaningEn": "to see; to watch",
+  "exampleJa": "",
+  "exampleEn": ""
+ },
+ {
+  "id": "n5_0297",
+  "word": "元気",
+  "kana": "げんき",
+  "romaji": "genki",
+  "meaningEn": "health; vitality",
+  "exampleJa": "元気出して。",
+  "exampleEn": "Cheer up!"
+ },
+ {
+  "id": "n5_0298",
+  "word": "玄関",
+  "kana": "げんかん",
+  "romaji": "genkan",
+  "meaningEn": "entry hall",
+  "exampleJa": "だれか玄関にいる。",
+  "exampleEn": "Someone is at the door."
+ },
+ {
+  "id": "n5_0299",
+  "word": "言う",
+  "kana": "いう",
+  "romaji": "iu",
+  "meaningEn": "to say",
+  "exampleJa": "よく言うよ。",
+  "exampleEn": "Don't make me laugh."
+ },
+ {
+  "id": "n5_0300",
+  "word": "言葉",
+  "kana": "ことば",
+  "romaji": "kotoba",
+  "meaningEn": "word; language",
+  "exampleJa": "言葉を失った。",
+  "exampleEn": "I was at a loss for words."
+ },
+ {
+  "id": "n5_0301",
+  "word": "古い",
+  "kana": "ふるい",
+  "romaji": "furui",
+  "meaningEn": "old (not used for people)",
+  "exampleJa": "母は頭が古い。",
+  "exampleEn": "Mother has old-fashioned ideas."
+ },
+ {
+  "id": "n5_0302",
+  "word": "呼ぶ",
+  "kana": "よぶ",
+  "romaji": "yobu",
+  "meaningEn": "to call out; to invite",
+  "exampleJa": "類は友を呼ぶ。",
+  "exampleEn": "Birds of a feather flock together."
+ },
+ {
+  "id": "n5_0303",
+  "word": "戸",
+  "kana": "と",
+  "romaji": "to",
+  "meaningEn": "Japanese style door",
+  "exampleJa": "戸外は暗い。",
+  "exampleEn": "It is dark out of doors."
+ },
+ {
+  "id": "n5_0304",
+  "word": "五",
+  "kana": "ご",
+  "romaji": "go",
+  "meaningEn": "five",
+  "exampleJa": "五十歩百歩。",
+  "exampleEn": "Scant difference."
+ },
+ {
+  "id": "n5_0305",
+  "word": "五つ",
+  "kana": "いつつ",
+  "romaji": "itsutsu",
+  "meaningEn": "five",
+  "exampleJa": "彼女はケーキを五つに分けた。",
+  "exampleEn": "She divided the cake into five pieces."
+ },
+ {
+  "id": "n5_0306",
+  "word": "五日",
+  "kana": "いつか",
+  "romaji": "itsuka",
+  "meaningEn": "five days; fifth day",
+  "exampleJa": "五日待ってくれ。",
+  "exampleEn": "Give me five days."
+ },
+ {
+  "id": "n5_0307",
+  "word": "午後",
+  "kana": "ごご",
+  "romaji": "gogo",
+  "meaningEn": "afternoon",
+  "exampleJa": "午後二時です。",
+  "exampleEn": "It's two o'clock in the afternoon."
+ },
+ {
+  "id": "n5_0308",
+  "word": "午前",
+  "kana": "ごぜん",
+  "romaji": "gozen",
+  "meaningEn": "morning",
+  "exampleJa": "午前８時です。",
+  "exampleEn": "It’s 8:00 am."
+ },
+ {
+  "id": "n5_0309",
+  "word": "後",
+  "kana": "あと",
+  "romaji": "ato",
+  "meaningEn": "afterwards",
+  "exampleJa": "後味が悪い。",
+  "exampleEn": "It leaves a bad aftertaste."
+ },
+ {
+  "id": "n5_0310",
+  "word": "後ろ",
+  "kana": "うしろ",
+  "romaji": "ushiro",
+  "meaningEn": "behind",
+  "exampleJa": "後ろを見ろ。",
+  "exampleEn": "Look back!"
+ },
+ {
+  "id": "n5_0311",
+  "word": "御飯",
+  "kana": "ごはん",
+  "romaji": "gohan",
+  "meaningEn": "cooked rice; meal",
+  "exampleJa": "夕御飯ができました。",
+  "exampleEn": "Dinner is ready."
+ },
+ {
+  "id": "n5_0312",
+  "word": "交差点",
+  "kana": "こうさてん",
+  "romaji": "kousaten",
+  "meaningEn": "intersection",
+  "exampleJa": "交差点で事故があった。",
+  "exampleEn": "There was an accident at the intersection."
+ },
+ {
+  "id": "n5_0313",
+  "word": "交番",
+  "kana": "こうばん",
+  "romaji": "kouban",
+  "meaningEn": "police box",
+  "exampleJa": "交番が近くにある。",
+  "exampleEn": "A police station is close at hand."
+ },
+ {
+  "id": "n5_0314",
+  "word": "公園",
+  "kana": "こうえん",
+  "romaji": "kouen",
+  "meaningEn": "park",
+  "exampleJa": "私は公園に歩く。",
+  "exampleEn": "I walk to the park."
+ },
+ {
+  "id": "n5_0315",
+  "word": "厚い",
+  "kana": "あつい",
+  "romaji": "atsui",
+  "meaningEn": "kind; deep; thick",
+  "exampleJa": "分厚い本だな。",
+  "exampleEn": "The book is thick."
+ },
+ {
+  "id": "n5_0316",
+  "word": "口",
+  "kana": "くち",
+  "romaji": "kuchi",
+  "meaningEn": "mouth; opening",
+  "exampleJa": "彼は早口だ。",
+  "exampleEn": "He is a fast speaker."
+ },
+ {
+  "id": "n5_0317",
+  "word": "向こう",
+  "kana": "むこう",
+  "romaji": "mukou",
+  "meaningEn": "over there",
+  "exampleJa": "向こうへ行け！",
+  "exampleEn": "Get away!"
+ },
+ {
+  "id": "n5_0318",
+  "word": "好き",
+  "kana": "すき",
+  "romaji": "suki",
+  "meaningEn": "likeable",
+  "exampleJa": "彼が大好き！",
+  "exampleEn": "I really like him!"
+ },
+ {
+  "id": "n5_0319",
+  "word": "広い",
+  "kana": "ひろい",
+  "romaji": "hiroi",
+  "meaningEn": "spacious; wide",
+  "exampleJa": "世界は広い。",
+  "exampleEn": "The world is vast."
+ },
+ {
+  "id": "n5_0320",
+  "word": "紅茶",
+  "kana": "こうちゃ",
+  "romaji": "koucha",
+  "meaningEn": "black tea",
+  "exampleJa": "紅茶はいかが？",
+  "exampleEn": "How about some tea?"
+ },
+ {
+  "id": "n5_0321",
+  "word": "行く",
+  "kana": "いく",
+  "romaji": "iku",
+  "meaningEn": "to go",
+  "exampleJa": "誰と行くの。",
+  "exampleEn": "Who will you go with?"
+ },
+ {
+  "id": "n5_0322",
+  "word": "降りる",
+  "kana": "おりる",
+  "romaji": "oriru",
+  "meaningEn": "to get off; to descend",
+  "exampleJa": "終点で降りる。",
+  "exampleEn": "We'll get off at the last stop."
+ },
+ {
+  "id": "n5_0323",
+  "word": "降る",
+  "kana": "ふる",
+  "romaji": "furu",
+  "meaningEn": "to fall; e.g. rain or snow",
+  "exampleJa": "雨が降るかな？",
+  "exampleEn": "Do you think that it'll rain?"
+ },
+ {
+  "id": "n5_0324",
+  "word": "高い",
+  "kana": "たかい",
+  "romaji": "takai",
+  "meaningEn": "tall; expensive",
+  "exampleJa": "でも高いよ。",
+  "exampleEn": "It's expensive though."
+ },
+ {
+  "id": "n5_0325",
+  "word": "国",
+  "kana": "くに",
+  "romaji": "kuni",
+  "meaningEn": "country",
+  "exampleJa": "帝国の逆襲。",
+  "exampleEn": "The empire strikes back."
+ },
+ {
+  "id": "n5_0326",
+  "word": "黒",
+  "kana": "くろ",
+  "romaji": "kuro",
+  "meaningEn": "black",
+  "exampleJa": "彼は腹黒い。",
+  "exampleEn": "He has a black heart."
+ },
+ {
+  "id": "n5_0327",
+  "word": "黒い",
+  "kana": "くろい",
+  "romaji": "kuroi",
+  "meaningEn": "black",
+  "exampleJa": "彼は腹黒い。",
+  "exampleEn": "He has a black heart."
+ },
+ {
+  "id": "n5_0328",
+  "word": "今",
+  "kana": "いま",
+  "romaji": "ima",
+  "meaningEn": "now",
+  "exampleJa": "今晩暇かな？",
+  "exampleEn": "Are you free tonight?"
+ },
+ {
+  "id": "n5_0329",
+  "word": "今月",
+  "kana": "こんげつ",
+  "romaji": "kongetsu",
+  "meaningEn": "this month",
+  "exampleJa": "今月は金欠なの。",
+  "exampleEn": "Money's tight for me this month."
+ },
+ {
+  "id": "n5_0330",
+  "word": "今週",
+  "kana": "こんしゅう",
+  "romaji": "konshuu",
+  "meaningEn": "this week",
+  "exampleJa": "今週末は暇？",
+  "exampleEn": "Are you free this weekend?"
+ },
+ {
+  "id": "n5_0331",
+  "word": "今朝",
+  "kana": "けさ",
+  "romaji": "kesa",
+  "meaningEn": "this morning",
+  "exampleJa": "今朝の虹みた？",
+  "exampleEn": "Did you see the rainbow this morning?"
+ },
+ {
+  "id": "n5_0332",
+  "word": "今日",
+  "kana": "きょう",
+  "romaji": "kyou",
+  "meaningEn": "today",
+  "exampleJa": "今日は暑い。",
+  "exampleEn": "It's hot today."
+ },
+ {
+  "id": "n5_0333",
+  "word": "今年",
+  "kana": "ことし",
+  "romaji": "kotoshi",
+  "meaningEn": "this year",
+  "exampleJa": "今年は春が遅い。",
+  "exampleEn": "Spring is late this year."
+ },
+ {
+  "id": "n5_0334",
+  "word": "今晩",
+  "kana": "こんばん",
+  "romaji": "konban",
+  "meaningEn": "this evening",
+  "exampleJa": "今晩暇かな？",
+  "exampleEn": "Are you free tonight?"
+ },
+ {
+  "id": "n5_0335",
+  "word": "困る",
+  "kana": "こまる",
+  "romaji": "komaru",
+  "meaningEn": "to be worried",
+  "exampleJa": "杖がないと困る。",
+  "exampleEn": "I need my cane."
+ },
+ {
+  "id": "n5_0336",
+  "word": "左",
+  "kana": "ひだり",
+  "romaji": "hidari",
+  "meaningEn": "left hand side",
+  "exampleJa": "左利きなの？",
+  "exampleEn": "Are you a lefty?"
+ },
+ {
+  "id": "n5_0337",
+  "word": "差す",
+  "kana": "さす",
+  "romaji": "sasu",
+  "meaningEn": "to stretch out hands; to raise an umbrella",
+  "exampleJa": "彼の言動には嫌気が差す。",
+  "exampleEn": "His behavior makes me sick."
+ },
+ {
+  "id": "n5_0338",
+  "word": "砂糖",
+  "kana": "さとう",
+  "romaji": "satou",
+  "meaningEn": "sugar",
+  "exampleJa": "砂糖がない。",
+  "exampleEn": "We have no sugar."
+ },
+ {
+  "id": "n5_0339",
+  "word": "座る",
+  "kana": "すわる",
+  "romaji": "suwaru",
+  "meaningEn": "to sit",
+  "exampleJa": "その上に座るな。",
+  "exampleEn": "Don't sit on it."
+ },
+ {
+  "id": "n5_0340",
+  "word": "細い",
+  "kana": "ほそい",
+  "romaji": "hosoi",
+  "meaningEn": "thin",
+  "exampleJa": "とても心細いです。",
+  "exampleEn": "I'm so lonely."
+ },
+ {
+  "id": "n5_0341",
+  "word": "財布",
+  "kana": "さいふ",
+  "romaji": "saifu",
+  "meaningEn": "wallet",
+  "exampleJa": "ほら財布だ。",
+  "exampleEn": "Here's my wallet."
+ },
+ {
+  "id": "n5_0342",
+  "word": "咲く",
+  "kana": "さく",
+  "romaji": "saku",
+  "meaningEn": "to bloom",
+  "exampleJa": "梅の花は3月に咲く。",
+  "exampleEn": "Plum blossoms come out in March."
+ },
+ {
+  "id": "n5_0343",
+  "word": "作る",
+  "kana": "つくる",
+  "romaji": "tsukuru",
+  "meaningEn": "to make",
+  "exampleJa": "蚕は繭を作る。",
+  "exampleEn": "Silkworms spin cocoons."
+ },
+ {
+  "id": "n5_0344",
+  "word": "作文",
+  "kana": "さくぶん",
+  "romaji": "sakubun",
+  "meaningEn": "composition; writing",
+  "exampleJa": "彼女は作文が優秀だ。",
+  "exampleEn": "She is excellent in composition."
+ },
+ {
+  "id": "n5_0345",
+  "word": "昨日",
+  "kana": "きのう",
+  "romaji": "kinou",
+  "meaningEn": "yesterday",
+  "exampleJa": "昨日、泳いだ？",
+  "exampleEn": "Did you swim yesterday?"
+ },
+ {
+  "id": "n5_0346",
+  "word": "昨夜",
+  "kana": "ゆうべ",
+  "romaji": "yuube",
+  "meaningEn": "last night",
+  "exampleJa": "昨夜はごめん。",
+  "exampleEn": "I'm sorry about last night."
+ },
+ {
+  "id": "n5_0347",
+  "word": "撮る",
+  "kana": "とる",
+  "romaji": "toru",
+  "meaningEn": "to take a photo or record a film",
+  "exampleJa": "写真撮るの、好き好き。",
+  "exampleEn": "I love to take pictures."
+ },
+ {
+  "id": "n5_0348",
+  "word": "雑誌",
+  "kana": "ざっし",
+  "romaji": "zasshi",
+  "meaningEn": "magazine",
+  "exampleJa": "雑誌をくれないか。",
+  "exampleEn": "Give me some kind of magazines, will you?"
+ },
+ {
+  "id": "n5_0349",
+  "word": "三",
+  "kana": "さん",
+  "romaji": "san",
+  "meaningEn": "three",
+  "exampleJa": "三時過ぎよ。",
+  "exampleEn": "It's just after three o'clock."
+ },
+ {
+  "id": "n5_0350",
+  "word": "三つ",
+  "kana": "みっつ",
+  "romaji": "mittsu",
+  "meaningEn": "three",
+  "exampleJa": "三つ子の魂百まで。",
+  "exampleEn": "The child is father to the man."
+ },
+ {
+  "id": "n5_0351",
+  "word": "三日",
+  "kana": "みっか",
+  "romaji": "mikka",
+  "meaningEn": "three days; third day of the month",
+  "exampleJa": "切符は三日間有効だ。",
+  "exampleEn": "The ticket holds good for three days."
+ },
+ {
+  "id": "n5_0352",
+  "word": "傘",
+  "kana": "かさ",
+  "romaji": "kasa",
+  "meaningEn": "umbrella",
+  "exampleJa": "私の傘です。",
+  "exampleEn": "That's my umbrella."
+ },
+ {
+  "id": "n5_0353",
+  "word": "山",
+  "kana": "やま",
+  "romaji": "yama",
+  "meaningEn": "mountain",
+  "exampleJa": "山羊座です。",
+  "exampleEn": "I'm a Capricorn."
+ },
+ {
+  "id": "n5_0354",
+  "word": "散歩",
+  "kana": "さんぽする",
+  "romaji": "sanposuru",
+  "meaningEn": "to stroll",
+  "exampleJa": "散歩をした。",
+  "exampleEn": "I took a walk."
+ },
+ {
+  "id": "n5_0355",
+  "word": "仕事",
+  "kana": "しごと",
+  "romaji": "shigoto",
+  "meaningEn": "job",
+  "exampleJa": "仕事中です。",
+  "exampleEn": "I am working."
+ },
+ {
+  "id": "n5_0356",
+  "word": "使う",
+  "kana": "つかう",
+  "romaji": "tsukau",
+  "meaningEn": "to use",
+  "exampleJa": "何に使うの？",
+  "exampleEn": "What for?"
+ },
+ {
+  "id": "n5_0357",
+  "word": "四",
+  "kana": "し / よん",
+  "romaji": "shi / yon",
+  "meaningEn": "four",
+  "exampleJa": "二の二倍は四。",
+  "exampleEn": "Twice two is equal to four."
+ },
+ {
+  "id": "n5_0358",
+  "word": "四つ",
+  "kana": "よっつ",
+  "romaji": "yottsu",
+  "meaningEn": "four",
+  "exampleJa": "見て！四つ葉！",
+  "exampleEn": "Look! A four-leafed clover!"
+ },
+ {
+  "id": "n5_0359",
+  "word": "四日",
+  "kana": "よっか",
+  "romaji": "yokka",
+  "meaningEn": "four days; fouth day of the month",
+  "exampleJa": "雨は四日間降り続いた。",
+  "exampleEn": "The rain lasted four days."
+ },
+ {
+  "id": "n5_0360",
+  "word": "始まる",
+  "kana": "はじまる",
+  "romaji": "hajimaru",
+  "meaningEn": "to begin",
+  "exampleJa": "いつ始まるの？",
+  "exampleEn": "When will it start?"
+ },
+ {
+  "id": "n5_0361",
+  "word": "姉",
+  "kana": "あね",
+  "romaji": "ane",
+  "meaningEn": "(humble) older sister",
+  "exampleJa": "姉はいない。",
+  "exampleEn": "I don't have an older sister."
+ },
+ {
+  "id": "n5_0362",
+  "word": "子供",
+  "kana": "こども",
+  "romaji": "kodomo",
+  "meaningEn": "child",
+  "exampleJa": "子供が欲しい？",
+  "exampleEn": "Do you want children?"
+ },
+ {
+  "id": "n5_0363",
+  "word": "止まる",
+  "kana": "とまる",
+  "romaji": "tomaru",
+  "meaningEn": "to come to a halt",
+  "exampleJa": "立ち止まるな。",
+  "exampleEn": "Move along now."
+ },
+ {
+  "id": "n5_0364",
+  "word": "死ぬ",
+  "kana": "しぬ",
+  "romaji": "shinu",
+  "meaningEn": "to die",
+  "exampleJa": "死ぬもんか。",
+  "exampleEn": "I won't die."
+ },
+ {
+  "id": "n5_0365",
+  "word": "私",
+  "kana": "わたくし",
+  "romaji": "watakushi",
+  "meaningEn": "(humble) I; myself",
+  "exampleJa": "私も行った。",
+  "exampleEn": "I also went."
+ },
+ {
+  "id": "n5_0366",
+  "word": "紙",
+  "kana": "かみ",
+  "romaji": "kami",
+  "meaningEn": "paper",
+  "exampleJa": "紙がほしい。",
+  "exampleEn": "I need some paper."
+ },
+ {
+  "id": "n5_0367",
+  "word": "歯",
+  "kana": "は",
+  "romaji": "ha",
+  "meaningEn": "tooth",
+  "exampleJa": "歯が痛いの？",
+  "exampleEn": "Does your tooth hurt?"
+ },
+ {
+  "id": "n5_0368",
+  "word": "字引",
+  "kana": "じびき",
+  "romaji": "jibiki",
+  "meaningEn": "dictionary",
+  "exampleJa": "彼女はいわゆる生き字引だ。",
+  "exampleEn": "She is, so to speak, a walking dictionary."
+ },
+ {
+  "id": "n5_0369",
+  "word": "持つ",
+  "kana": "もつ",
+  "romaji": "motsu",
+  "meaningEn": "to hold",
+  "exampleJa": "僕が持つよ。",
+  "exampleEn": "Let me carry it for you."
+ },
+ {
+  "id": "n5_0370",
+  "word": "時々",
+  "kana": "ときどき",
+  "romaji": "tokidoki",
+  "meaningEn": "sometimes",
+  "exampleJa": "彼は時々変です。",
+  "exampleEn": "Sometimes he can be a strange guy."
+ },
+ {
+  "id": "n5_0371",
+  "word": "時間",
+  "kana": "じかん",
+  "romaji": "jikan",
+  "meaningEn": "time",
+  "exampleJa": "寝る時間よ。",
+  "exampleEn": "Time for bed."
+ },
+ {
+  "id": "n5_0372",
+  "word": "時計",
+  "kana": "とけい",
+  "romaji": "tokei",
+  "meaningEn": "watch; clock",
+  "exampleJa": "時計してる？",
+  "exampleEn": "Are you wearing a watch?"
+ },
+ {
+  "id": "n5_0373",
+  "word": "次",
+  "kana": "つぎ",
+  "romaji": "tsugi",
+  "meaningEn": "next",
+  "exampleJa": "君次第だよ。",
+  "exampleEn": "It's up to you."
+ },
+ {
+  "id": "n5_0374",
+  "word": "耳",
+  "kana": "みみ",
+  "romaji": "mimi",
+  "meaningEn": "ear",
+  "exampleJa": "初耳ですね。",
+  "exampleEn": "This is the first time I heard about it."
+ },
+ {
+  "id": "n5_0375",
+  "word": "自転車",
+  "kana": "じてんしゃ",
+  "romaji": "jitensha",
+  "meaningEn": "bicycle",
+  "exampleJa": "自転車がある。",
+  "exampleEn": "I have a bike."
+ },
+ {
+  "id": "n5_0376",
+  "word": "自動車",
+  "kana": "じどうしゃ",
+  "romaji": "jidousha",
+  "meaningEn": "automobile",
+  "exampleJa": "自動車は左折した。",
+  "exampleEn": "The car made a turn to the left."
+ },
+ {
+  "id": "n5_0377",
+  "word": "自分",
+  "kana": "じぶん",
+  "romaji": "jibun",
+  "meaningEn": "oneself",
+  "exampleJa": "自分でやれ。",
+  "exampleEn": "Do it yourself."
+ },
+ {
+  "id": "n5_0378",
+  "word": "辞書",
+  "kana": "じしょ",
+  "romaji": "jisho",
+  "meaningEn": "dictionary",
+  "exampleJa": "辞書持ってる？",
+  "exampleEn": "Do you have a dictionary?"
+ },
+ {
+  "id": "n5_0379",
+  "word": "七",
+  "kana": "しち / なな",
+  "romaji": "shichi / nana",
+  "meaningEn": "seven",
+  "exampleJa": "七転び八起き。",
+  "exampleEn": "Fall seven times. Stand up eight."
+ },
+ {
+  "id": "n5_0380",
+  "word": "七つ",
+  "kana": "ななつ",
+  "romaji": "nanatsu",
+  "meaningEn": "seven",
+  "exampleJa": "一つ、二つ、三つ、四つ、五つ、六つ、七つ、八つ、九つ、十。",
+  "exampleEn": "One, two, three, four, five, six, seven, eight, nine, ten."
+ },
+ {
+  "id": "n5_0381",
+  "word": "七日",
+  "kana": "なのか",
+  "romaji": "nanoka",
+  "meaningEn": "seven days; the seventh day",
+  "exampleJa": "一週間は七日です。",
+  "exampleEn": "There are seven days in a week."
+ },
+ {
+  "id": "n5_0382",
+  "word": "質問",
+  "kana": "しつもん",
+  "romaji": "shitsumon",
+  "meaningEn": "question",
+  "exampleJa": "よい質問だ。",
+  "exampleEn": "Good question!"
+ },
+ {
+  "id": "n5_0383",
+  "word": "写真",
+  "kana": "しゃしん",
+  "romaji": "shashin",
+  "meaningEn": "photograph",
+  "exampleJa": "写真見せて。",
+  "exampleEn": "Show me the photo."
+ },
+ {
+  "id": "n5_0384",
+  "word": "車",
+  "kana": "くるま",
+  "romaji": "kuruma",
+  "meaningEn": "car; vehicle",
+  "exampleJa": "車に乗って。",
+  "exampleEn": "Get into the car."
+ },
+ {
+  "id": "n5_0385",
+  "word": "借りる",
+  "kana": "かりる",
+  "romaji": "kariru",
+  "meaningEn": "to borrow",
+  "exampleJa": "道具を借りる事が出来ますか。",
+  "exampleEn": "Is it possible to rent equipment?"
+ },
+ {
+  "id": "n5_0386",
+  "word": "若い",
+  "kana": "わかい",
+  "romaji": "wakai",
+  "meaningEn": "young",
+  "exampleJa": "彼はまだ若い。",
+  "exampleEn": "He is still young."
+ },
+ {
+  "id": "n5_0387",
+  "word": "弱い",
+  "kana": "よわい",
+  "romaji": "yowai",
+  "meaningEn": "weak",
+  "exampleJa": "地理は弱い。",
+  "exampleEn": "I am weak in geography."
+ },
+ {
+  "id": "n5_0388",
+  "word": "取る",
+  "kana": "とる",
+  "romaji": "toru",
+  "meaningEn": "to take something",
+  "exampleJa": "どっち取る？",
+  "exampleEn": "Which one do you take?"
+ },
+ {
+  "id": "n5_0389",
+  "word": "手",
+  "kana": "て",
+  "romaji": "te",
+  "meaningEn": "hand",
+  "exampleJa": "手を下げろ。",
+  "exampleEn": "Put your hands down!"
+ },
+ {
+  "id": "n5_0390",
+  "word": "手紙",
+  "kana": "てがみ",
+  "romaji": "tegami",
+  "meaningEn": "letter",
+  "exampleJa": "はい、手紙。",
+  "exampleEn": "Here's a letter for you."
+ },
+ {
+  "id": "n5_0391",
+  "word": "授業",
+  "kana": "じゅぎょう",
+  "romaji": "jugyou",
+  "meaningEn": "lesson; class work",
+  "exampleJa": "彼等は授業中だ。",
+  "exampleEn": "They are in class."
+ },
+ {
+  "id": "n5_0392",
+  "word": "秋",
+  "kana": "あき",
+  "romaji": "aki",
+  "meaningEn": "autumn",
+  "exampleJa": "男心と秋の空。",
+  "exampleEn": "Man is as fickle as autumn weather."
+ },
+ {
+  "id": "n5_0393",
+  "word": "終る",
+  "kana": "おわる",
+  "romaji": "owaru",
+  "meaningEn": "to finish",
+  "exampleJa": "議長は意見が不一致に終る可能性を排除しなかった。",
+  "exampleEn": "The chairman did not rule out the possibility of a disagreement."
+ },
+ {
+  "id": "n5_0394",
+  "word": "習う",
+  "kana": "ならう",
+  "romaji": "narau",
+  "meaningEn": "to learn",
+  "exampleJa": "習うより慣れろ。",
+  "exampleEn": "Practice makes perfect."
+ },
+ {
+  "id": "n5_0395",
+  "word": "住む",
+  "kana": "すむ",
+  "romaji": "sumu",
+  "meaningEn": "to live in",
+  "exampleJa": "森は僕の住む家だ。",
+  "exampleEn": "The woods are my home."
+ },
+ {
+  "id": "n5_0396",
+  "word": "十",
+  "kana": "じゅう とお",
+  "romaji": "juu too",
+  "meaningEn": "ten",
+  "exampleJa": "五十歩百歩。",
+  "exampleEn": "Scant difference."
+ },
+ {
+  "id": "n5_0397",
+  "word": "十日",
+  "kana": "とおか",
+  "romaji": "tooka",
+  "meaningEn": "ten days; the tenth day",
+  "exampleJa": "明日は十月十日火曜日です。",
+  "exampleEn": "Tomorrow is Tuesday, the tenth of October."
+ },
+ {
+  "id": "n5_0398",
+  "word": "重い",
+  "kana": "おもい",
+  "romaji": "omoi",
+  "meaningEn": "heavy",
+  "exampleJa": "トムは重い。",
+  "exampleEn": "Tom is heavy."
+ },
+ {
+  "id": "n5_0399",
+  "word": "宿題",
+  "kana": "しゅくだい",
+  "romaji": "shukudai",
+  "meaningEn": "homework",
+  "exampleJa": "宿題やった？",
+  "exampleEn": "Did you do your homework?"
+ },
+ {
+  "id": "n5_0400",
+  "word": "出かける",
+  "kana": "でかける",
+  "romaji": "dekakeru",
+  "meaningEn": "to go out",
+  "exampleJa": "出かけるの？",
+  "exampleEn": "Are you going out?"
+ },
+ {
+  "id": "n5_0401",
+  "word": "出す",
+  "kana": "だす",
+  "romaji": "dasu",
+  "meaningEn": "to put out",
+  "exampleJa": "口を出すな。",
+  "exampleEn": "You keep out of this."
+ },
+ {
+  "id": "n5_0402",
+  "word": "出る",
+  "kana": "でる",
+  "romaji": "deru",
+  "meaningEn": "to appear; to leave",
+  "exampleJa": "何時に出る？",
+  "exampleEn": "What time are we leaving?"
+ },
+ {
+  "id": "n5_0403",
+  "word": "出口",
+  "kana": "でぐち",
+  "romaji": "deguchi",
+  "meaningEn": "exit",
+  "exampleJa": "出口を探そう。",
+  "exampleEn": "Let's find the exit."
+ },
+ {
+  "id": "n5_0404",
+  "word": "春",
+  "kana": "はる",
+  "romaji": "haru",
+  "meaningEn": "spring",
+  "exampleJa": "春になった。",
+  "exampleEn": "Spring is here."
+ },
+ {
+  "id": "n5_0405",
+  "word": "初め/始め",
+  "kana": "はじめ",
+  "romaji": "hajime",
+  "meaningEn": "beginning",
+  "exampleJa": "",
+  "exampleEn": ""
+ },
+ {
+  "id": "n5_0406",
+  "word": "初めて",
+  "kana": "はじめて",
+  "romaji": "hajimete",
+  "meaningEn": "for the first time",
+  "exampleJa": "初めてだろ？",
+  "exampleEn": "First time?"
+ },
+ {
+  "id": "n5_0407",
+  "word": "所",
+  "kana": "ところ",
+  "romaji": "tokoro",
+  "meaningEn": "place",
+  "exampleJa": "この場所に？",
+  "exampleEn": "Just right here?"
+ },
+ {
+  "id": "n5_0408",
+  "word": "暑い",
+  "kana": "あつい",
+  "romaji": "atsui",
+  "meaningEn": "hot",
+  "exampleJa": "今日は暑い。",
+  "exampleEn": "It's hot today."
+ },
+ {
+  "id": "n5_0409",
+  "word": "書く",
+  "kana": "かく",
+  "romaji": "kaku",
+  "meaningEn": "to write",
+  "exampleJa": "書く紙がない。",
+  "exampleEn": "There is no paper to write on."
+ },
+ {
+  "id": "n5_0410",
+  "word": "女",
+  "kana": "おんな",
+  "romaji": "onna",
+  "meaningEn": "woman",
+  "exampleJa": "彼女は歩く。",
+  "exampleEn": "She walks."
+ },
+ {
+  "id": "n5_0411",
+  "word": "女の子",
+  "kana": "おんなのこ",
+  "romaji": "onnanoko",
+  "meaningEn": "girl",
+  "exampleJa": "この女の子は誰？",
+  "exampleEn": "Who is this girl?"
+ },
+ {
+  "id": "n5_0412",
+  "word": "小さい",
+  "kana": "ちいさい",
+  "romaji": "chiisai",
+  "meaningEn": "little",
+  "exampleJa": "この本は小さい。",
+  "exampleEn": "This book is small."
+ },
+ {
+  "id": "n5_0413",
+  "word": "小さな",
+  "kana": "ちいさな",
+  "romaji": "chiisana",
+  "meaningEn": "little",
+  "exampleJa": "小さな部屋ね。",
+  "exampleEn": "It's a small room."
+ },
+ {
+  "id": "n5_0414",
+  "word": "少し",
+  "kana": "すこし",
+  "romaji": "sukoshi",
+  "meaningEn": "few",
+  "exampleJa": "少し疲れた。",
+  "exampleEn": "I'm a bit tired."
+ },
+ {
+  "id": "n5_0415",
+  "word": "少ない",
+  "kana": "すくない",
+  "romaji": "sukunai",
+  "meaningEn": "a few",
+  "exampleJa": "５は８より少ない。",
+  "exampleEn": "5 is less than 8."
+ },
+ {
+  "id": "n5_0416",
+  "word": "消える",
+  "kana": "きえる",
+  "romaji": "kieru",
+  "meaningEn": "to disappear",
+  "exampleJa": "雪はすぐに消えるだろう。",
+  "exampleEn": "The snow will soon disappear."
+ },
+ {
+  "id": "n5_0417",
+  "word": "消す",
+  "kana": "けす",
+  "romaji": "kesu",
+  "meaningEn": "to erase; to turn off power",
+  "exampleJa": "電気を消すな。",
+  "exampleEn": "Don't turn off the light."
+ },
+ {
+  "id": "n5_0418",
+  "word": "上",
+  "kana": "うえ",
+  "romaji": "ue",
+  "meaningEn": "on top of",
+  "exampleJa": "以上ですか？",
+  "exampleEn": "Is that all?"
+ },
+ {
+  "id": "n5_0419",
+  "word": "上げる",
+  "kana": "あげる",
+  "romaji": "ageru",
+  "meaningEn": "to give",
+  "exampleJa": "頭を上げるなよ。",
+  "exampleEn": "Keep your head down."
+ },
+ {
+  "id": "n5_0420",
+  "word": "上手",
+  "kana": "じょうず",
+  "romaji": "jouzu",
+  "meaningEn": "skillful",
+  "exampleJa": "世渡り上手ね。",
+  "exampleEn": "You seem to breeze through everything in life."
+ },
+ {
+  "id": "n5_0421",
+  "word": "上着",
+  "kana": "うわぎ",
+  "romaji": "uwagi",
+  "meaningEn": "jacket",
+  "exampleJa": "彼は上着を掛けた。",
+  "exampleEn": "He hung up his coat."
+ },
+ {
+  "id": "n5_0422",
+  "word": "丈夫",
+  "kana": "じょうぶ",
+  "romaji": "joubu",
+  "meaningEn": "strong; durable",
+  "exampleJa": "大丈夫そう？",
+  "exampleEn": "Are you going to be OK?"
+ },
+ {
+  "id": "n5_0423",
+  "word": "乗る",
+  "kana": "のる",
+  "romaji": "noru",
+  "meaningEn": "to get on; to ride",
+  "exampleJa": "図に乗るな。",
+  "exampleEn": "Don't push your luck."
+ },
+ {
+  "id": "n5_0424",
+  "word": "色",
+  "kana": "いろ",
+  "romaji": "iro",
+  "meaningEn": "colour",
+  "exampleJa": "虹は７色だ。",
+  "exampleEn": "The rainbow has seven colors."
+ },
+ {
+  "id": "n5_0425",
+  "word": "食べる",
+  "kana": "たべる",
+  "romaji": "taberu",
+  "meaningEn": "to eat",
+  "exampleJa": "魚を食べる。",
+  "exampleEn": "I eat fish."
+ },
+ {
+  "id": "n5_0426",
+  "word": "食べ物",
+  "kana": "たべもの",
+  "romaji": "tabemono",
+  "meaningEn": "food",
+  "exampleJa": "好きな食べ物は？",
+  "exampleEn": "What's your favorite food?"
+ },
+ {
+  "id": "n5_0427",
+  "word": "食堂",
+  "kana": "しょくどう",
+  "romaji": "shokudou",
+  "meaningEn": "dining hall",
+  "exampleJa": "食堂はどこですか。",
+  "exampleEn": "Where is the cafeteria?"
+ },
+ {
+  "id": "n5_0428",
+  "word": "寝る",
+  "kana": "ねる",
+  "romaji": "neru",
+  "meaningEn": "to go to bed; to sleep",
+  "exampleJa": "寝る時間よ。",
+  "exampleEn": "Time for bed."
+ },
+ {
+  "id": "n5_0429",
+  "word": "新しい",
+  "kana": "あたらしい",
+  "romaji": "atarashii",
+  "meaningEn": "new",
+  "exampleJa": "この本は新しい。",
+  "exampleEn": "This book is new."
+ },
+ {
+  "id": "n5_0430",
+  "word": "新聞",
+  "kana": "しんぶん",
+  "romaji": "shinbun",
+  "meaningEn": "newspaper",
+  "exampleJa": "新聞取って。",
+  "exampleEn": "Get me the newspaper."
+ },
+ {
+  "id": "n5_0431",
+  "word": "辛い",
+  "kana": "からい",
+  "romaji": "karai",
+  "meaningEn": "spicy",
+  "exampleJa": "花粉症は辛い。",
+  "exampleEn": "Hay fever is tough."
+ },
+ {
+  "id": "n5_0432",
+  "word": "人",
+  "kana": "ひと",
+  "romaji": "hito",
+  "meaningEn": "person",
+  "exampleJa": "文は人なり。",
+  "exampleEn": "The style is the man himself."
+ },
+ {
+  "id": "n5_0433",
+  "word": "図書館",
+  "kana": "としょかん",
+  "romaji": "toshokan",
+  "meaningEn": "library",
+  "exampleJa": "明日図書館でね。",
+  "exampleEn": "See you tomorrow at the library."
+ },
+ {
+  "id": "n5_0434",
+  "word": "吹く",
+  "kana": "ふく",
+  "romaji": "fuku",
+  "meaningEn": "to blow",
+  "exampleJa": "風は南へ吹く。",
+  "exampleEn": "The wind blows south."
+ },
+ {
+  "id": "n5_0435",
+  "word": "水",
+  "kana": "みず",
+  "romaji": "mizu",
+  "meaningEn": "water",
+  "exampleJa": "水が欲しい。",
+  "exampleEn": "I want some water."
+ },
+ {
+  "id": "n5_0436",
+  "word": "水曜日",
+  "kana": "すいようび",
+  "romaji": "suiyoubi",
+  "meaningEn": "Wednesday",
+  "exampleJa": "今日は水曜日です。",
+  "exampleEn": "Today is Wednesday."
+ },
+ {
+  "id": "n5_0437",
+  "word": "晴れ",
+  "kana": "はれ",
+  "romaji": "hare",
+  "meaningEn": "clear weather",
+  "exampleJa": "晴れそうだ。",
+  "exampleEn": "The sky is likely to clear up."
+ },
+ {
+  "id": "n5_0438",
+  "word": "晴れる",
+  "kana": "はれる",
+  "romaji": "hareru",
+  "meaningEn": "to be sunny",
+  "exampleJa": "晴れると思う。",
+  "exampleEn": "I think it will be fine."
+ },
+ {
+  "id": "n5_0439",
+  "word": "生まれる",
+  "kana": "うまれる",
+  "romaji": "umareru",
+  "meaningEn": "to be born",
+  "exampleJa": "彼女に赤ちゃんが生まれる。",
+  "exampleEn": "She is going to have a baby."
+ },
+ {
+  "id": "n5_0440",
+  "word": "生徒",
+  "kana": "せいと",
+  "romaji": "seito",
+  "meaningEn": "pupil",
+  "exampleJa": "トムは生徒です。",
+  "exampleEn": "Tom is a student."
+ },
+ {
+  "id": "n5_0441",
+  "word": "声",
+  "kana": "こえ",
+  "romaji": "koe",
+  "meaningEn": "voice",
+  "exampleJa": "声援がやんだ。",
+  "exampleEn": "The cheering ceased."
+ },
+ {
+  "id": "n5_0442",
+  "word": "西",
+  "kana": "にし",
+  "romaji": "nishi",
+  "meaningEn": "west",
+  "exampleJa": "日は西に沈む。",
+  "exampleEn": "The sun sets in the west."
+ },
+ {
+  "id": "n5_0443",
+  "word": "青",
+  "kana": "あお",
+  "romaji": "ao",
+  "meaningEn": "blue",
+  "exampleJa": "信号は青だ。",
+  "exampleEn": "The traffic signal is green."
+ },
+ {
+  "id": "n5_0444",
+  "word": "青い",
+  "kana": "あおい",
+  "romaji": "aoi",
+  "meaningEn": "blue",
+  "exampleJa": "顔が青いよ。",
+  "exampleEn": "You look pale."
+ },
+ {
+  "id": "n5_0445",
+  "word": "静か",
+  "kana": "しずか",
+  "romaji": "shizuka",
+  "meaningEn": "quiet",
+  "exampleJa": "静か過ぎる。",
+  "exampleEn": "It's too quiet."
+ },
+ {
+  "id": "n5_0446",
+  "word": "赤",
+  "kana": "あか",
+  "romaji": "aka",
+  "meaningEn": "red",
+  "exampleJa": "赤丸で囲む。",
+  "exampleEn": "Circle in red pencil."
+ },
+ {
+  "id": "n5_0447",
+  "word": "赤い",
+  "kana": "あかい",
+  "romaji": "akai",
+  "meaningEn": "red",
+  "exampleJa": "顔が赤いよ。",
+  "exampleEn": "Your face is red."
+ },
+ {
+  "id": "n5_0448",
+  "word": "切る",
+  "kana": "きる",
+  "romaji": "kiru",
+  "meaningEn": "to cut",
+  "exampleJa": "道路を横切るな。",
+  "exampleEn": "Don't cross the road."
+ },
+ {
+  "id": "n5_0449",
+  "word": "切手",
+  "kana": "きって",
+  "romaji": "kitte",
+  "meaningEn": "postage stamp",
+  "exampleJa": "小切手で支払う。",
+  "exampleEn": "I will pay for it by check."
+ },
+ {
+  "id": "n5_0450",
+  "word": "切符",
+  "kana": "きっぷ",
+  "romaji": "kippu",
+  "meaningEn": "ticket",
+  "exampleJa": "切符代、ある？",
+  "exampleEn": "Do you have money for a ticket?"
+ },
+ {
+  "id": "n5_0451",
+  "word": "雪",
+  "kana": "ゆき",
+  "romaji": "yuki",
+  "meaningEn": "snow",
+  "exampleJa": "雪は消えた。",
+  "exampleEn": "The snow has disappeared."
+ },
+ {
+  "id": "n5_0452",
+  "word": "先",
+  "kana": "さき",
+  "romaji": "saki",
+  "meaningEn": "the future; previous",
+  "exampleJa": "先生が来る。",
+  "exampleEn": "There comes our teacher."
+ },
+ {
+  "id": "n5_0453",
+  "word": "先月",
+  "kana": "せんげつ",
+  "romaji": "sengetsu",
+  "meaningEn": "last month",
+  "exampleJa": "会合は先月あった。",
+  "exampleEn": "The meeting was last month."
+ },
+ {
+  "id": "n5_0454",
+  "word": "先週",
+  "kana": "せんしゅう",
+  "romaji": "senshuu",
+  "meaningEn": "last week",
+  "exampleJa": "先週でした。",
+  "exampleEn": "It was last week."
+ },
+ {
+  "id": "n5_0455",
+  "word": "先生",
+  "kana": "せんせい",
+  "romaji": "sensei",
+  "meaningEn": "teacher; doctor",
+  "exampleJa": "先生が来る。",
+  "exampleEn": "There comes our teacher."
+ },
+ {
+  "id": "n5_0456",
+  "word": "千",
+  "kana": "せん",
+  "romaji": "sen",
+  "meaningEn": "thousand",
+  "exampleJa": "千切りにする。",
+  "exampleEn": "Cut into long thin strips."
+ },
+ {
+  "id": "n5_0457",
+  "word": "川/河",
+  "kana": "かわ",
+  "romaji": "kawa",
+  "meaningEn": "river",
+  "exampleJa": "",
+  "exampleEn": ""
+ },
+ {
+  "id": "n5_0458",
+  "word": "洗う",
+  "kana": "あらう",
+  "romaji": "arau",
+  "meaningEn": "to wash",
+  "exampleJa": "血で血を洗う。",
+  "exampleEn": "Blood will have blood."
+ },
+ {
+  "id": "n5_0459",
+  "word": "洗濯",
+  "kana": "せんたく",
+  "romaji": "sentaku",
+  "meaningEn": "washing",
+  "exampleJa": "鬼の留守に洗濯。",
+  "exampleEn": "When the cat is away, the mice will play."
+ },
+ {
+  "id": "n5_0460",
+  "word": "前",
+  "kana": "まえ",
+  "romaji": "mae",
+  "meaningEn": "before",
+  "exampleJa": "７時前にね。",
+  "exampleEn": "See you a little before 7."
+ },
+ {
+  "id": "n5_0461",
+  "word": "全部",
+  "kana": "ぜんぶ",
+  "romaji": "zenbu",
+  "meaningEn": "all",
+  "exampleJa": "それで全部？",
+  "exampleEn": "Is that all?"
+ },
+ {
+  "id": "n5_0462",
+  "word": "掃除",
+  "kana": "そうじする",
+  "romaji": "soujisuru",
+  "meaningEn": "to clean; to sweep",
+  "exampleJa": "大掃除の時間よ。",
+  "exampleEn": "It's time for spring cleaning."
+ },
+ {
+  "id": "n5_0463",
+  "word": "早い",
+  "kana": "はやい",
+  "romaji": "hayai",
+  "meaningEn": "early",
+  "exampleJa": "彼は素早い。",
+  "exampleEn": "He moves quickly."
+ },
+ {
+  "id": "n5_0464",
+  "word": "窓",
+  "kana": "まど",
+  "romaji": "mado",
+  "meaningEn": "window",
+  "exampleJa": "窓を閉めて。",
+  "exampleEn": "Close the window."
+ },
+ {
+  "id": "n5_0465",
+  "word": "走る",
+  "kana": "はしる",
+  "romaji": "hashiru",
+  "meaningEn": "to run",
+  "exampleJa": "彼は速く走る。",
+  "exampleEn": "He is a fast runner."
+ },
+ {
+  "id": "n5_0466",
+  "word": "足",
+  "kana": "あし",
+  "romaji": "ashi",
+  "meaningEn": "foot; leg",
+  "exampleJa": "それで満足？",
+  "exampleEn": "Are you satisfied?"
+ },
+ {
+  "id": "n5_0467",
+  "word": "速い",
+  "kana": "はやい",
+  "romaji": "hayai",
+  "meaningEn": "quick",
+  "exampleJa": "車は速いな。",
+  "exampleEn": "The car is fast."
+ },
+ {
+  "id": "n5_0468",
+  "word": "村",
+  "kana": "むら",
+  "romaji": "mura",
+  "meaningEn": "village",
+  "exampleJa": "村には娯楽がない。",
+  "exampleEn": "There are not many amusements in the village."
+ },
+ {
+  "id": "n5_0469",
+  "word": "多い",
+  "kana": "おおい",
+  "romaji": "ooi",
+  "meaningEn": "many",
+  "exampleJa": "疑問が多い。",
+  "exampleEn": "I have many doubts."
+ },
+ {
+  "id": "n5_0470",
+  "word": "太い",
+  "kana": "ふとい",
+  "romaji": "futoi",
+  "meaningEn": "fat",
+  "exampleJa": "トムは首が太いんだ。",
+  "exampleEn": "Tom has a thick neck."
+ },
+ {
+  "id": "n5_0471",
+  "word": "体",
+  "kana": "からだ",
+  "romaji": "karada",
+  "meaningEn": "body",
+  "exampleJa": "大体正しい。",
+  "exampleEn": "That is almost correct."
+ },
+ {
+  "id": "n5_0472",
+  "word": "待つ",
+  "kana": "まつ",
+  "romaji": "matsu",
+  "meaningEn": "to wait",
+  "exampleJa": "待つしかない。",
+  "exampleEn": "I can only wait."
+ },
+ {
+  "id": "n5_0473",
+  "word": "貸す",
+  "kana": "かす",
+  "romaji": "kasu",
+  "meaningEn": "to lend",
+  "exampleJa": "噂話に耳を貸すな。",
+  "exampleEn": "Don't listen to gossip."
+ },
+ {
+  "id": "n5_0474",
+  "word": "台所",
+  "kana": "だいどころ",
+  "romaji": "daidokoro",
+  "meaningEn": "kitchen",
+  "exampleJa": "台所はどこ？",
+  "exampleEn": "Where's the kitchen?"
+ },
+ {
+  "id": "n5_0475",
+  "word": "大きい",
+  "kana": "おおきい",
+  "romaji": "ookii",
+  "meaningEn": "big",
+  "exampleJa": "彼は声が大きい。",
+  "exampleEn": "He has a loud voice."
+ },
+ {
+  "id": "n5_0476",
+  "word": "大きな",
+  "kana": "おおきな",
+  "romaji": "ookina",
+  "meaningEn": "big",
+  "exampleJa": "大きな犬ね。",
+  "exampleEn": "It's a big dog."
+ },
+ {
+  "id": "n5_0477",
+  "word": "大学",
+  "kana": "だいがく",
+  "romaji": "daigaku",
+  "meaningEn": "university",
+  "exampleJa": "大学生です。",
+  "exampleEn": "I am a university student."
+ },
+ {
+  "id": "n5_0478",
+  "word": "大好き",
+  "kana": "だいすき",
+  "romaji": "daisuki",
+  "meaningEn": "to be very likeable",
+  "exampleJa": "彼が大好き！",
+  "exampleEn": "I really like him!"
+ },
+ {
+  "id": "n5_0479",
+  "word": "大使館",
+  "kana": "たいしかん",
+  "romaji": "taishikan",
+  "meaningEn": "embassy",
+  "exampleJa": "私は明日大使館へ行きます。",
+  "exampleEn": "I'll go to the embassy tomorrow."
+ },
+ {
+  "id": "n5_0480",
+  "word": "大丈夫",
+  "kana": "だいじょうぶ",
+  "romaji": "daijoubu",
+  "meaningEn": "all right",
+  "exampleJa": "大丈夫そう？",
+  "exampleEn": "Are you going to be OK?"
+ },
+ {
+  "id": "n5_0481",
+  "word": "大人",
+  "kana": "おとな",
+  "romaji": "otona",
+  "meaningEn": "adult",
+  "exampleJa": "トムは大人だ。",
+  "exampleEn": "Tom is an adult."
+ },
+ {
+  "id": "n5_0482",
+  "word": "大勢",
+  "kana": "おおぜい",
+  "romaji": "oozei",
+  "meaningEn": "great number of people",
+  "exampleJa": "大勢の人出ですよ。",
+  "exampleEn": "We're filled to the rafters."
+ },
+ {
+  "id": "n5_0483",
+  "word": "大切",
+  "kana": "たいせつ",
+  "romaji": "taisetsu",
+  "meaningEn": "important",
+  "exampleJa": "大切にします。",
+  "exampleEn": "I'll treasure it."
+ },
+ {
+  "id": "n5_0484",
+  "word": "脱ぐ",
+  "kana": "ぬぐ",
+  "romaji": "nugu",
+  "meaningEn": "to take off clothes",
+  "exampleJa": "君にはシャッポを脱ぐよ。",
+  "exampleEn": "I take my hat off to you!"
+ },
+ {
+  "id": "n5_0485",
+  "word": "誰",
+  "kana": "だれ",
+  "romaji": "dare",
+  "meaningEn": "who",
+  "exampleJa": "誰に送るの？",
+  "exampleEn": "Who are they for?"
+ },
+ {
+  "id": "n5_0486",
+  "word": "短い",
+  "kana": "みじかい",
+  "romaji": "mijikai",
+  "meaningEn": "short",
+  "exampleJa": "人生は短い。",
+  "exampleEn": "Life is short."
+ },
+ {
+  "id": "n5_0487",
+  "word": "誕生日",
+  "kana": "たんじょうび",
+  "romaji": "tanjoubi",
+  "meaningEn": "birthday",
+  "exampleJa": "誕生日いつ？",
+  "exampleEn": "When is your birthday?"
+ },
+ {
+  "id": "n5_0488",
+  "word": "弾く",
+  "kana": "ひく",
+  "romaji": "hiku",
+  "meaningEn": "to play an instrument with strings; including piano",
+  "exampleJa": "君はギター弾く？",
+  "exampleEn": "Do you play the guitar?"
+ },
+ {
+  "id": "n5_0489",
+  "word": "暖かい",
+  "kana": "あたたかい",
+  "romaji": "atatakai",
+  "meaningEn": "warm",
+  "exampleJa": "懐が暖かい。",
+  "exampleEn": "I have plenty of money with me."
+ },
+ {
+  "id": "n5_0490",
+  "word": "男",
+  "kana": "おとこ",
+  "romaji": "otoko",
+  "meaningEn": "man",
+  "exampleJa": "男になれよ。",
+  "exampleEn": "Be a man."
+ },
+ {
+  "id": "n5_0491",
+  "word": "男の子",
+  "kana": "おとこのこ",
+  "romaji": "otokonoko",
+  "meaningEn": "boy",
+  "exampleJa": "男の子ですよ。",
+  "exampleEn": "It's a boy."
+ },
+ {
+  "id": "n5_0492",
+  "word": "知る",
+  "kana": "しる",
+  "romaji": "shiru",
+  "meaningEn": "to know",
+  "exampleJa": "知るもんか。",
+  "exampleEn": "Who cares?"
+ },
+ {
+  "id": "n5_0493",
+  "word": "地下鉄",
+  "kana": "ちかてつ",
+  "romaji": "chikatetsu",
+  "meaningEn": "underground train",
+  "exampleJa": "地下鉄に乗ろう。",
+  "exampleEn": "Let's take the subway."
+ },
+ {
+  "id": "n5_0494",
+  "word": "地図",
+  "kana": "ちず",
+  "romaji": "chizu",
+  "meaningEn": "map",
+  "exampleJa": "これは地図です。",
+  "exampleEn": "This is a map."
+ },
+ {
+  "id": "n5_0495",
+  "word": "池",
+  "kana": "いけ",
+  "romaji": "ike",
+  "meaningEn": "pond",
+  "exampleJa": "電池が切れた。",
+  "exampleEn": "The battery is flat."
+ },
+ {
+  "id": "n5_0496",
+  "word": "置く",
+  "kana": "おく",
+  "romaji": "oku",
+  "meaningEn": "to put",
+  "exampleJa": "通路に物を置くな。",
+  "exampleEn": "Don't put your things in the passage."
+ },
+ {
+  "id": "n5_0497",
+  "word": "遅い",
+  "kana": "おそい",
+  "romaji": "osoi",
+  "meaningEn": "late; slow",
+  "exampleJa": "トムは遅い。",
+  "exampleEn": "Tom's late."
+ },
+ {
+  "id": "n5_0498",
+  "word": "茶色",
+  "kana": "ちゃいろ",
+  "romaji": "chairo",
+  "meaningEn": "brown",
+  "exampleJa": "茶色の動物は？",
+  "exampleEn": "What animal is brown?"
+ },
+ {
+  "id": "n5_0499",
+  "word": "着く",
+  "kana": "つく",
+  "romaji": "tsuku",
+  "meaningEn": "to arrive at",
+  "exampleJa": "いつ着くの？",
+  "exampleEn": "When do we arrive?"
+ },
+ {
+  "id": "n5_0500",
+  "word": "着る",
+  "kana": "きる",
+  "romaji": "kiru",
+  "meaningEn": "to put on from the shoulders down",
+  "exampleJa": "恩に着るよ。",
+  "exampleEn": "I owe you one."
+ },
+ {
+  "id": "n5_0501",
+  "word": "中",
+  "kana": "なか",
+  "romaji": "naka",
+  "meaningEn": "middle",
+  "exampleJa": "電話中です。",
+  "exampleEn": "I'm talking on the phone."
+ },
+ {
+  "id": "n5_0502",
+  "word": "昼",
+  "kana": "ひる",
+  "romaji": "hiru",
+  "meaningEn": "noon; daytime",
+  "exampleJa": "お昼ですよ。",
+  "exampleEn": "Lunch is on."
+ },
+ {
+  "id": "n5_0503",
+  "word": "昼御飯",
+  "kana": "ひるごはん",
+  "romaji": "hirugohan",
+  "meaningEn": "midday meal",
+  "exampleJa": "",
+  "exampleEn": ""
+ },
+ {
+  "id": "n5_0504",
+  "word": "朝",
+  "kana": "あさ",
+  "romaji": "asa",
+  "meaningEn": "morning",
+  "exampleJa": "もう朝なの？",
+  "exampleEn": "Is it morning already?"
+ },
+ {
+  "id": "n5_0505",
+  "word": "朝御飯",
+  "kana": "あさごはん",
+  "romaji": "asagohan",
+  "meaningEn": "breakfast",
+  "exampleJa": "朝御飯ができています。",
+  "exampleEn": "Breakfast is ready."
+ },
+ {
+  "id": "n5_0506",
+  "word": "町",
+  "kana": "まち",
+  "romaji": "machi",
+  "meaningEn": "town; city",
+  "exampleJa": "町は眠っていた。",
+  "exampleEn": "The town slept."
+ },
+ {
+  "id": "n5_0507",
+  "word": "長い",
+  "kana": "ながい",
+  "romaji": "nagai",
+  "meaningEn": "long",
+  "exampleJa": "人生は長い。",
+  "exampleEn": "Life is good."
+ },
+ {
+  "id": "n5_0508",
+  "word": "鳥",
+  "kana": "とり",
+  "romaji": "tori",
+  "meaningEn": "bird",
+  "exampleJa": "鳥は卵を産む。",
+  "exampleEn": "Birds lay eggs."
+ },
+ {
+  "id": "n5_0509",
+  "word": "痛い",
+  "kana": "いたい",
+  "romaji": "itai",
+  "meaningEn": "painful",
+  "exampleJa": "頭が痛いな。",
+  "exampleEn": "I have a headache."
+ },
+ {
+  "id": "n5_0510",
+  "word": "低い",
+  "kana": "ひくい",
+  "romaji": "hikui",
+  "meaningEn": "short; low",
+  "exampleJa": "トムは声が低い。",
+  "exampleEn": "Tom has a low-pitched voice."
+ },
+ {
+  "id": "n5_0511",
+  "word": "庭",
+  "kana": "にわ",
+  "romaji": "niwa",
+  "meaningEn": "garden",
+  "exampleJa": "家庭は円満だ。",
+  "exampleEn": "I have peace at home."
+ },
+ {
+  "id": "n5_0512",
+  "word": "弟",
+  "kana": "おとうと",
+  "romaji": "otouto",
+  "meaningEn": "younger brother",
+  "exampleJa": "弟の名前は？",
+  "exampleEn": "What's your younger brother's name?"
+ },
+ {
+  "id": "n5_0513",
+  "word": "締める",
+  "kana": "しめる",
+  "romaji": "shimeru",
+  "meaningEn": "to tie",
+  "exampleJa": "口と財布は締めるが得。",
+  "exampleEn": "Keep your purse and your mouth closed."
+ },
+ {
+  "id": "n5_0514",
+  "word": "天気",
+  "kana": "てんき",
+  "romaji": "tenki",
+  "meaningEn": "weather",
+  "exampleJa": "ひどい天気！",
+  "exampleEn": "What horrible weather!"
+ },
+ {
+  "id": "n5_0515",
+  "word": "店",
+  "kana": "みせ",
+  "romaji": "mise",
+  "meaningEn": "shop",
+  "exampleJa": "彼は店に行った。",
+  "exampleEn": "He's gone to the shops."
+ },
+ {
+  "id": "n5_0516",
+  "word": "貼る",
+  "kana": "はる",
+  "romaji": "haru",
+  "meaningEn": "to stick",
+  "exampleJa": "手紙に切手を貼るのを忘れるな。",
+  "exampleEn": "Don't forget to put a stamp on your letter."
+ },
+ {
+  "id": "n5_0517",
+  "word": "電気",
+  "kana": "でんき",
+  "romaji": "denki",
+  "meaningEn": "electricity; electric light",
+  "exampleJa": "電気消して。",
+  "exampleEn": "Put out the light."
+ },
+ {
+  "id": "n5_0518",
+  "word": "電車",
+  "kana": "でんしゃ",
+  "romaji": "densha",
+  "meaningEn": "electric train",
+  "exampleJa": "電車来たよ。",
+  "exampleEn": "Here comes the train."
+ },
+ {
+  "id": "n5_0519",
+  "word": "電話",
+  "kana": "でんわ",
+  "romaji": "denwa",
+  "meaningEn": "telephone",
+  "exampleJa": "電話中です。",
+  "exampleEn": "I'm talking on the phone."
+ },
+ {
+  "id": "n5_0520",
+  "word": "渡す",
+  "kana": "わたす",
+  "romaji": "watasu",
+  "meaningEn": "to hand over",
+  "exampleJa": "君に渡す物がある。",
+  "exampleEn": "I have something to give you."
+ },
+ {
+  "id": "n5_0521",
+  "word": "渡る",
+  "kana": "わたる",
+  "romaji": "wataru",
+  "meaningEn": "to go across",
+  "exampleJa": "通りを渡るな。",
+  "exampleEn": "Don't cross the street!"
+ },
+ {
+  "id": "n5_0522",
+  "word": "登る",
+  "kana": "のぼる",
+  "romaji": "noboru",
+  "meaningEn": "to climb",
+  "exampleJa": "塀に登るな。",
+  "exampleEn": "Don't climb up the wall."
+ },
+ {
+  "id": "n5_0523",
+  "word": "土曜日",
+  "kana": "どようび",
+  "romaji": "doyoubi",
+  "meaningEn": "Saturday",
+  "exampleJa": "土曜日だよ。",
+  "exampleEn": "It is Saturday."
+ },
+ {
+  "id": "n5_0524",
+  "word": "冬",
+  "kana": "ふゆ",
+  "romaji": "fuyu",
+  "meaningEn": "winter",
+  "exampleJa": "冬は疲れる。",
+  "exampleEn": "I feel more tired in the wintertime."
+ },
+ {
+  "id": "n5_0525",
+  "word": "東",
+  "kana": "ひがし",
+  "romaji": "higashi",
+  "meaningEn": "east",
+  "exampleJa": "東京駅なう。",
+  "exampleEn": "I'm at Tokyo Station now."
+ },
+ {
+  "id": "n5_0526",
+  "word": "答える",
+  "kana": "こたえる",
+  "romaji": "kotaeru",
+  "meaningEn": "to answer",
+  "exampleJa": "軽率に答えるな。",
+  "exampleEn": "Do not answer hastily."
+ },
+ {
+  "id": "n5_0527",
+  "word": "頭",
+  "kana": "あたま",
+  "romaji": "atama",
+  "meaningEn": "head",
+  "exampleJa": "頭痛がする。",
+  "exampleEn": "I have a headache."
+ },
+ {
+  "id": "n5_0528",
+  "word": "働く",
+  "kana": "はたらく",
+  "romaji": "hataraku",
+  "meaningEn": "to work",
+  "exampleJa": "働くしかない。",
+  "exampleEn": "We have no alternative but to work."
+ },
+ {
+  "id": "n5_0529",
+  "word": "動物",
+  "kana": "どうぶつ",
+  "romaji": "doubutsu",
+  "meaningEn": "animal",
+  "exampleJa": "猫は動物です。",
+  "exampleEn": "Cats are animals."
+ },
+ {
+  "id": "n5_0530",
+  "word": "同じ",
+  "kana": "おなじ",
+  "romaji": "onaji",
+  "meaningEn": "same",
+  "exampleJa": "同じ意見です。",
+  "exampleEn": "I agree."
+ },
+ {
+  "id": "n5_0531",
+  "word": "道",
+  "kana": "みち",
+  "romaji": "michi",
+  "meaningEn": "street",
+  "exampleJa": "旅は道連れ。",
+  "exampleEn": "Good company on the road is the shortest cut."
+ },
+ {
+  "id": "n5_0532",
+  "word": "読む",
+  "kana": "よむ",
+  "romaji": "yomu",
+  "meaningEn": "to read",
+  "exampleJa": "そんな本読むな。",
+  "exampleEn": "Do not read such a book."
+ },
+ {
+  "id": "n5_0533",
+  "word": "豚肉",
+  "kana": "ぶたにく",
+  "romaji": "butaniku",
+  "meaningEn": "pork",
+  "exampleJa": "豚肉は私には合わない。",
+  "exampleEn": "Pork doesn't agree with me."
+ },
+ {
+  "id": "n5_0534",
+  "word": "曇り",
+  "kana": "くもり",
+  "romaji": "kumori",
+  "meaningEn": "cloudy weather",
+  "exampleJa": "曇りの日です。",
+  "exampleEn": "It's a cloudy day."
+ },
+ {
+  "id": "n5_0535",
+  "word": "曇る",
+  "kana": "くもる",
+  "romaji": "kumoru",
+  "meaningEn": "to become cloudy; to become dim",
+  "exampleJa": "マスクをつけると眼鏡が曇る。",
+  "exampleEn": "When I wear a mask, my glasses get steamed up."
+ },
+ {
+  "id": "n5_0536",
+  "word": "南",
+  "kana": "みなみ",
+  "romaji": "minami",
+  "meaningEn": "south",
+  "exampleJa": "風は南へ吹く。",
+  "exampleEn": "The wind blows south."
+ },
+ {
+  "id": "n5_0537",
+  "word": "難しい",
+  "kana": "むずかしい",
+  "romaji": "muzukashii",
+  "meaningEn": "difficult",
+  "exampleJa": "彼は気難しい。",
+  "exampleEn": "He is hard to please."
+ },
+ {
+  "id": "n5_0538",
+  "word": "二",
+  "kana": "に",
+  "romaji": "ni",
+  "meaningEn": "two",
+  "exampleJa": "二日酔いだ。",
+  "exampleEn": "I have a hangover."
+ },
+ {
+  "id": "n5_0539",
+  "word": "二つ",
+  "kana": "ふたつ",
+  "romaji": "futatsu",
+  "meaningEn": "two",
+  "exampleJa": "二つ折り厳禁。",
+  "exampleEn": "Do not fold!"
+ },
+ {
+  "id": "n5_0540",
+  "word": "二十歳",
+  "kana": "はたち",
+  "romaji": "hatachi",
+  "meaningEn": "20 years old; 20th year",
+  "exampleJa": "ローリーは二十歳だ。",
+  "exampleEn": "Laurie is twenty years old."
+ },
+ {
+  "id": "n5_0541",
+  "word": "二十日",
+  "kana": "はつか",
+  "romaji": "hatsuka",
+  "meaningEn": "twenty days; twentieth",
+  "exampleJa": "今日は金曜日、十月二十日だ。",
+  "exampleEn": "Today is Friday, the twentieth of October."
+ },
+ {
+  "id": "n5_0542",
+  "word": "二人",
+  "kana": "ふたり",
+  "romaji": "futari",
+  "meaningEn": "two people",
+  "exampleJa": "二人は結婚した。",
+  "exampleEn": "They got married."
+ },
+ {
+  "id": "n5_0543",
+  "word": "二日",
+  "kana": "ふつか",
+  "romaji": "futsuka",
+  "meaningEn": "two days; second day of the month",
+  "exampleJa": "二日酔いだ。",
+  "exampleEn": "I have a hangover."
+ },
+ {
+  "id": "n5_0544",
+  "word": "賑やか",
+  "kana": "にぎやか",
+  "romaji": "nigiyaka",
+  "meaningEn": "bustling; busy",
+  "exampleJa": "この通りは賑やかだ。",
+  "exampleEn": "This street is lively."
+ },
+ {
+  "id": "n5_0545",
+  "word": "肉",
+  "kana": "にく",
+  "romaji": "niku",
+  "meaningEn": "meat",
+  "exampleJa": "牛肉は高い。",
+  "exampleEn": "Beef is expensive."
+ },
+ {
+  "id": "n5_0546",
+  "word": "日曜日",
+  "kana": "にちようび",
+  "romaji": "nichiyoubi",
+  "meaningEn": "Sunday",
+  "exampleJa": "日曜日、暇？",
+  "exampleEn": "Are you free on Sunday?"
+ },
+ {
+  "id": "n5_0547",
+  "word": "入る",
+  "kana": "はいる",
+  "romaji": "hairu",
+  "meaningEn": "to enter; to contain",
+  "exampleJa": "芝生に入るな。",
+  "exampleEn": "Keep off the grass!"
+ },
+ {
+  "id": "n5_0548",
+  "word": "入れる",
+  "kana": "いれる",
+  "romaji": "ireru",
+  "meaningEn": "to put in",
+  "exampleJa": "氷は入れる？",
+  "exampleEn": "Would you like ice?"
+ },
+ {
+  "id": "n5_0549",
+  "word": "入口",
+  "kana": "いりぐち",
+  "romaji": "iriguchi",
+  "meaningEn": "entrance",
+  "exampleJa": "入口の側で立った。",
+  "exampleEn": "He stood by the entrance."
+ },
+ {
+  "id": "n5_0550",
+  "word": "猫",
+  "kana": "ねこ",
+  "romaji": "neko",
+  "meaningEn": "cat",
+  "exampleJa": "僕は猫背だ。",
+  "exampleEn": "I am round shouldered."
+ },
+ {
+  "id": "n5_0551",
+  "word": "熱い",
+  "kana": "あつい",
+  "romaji": "atsui",
+  "meaningEn": "hot to the touch",
+  "exampleJa": "卵がまだ熱い。",
+  "exampleEn": "The eggs are still hot."
+ },
+ {
+  "id": "n5_0552",
+  "word": "年",
+  "kana": "とし",
+  "romaji": "toshi",
+  "meaningEn": "year",
+  "exampleJa": "よいお年を。",
+  "exampleEn": "Happy New Year!"
+ },
+ {
+  "id": "n5_0553",
+  "word": "背",
+  "kana": "せ",
+  "romaji": "se",
+  "meaningEn": "height; stature",
+  "exampleJa": "僕は猫背だ。",
+  "exampleEn": "I am round shouldered."
+ },
+ {
+  "id": "n5_0554",
+  "word": "背広",
+  "kana": "せびろ",
+  "romaji": "sebiro",
+  "meaningEn": "business suit",
+  "exampleJa": "私は新しい背広を買った。",
+  "exampleEn": "I bought a new suit of clothes."
+ },
+ {
+  "id": "n5_0555",
+  "word": "買い物",
+  "kana": "かいもの",
+  "romaji": "kaimono",
+  "meaningEn": "shopping",
+  "exampleJa": "買い物大好き！",
+  "exampleEn": "I love shopping!"
+ },
+ {
+  "id": "n5_0556",
+  "word": "買う",
+  "kana": "かう",
+  "romaji": "kau",
+  "meaningEn": "to buy",
+  "exampleJa": "それ買うよ。",
+  "exampleEn": "I'll buy it."
+ },
+ {
+  "id": "n5_0557",
+  "word": "売る",
+  "kana": "うる",
+  "romaji": "uru",
+  "meaningEn": "to sell",
+  "exampleJa": "彼は果物を売る。",
+  "exampleEn": "He sells fruit."
+ },
+ {
+  "id": "n5_0558",
+  "word": "伯父/叔父",
+  "kana": "おじいさん",
+  "romaji": "ojiisan",
+  "meaningEn": "grandfather; male senior citizen",
+  "exampleJa": "",
+  "exampleEn": ""
+ },
+ {
+  "id": "n5_0559",
+  "word": "伯母さん/叔母さん",
+  "kana": "おばさん",
+  "romaji": "obasan",
+  "meaningEn": "aunt",
+  "exampleJa": "",
+  "exampleEn": ""
+ },
+ {
+  "id": "n5_0560",
+  "word": "白",
+  "kana": "しろ",
+  "romaji": "shiro",
+  "meaningEn": "white",
+  "exampleJa": "明々白々だ。",
+  "exampleEn": "It's abundantly clear."
+ },
+ {
+  "id": "n5_0561",
+  "word": "白い",
+  "kana": "しろい",
+  "romaji": "shiroi",
+  "meaningEn": "white",
+  "exampleJa": "白いですか。",
+  "exampleEn": "Is it white?"
+ },
+ {
+  "id": "n5_0562",
+  "word": "薄い",
+  "kana": "うすい",
+  "romaji": "usui",
+  "meaningEn": "thin; weak",
+  "exampleJa": "あの人は影が薄い。",
+  "exampleEn": "He is always in the background."
+ },
+ {
+  "id": "n5_0563",
+  "word": "箱",
+  "kana": "はこ",
+  "romaji": "hako",
+  "meaningEn": "box",
+  "exampleJa": "箱を開けて。",
+  "exampleEn": "Open the box."
+ },
+ {
+  "id": "n5_0564",
+  "word": "八",
+  "kana": "はち",
+  "romaji": "hachi",
+  "meaningEn": "eight",
+  "exampleJa": "八十歳です。",
+  "exampleEn": "He is eighty years old."
+ },
+ {
+  "id": "n5_0565",
+  "word": "八つ",
+  "kana": "やっつ",
+  "romaji": "yattsu",
+  "meaningEn": "eight",
+  "exampleJa": "彼女は八つだ。",
+  "exampleEn": "She is eight."
+ },
+ {
+  "id": "n5_0566",
+  "word": "八日",
+  "kana": "ようか",
+  "romaji": "youka",
+  "meaningEn": "eight days; eighth day of the month",
+  "exampleJa": "日本では、八月八日はヒゲの日です。",
+  "exampleEn": "August 8th is Beard Day in Japan."
+ },
+ {
+  "id": "n5_0567",
+  "word": "八百屋",
+  "kana": "やおや",
+  "romaji": "yaoya",
+  "meaningEn": "greengrocer",
+  "exampleJa": "私は八百屋の外で彼に出会った。",
+  "exampleEn": "I met him outside the greengrocer's."
+ },
+ {
+  "id": "n5_0568",
+  "word": "半",
+  "kana": "はん",
+  "romaji": "han",
+  "meaningEn": "half",
+  "exampleJa": "半分よこせ。",
+  "exampleEn": "Give me half of it."
+ },
+ {
+  "id": "n5_0569",
+  "word": "半分",
+  "kana": "はんぶん",
+  "romaji": "hanbun",
+  "meaningEn": "half minute",
+  "exampleJa": "半分よこせ。",
+  "exampleEn": "Give me half of it."
+ },
+ {
+  "id": "n5_0570",
+  "word": "煩い",
+  "kana": "うるさい",
+  "romaji": "urusai",
+  "meaningEn": "noisy; annoying",
+  "exampleJa": "この客引きはとても煩い！",
+  "exampleEn": "These hawkers are very annoying!"
+ },
+ {
+  "id": "n5_0571",
+  "word": "晩",
+  "kana": "ばん",
+  "romaji": "ban",
+  "meaningEn": "evening",
+  "exampleJa": "彼は晩学だ。",
+  "exampleEn": "He acquired education late in his life."
+ },
+ {
+  "id": "n5_0572",
+  "word": "晩御飯",
+  "kana": "ばんごはん",
+  "romaji": "bangohan",
+  "meaningEn": "evening meal",
+  "exampleJa": "母は晩御飯の支度で忙しい。",
+  "exampleEn": "Mother is busy cooking the dinner."
+ },
+ {
+  "id": "n5_0573",
+  "word": "番号",
+  "kana": "ばんごう",
+  "romaji": "bangou",
+  "meaningEn": "number",
+  "exampleJa": "電話番号、何番？",
+  "exampleEn": "What's the number?"
+ },
+ {
+  "id": "n5_0574",
+  "word": "疲れる",
+  "kana": "つかれる",
+  "romaji": "tsukareru",
+  "meaningEn": "to get tired",
+  "exampleJa": "冬は疲れる。",
+  "exampleEn": "I feel more tired in the wintertime."
+ },
+ {
+  "id": "n5_0575",
+  "word": "飛ぶ",
+  "kana": "とぶ",
+  "romaji": "tobu",
+  "meaningEn": "to fly; to hop",
+  "exampleJa": "飛ぶ前に見よ。",
+  "exampleEn": "Look before you leap."
+ },
+ {
+  "id": "n5_0576",
+  "word": "飛行機",
+  "kana": "ひこうき",
+  "romaji": "hikouki",
+  "meaningEn": "aeroplane",
+  "exampleJa": "紙飛行機だよ。",
+  "exampleEn": "I made a paper plane."
+ },
+ {
+  "id": "n5_0577",
+  "word": "鼻",
+  "kana": "はな",
+  "romaji": "hana",
+  "meaningEn": "nose",
+  "exampleJa": "鼻をかんで。",
+  "exampleEn": "Blow your nose."
+ },
+ {
+  "id": "n5_0578",
+  "word": "百",
+  "kana": "ひゃく",
+  "romaji": "hyaku",
+  "meaningEn": "hundred",
+  "exampleJa": "五十歩百歩。",
+  "exampleEn": "Scant difference."
+ },
+ {
+  "id": "n5_0579",
+  "word": "病院",
+  "kana": "びょういん",
+  "romaji": "byouin",
+  "meaningEn": "hospital",
+  "exampleJa": "ここは病院だ。",
+  "exampleEn": "This is a hospital."
+ },
+ {
+  "id": "n5_0580",
+  "word": "病気",
+  "kana": "びょうき",
+  "romaji": "byouki",
+  "meaningEn": "illness",
+  "exampleJa": "病気と闘う。",
+  "exampleEn": "I will battle with illness."
+ },
+ {
+  "id": "n5_0581",
+  "word": "部屋",
+  "kana": "へや",
+  "romaji": "heya",
+  "meaningEn": "room",
+  "exampleJa": "部屋を出ろ。",
+  "exampleEn": "You must go out of the room."
+ },
+ {
+  "id": "n5_0582",
+  "word": "封筒",
+  "kana": "ふうとう",
+  "romaji": "fuutou",
+  "meaningEn": "envelope",
+  "exampleJa": "封筒がいる。",
+  "exampleEn": "I need an envelope."
+ },
+ {
+  "id": "n5_0583",
+  "word": "風",
+  "kana": "かぜ",
+  "romaji": "kaze",
+  "meaningEn": "wind",
+  "exampleJa": "風邪ですね。",
+  "exampleEn": "It's just a cold."
+ },
+ {
+  "id": "n5_0584",
+  "word": "風邪",
+  "kana": "かぜ",
+  "romaji": "kaze",
+  "meaningEn": "a cold",
+  "exampleJa": "風邪ですね。",
+  "exampleEn": "It's just a cold."
+ },
+ {
+  "id": "n5_0585",
+  "word": "服",
+  "kana": "ふく",
+  "romaji": "fuku",
+  "meaningEn": "clothes",
+  "exampleJa": "一服させて。",
+  "exampleEn": "Let me have a cigarette."
+ },
+ {
+  "id": "n5_0586",
+  "word": "物",
+  "kana": "もの",
+  "romaji": "mono",
+  "meaningEn": "thing",
+  "exampleJa": "忘れ物ない？",
+  "exampleEn": "Do you have everything?"
+ },
+ {
+  "id": "n5_0587",
+  "word": "分かる",
+  "kana": "わかる",
+  "romaji": "wakaru",
+  "meaningEn": "to be understood",
+  "exampleJa": "分かる、分かる。",
+  "exampleEn": "I know what you mean."
+ },
+ {
+  "id": "n5_0588",
+  "word": "文章",
+  "kana": "ぶんしょう",
+  "romaji": "bunshou",
+  "meaningEn": "sentence; text",
+  "exampleJa": "彼は文章がうまい。",
+  "exampleEn": "He is a good writer."
+ },
+ {
+  "id": "n5_0589",
+  "word": "聞く",
+  "kana": "きく",
+  "romaji": "kiku",
+  "meaningEn": "to hear; to listen to; to ask",
+  "exampleJa": "一曲聞くか。",
+  "exampleEn": "Will you listen to a piece of music?"
+ },
+ {
+  "id": "n5_0590",
+  "word": "並ぶ",
+  "kana": "ならぶ",
+  "romaji": "narabu",
+  "meaningEn": "to line up; to stand in a line",
+  "exampleJa": "英国人は列を作って並ぶのに慣れている。",
+  "exampleEn": "British people are used to standing in queues."
+ },
+ {
+  "id": "n5_0591",
+  "word": "並べる",
+  "kana": "ならべる",
+  "romaji": "naraberu",
+  "meaningEn": "to line up; to set up",
+  "exampleJa": "身長順に男の子を並べる。",
+  "exampleEn": "Rank boys according to their height."
+ },
+ {
+  "id": "n5_0592",
+  "word": "閉まる",
+  "kana": "しまる",
+  "romaji": "shimaru",
+  "meaningEn": "to close; to be closed",
+  "exampleJa": "2時半に閉まる。",
+  "exampleEn": "We close at 2:30."
+ },
+ {
+  "id": "n5_0593",
+  "word": "閉める",
+  "kana": "しめる",
+  "romaji": "shimeru",
+  "meaningEn": "to close something",
+  "exampleJa": "ドアを閉めるね。",
+  "exampleEn": "I'll close the door."
+ },
+ {
+  "id": "n5_0594",
+  "word": "辺",
+  "kana": "へん",
+  "romaji": "hen",
+  "meaningEn": "area",
+  "exampleJa": "ここら辺の人？",
+  "exampleEn": "Does he live round here?"
+ },
+ {
+  "id": "n5_0595",
+  "word": "返す",
+  "kana": "かえす",
+  "romaji": "kaesu",
+  "meaningEn": "to return something",
+  "exampleJa": "歴史は繰り返す。",
+  "exampleEn": "History repeats itself."
+ },
+ {
+  "id": "n5_0596",
+  "word": "便利",
+  "kana": "べんり",
+  "romaji": "benri",
+  "meaningEn": "useful; convenient",
+  "exampleJa": "そりゃ便利だね。",
+  "exampleEn": "That comes in handy."
+ },
+ {
+  "id": "n5_0597",
+  "word": "勉強",
+  "kana": "べんきょうする",
+  "romaji": "benkyousuru",
+  "meaningEn": "to study",
+  "exampleJa": "勉強するな。",
+  "exampleEn": "Don't study."
+ },
+ {
+  "id": "n5_0598",
+  "word": "歩く",
+  "kana": "あるく",
+  "romaji": "aruku",
+  "meaningEn": "to walk",
+  "exampleJa": "彼女は歩く。",
+  "exampleEn": "She walks."
+ },
+ {
+  "id": "n5_0599",
+  "word": "方",
+  "kana": "かた",
+  "romaji": "kata",
+  "meaningEn": "person; way of doing",
+  "exampleJa": "湿疹の方は？",
+  "exampleEn": "What about the rash?"
+ },
+ {
+  "id": "n5_0600",
+  "word": "帽子",
+  "kana": "ぼうし",
+  "romaji": "boushi",
+  "meaningEn": "hat",
+  "exampleJa": "帽子、返して。",
+  "exampleEn": "Give me back my hat."
+ },
+ {
+  "id": "n5_0601",
+  "word": "忘れる",
+  "kana": "わすれる",
+  "romaji": "wasureru",
+  "meaningEn": "to forget",
+  "exampleJa": "死を忘れるな。",
+  "exampleEn": "Don't forget death."
+ },
+ {
+  "id": "n5_0602",
+  "word": "忙しい",
+  "kana": "いそがしい",
+  "romaji": "isogashii",
+  "meaningEn": "busy; irritated",
+  "exampleJa": "僕は忙しい。",
+  "exampleEn": "I'm busy."
+ },
+ {
+  "id": "n5_0603",
+  "word": "北",
+  "kana": "きた",
+  "romaji": "kita",
+  "meaningEn": "north",
+  "exampleJa": "見て、北極星よ。",
+  "exampleEn": "Look, it's the North Star."
+ },
+ {
+  "id": "n5_0604",
+  "word": "本",
+  "kana": "ほん",
+  "romaji": "hon",
+  "meaningEn": "book",
+  "exampleJa": "本日定休日。",
+  "exampleEn": "Today is our regular closing day."
+ },
+ {
+  "id": "n5_0605",
+  "word": "本棚",
+  "kana": "ほんだな",
+  "romaji": "hondana",
+  "meaningEn": "bookshelves",
+  "exampleJa": "ジョンは本棚を作った。",
+  "exampleEn": "John built a bookcase."
+ },
+ {
+  "id": "n5_0606",
+  "word": "磨く",
+  "kana": "みがく",
+  "romaji": "migaku",
+  "meaningEn": "to brush teeth; to polish",
+  "exampleJa": "男の人は歯を磨く。",
+  "exampleEn": "The man brushes his teeth."
+ },
+ {
+  "id": "n5_0607",
+  "word": "妹",
+  "kana": "いもうと",
+  "romaji": "imouto",
+  "meaningEn": "(humble) younger sister",
+  "exampleJa": "妹は美人だ。",
+  "exampleEn": "My sister is pretty."
+ },
+ {
+  "id": "n5_0608",
+  "word": "毎月",
+  "kana": "まいげつ/まいつき",
+  "romaji": "maigetsu/maitsuki",
+  "meaningEn": "every month",
+  "exampleJa": "この雑誌は毎月出る。",
+  "exampleEn": "This magazine is issued every month."
+ },
+ {
+  "id": "n5_0609",
+  "word": "毎週",
+  "kana": "まいしゅう",
+  "romaji": "maishuu",
+  "meaningEn": "every week",
+  "exampleJa": "毎週釣りに行く。",
+  "exampleEn": "Every week he goes fishing."
+ },
+ {
+  "id": "n5_0610",
+  "word": "毎朝",
+  "kana": "まいあさ",
+  "romaji": "maiasa",
+  "meaningEn": "every morning",
+  "exampleJa": "父は毎朝散歩する。",
+  "exampleEn": "My father takes a walk every morning."
+ },
+ {
+  "id": "n5_0611",
+  "word": "毎日",
+  "kana": "まいにち",
+  "romaji": "mainichi",
+  "meaningEn": "every day",
+  "exampleJa": "平凡な毎日さ。",
+  "exampleEn": "I live an ordinary life."
+ },
+ {
+  "id": "n5_0612",
+  "word": "毎年",
+  "kana": "まいねん/まいとし",
+  "romaji": "mainen/maitoshi",
+  "meaningEn": "every year",
+  "exampleJa": "毎年行きます。",
+  "exampleEn": "I go every year."
+ },
+ {
+  "id": "n5_0613",
+  "word": "毎晩",
+  "kana": "まいばん",
+  "romaji": "maiban",
+  "meaningEn": "every night",
+  "exampleJa": "毎晩電話するよ。",
+  "exampleEn": "I'll give you a ring every night."
+ },
+ {
+  "id": "n5_0614",
+  "word": "万",
+  "kana": "まん",
+  "romaji": "man",
+  "meaningEn": "ten thousand",
+  "exampleJa": "万事順調だ。",
+  "exampleEn": "Everything is all right."
+ },
+ {
+  "id": "n5_0615",
+  "word": "万年筆",
+  "kana": "まんねんひつ",
+  "romaji": "mannenhitsu",
+  "meaningEn": "fountain pen",
+  "exampleJa": "万年筆って持ってる？",
+  "exampleEn": "Do you have a fountain pen?"
+ },
+ {
+  "id": "n5_0616",
+  "word": "無くす",
+  "kana": "なくす",
+  "romaji": "nakusu",
+  "meaningEn": "to lose something",
+  "exampleJa": "新しい政府は国から腐敗を無くすと約束した。",
+  "exampleEn": "The new government promised to rid the country of corruption."
+ },
+ {
+  "id": "n5_0617",
+  "word": "名前",
+  "kana": "なまえ",
+  "romaji": "namae",
+  "meaningEn": "name",
+  "exampleJa": "彼の名前は？",
+  "exampleEn": "What is his name?"
+ },
+ {
+  "id": "n5_0618",
+  "word": "明い",
+  "kana": "あかるい",
+  "romaji": "akarui",
+  "meaningEn": "bright",
+  "exampleJa": "発言を許していただけるなら、すべてをご説明いたします。",
+  "exampleEn": "If you permit me to speak, I can explain everything."
+ },
+ {
+  "id": "n5_0619",
+  "word": "明日",
+  "kana": "あした",
+  "romaji": "ashita",
+  "meaningEn": "tomorrow",
+  "exampleJa": "明日来れる？",
+  "exampleEn": "Can you come tomorrow?"
+ },
+ {
+  "id": "n5_0620",
+  "word": "鳴く",
+  "kana": "なく",
+  "romaji": "naku",
+  "meaningEn": "animal noise. to chirp; roar or croak etc.",
+  "exampleJa": "羊は何て鳴くの？",
+  "exampleEn": "What sound does a sheep make?"
+ },
+ {
+  "id": "n5_0621",
+  "word": "木",
+  "kana": "き",
+  "romaji": "ki",
+  "meaningEn": "tree; wood",
+  "exampleJa": "木を折るな。",
+  "exampleEn": "Don't break the branches."
+ },
+ {
+  "id": "n5_0622",
+  "word": "木曜日",
+  "kana": "もくようび",
+  "romaji": "mokuyoubi",
+  "meaningEn": "Thursday",
+  "exampleJa": "今日は木曜日です。",
+  "exampleEn": "Today is Thursday."
+ },
+ {
+  "id": "n5_0623",
+  "word": "目",
+  "kana": "め",
+  "romaji": "me",
+  "meaningEn": "eye",
+  "exampleJa": "目を閉じて。",
+  "exampleEn": "Close your eyes."
+ },
+ {
+  "id": "n5_0624",
+  "word": "問題",
+  "kana": "もんだい",
+  "romaji": "mondai",
+  "meaningEn": "problem",
+  "exampleJa": "問題ないよ。",
+  "exampleEn": "No problem!"
+ },
+ {
+  "id": "n5_0625",
+  "word": "門",
+  "kana": "もん",
+  "romaji": "mon",
+  "meaningEn": "gate",
+  "exampleJa": "口は禍の門。",
+  "exampleEn": "The tongue wounds more than a lance."
+ },
+ {
+  "id": "n5_0626",
+  "word": "夜",
+  "kana": "よる",
+  "romaji": "yoru",
+  "meaningEn": "evening; night",
+  "exampleJa": "夜が明ける。",
+  "exampleEn": "Day breaks."
+ },
+ {
+  "id": "n5_0627",
+  "word": "野菜",
+  "kana": "やさい",
+  "romaji": "yasai",
+  "meaningEn": "vegetable",
+  "exampleJa": "茄子は野菜よ。",
+  "exampleEn": "The eggplant is a vegetable."
+ },
+ {
+  "id": "n5_0628",
+  "word": "薬",
+  "kana": "くすり",
+  "romaji": "kusuri",
+  "meaningEn": "medicine",
+  "exampleJa": "薬が効いた。",
+  "exampleEn": "The medicine has worked."
+ },
+ {
+  "id": "n5_0629",
+  "word": "友達",
+  "kana": "ともだち",
+  "romaji": "tomodachi",
+  "meaningEn": "friend",
+  "exampleJa": "友達でしょ？",
+  "exampleEn": "Are you friends?"
+ },
+ {
+  "id": "n5_0630",
+  "word": "有名",
+  "kana": "ゆうめい",
+  "romaji": "yuumei",
+  "meaningEn": "famous",
+  "exampleJa": "有名な曲よ。",
+  "exampleEn": "It's a famous song."
+ },
+ {
+  "id": "n5_0631",
+  "word": "遊ぶ",
+  "kana": "あそぶ",
+  "romaji": "asobu",
+  "meaningEn": "to play; to make a visit",
+  "exampleJa": "ここで遊ぶな。",
+  "exampleEn": "Don't play here."
+ },
+ {
+  "id": "n5_0632",
+  "word": "郵便局",
+  "kana": "ゆうびんきょく",
+  "romaji": "yuubinkyoku",
+  "meaningEn": "post office",
+  "exampleJa": "郵便局に行くの？",
+  "exampleEn": "Are you going to the post office?"
+ },
+ {
+  "id": "n5_0633",
+  "word": "夕飯",
+  "kana": "ゆうはん",
+  "romaji": "yuuhan",
+  "meaningEn": "dinner",
+  "exampleJa": "今、夕飯中。",
+  "exampleEn": "Right now, I'm eating dinner."
+ },
+ {
+  "id": "n5_0634",
+  "word": "夕方",
+  "kana": "ゆうがた",
+  "romaji": "yuugata",
+  "meaningEn": "evening",
+  "exampleJa": "夕方の五時です。",
+  "exampleEn": "It's five in the evening."
+ },
+ {
+  "id": "n5_0635",
+  "word": "洋服",
+  "kana": "ようふく",
+  "romaji": "youfuku",
+  "meaningEn": "western-style clothes",
+  "exampleJa": "お洋服着ましょうね。",
+  "exampleEn": "Let's get you dressed."
+ },
+ {
+  "id": "n5_0636",
+  "word": "葉書",
+  "kana": "はがき",
+  "romaji": "hagaki",
+  "meaningEn": "postcard",
+  "exampleJa": "葉書をおくれ。",
+  "exampleEn": "Send me a postcard."
+ },
+ {
+  "id": "n5_0637",
+  "word": "要る",
+  "kana": "いる",
+  "romaji": "iru",
+  "meaningEn": "to need",
+  "exampleJa": "車が要るの？",
+  "exampleEn": "Do you want a car?"
+ },
+ {
+  "id": "n5_0638",
+  "word": "欲しい",
+  "kana": "ほしい",
+  "romaji": "hoshii",
+  "meaningEn": "want",
+  "exampleJa": "水が欲しい。",
+  "exampleEn": "I want some water."
+ },
+ {
+  "id": "n5_0639",
+  "word": "来る",
+  "kana": "くる",
+  "romaji": "kuru",
+  "meaningEn": "to come",
+  "exampleJa": "先生が来る。",
+  "exampleEn": "There comes our teacher."
+ },
+ {
+  "id": "n5_0640",
+  "word": "来月",
+  "kana": "らいげつ",
+  "romaji": "raigetsu",
+  "meaningEn": "next month",
+  "exampleJa": "再来月は１２月だ。",
+  "exampleEn": "The month after next is December."
+ },
+ {
+  "id": "n5_0641",
+  "word": "来週",
+  "kana": "らいしゅう",
+  "romaji": "raishuu",
+  "meaningEn": "next week",
+  "exampleJa": "また再来週。",
+  "exampleEn": "See you the week after next week."
+ },
+ {
+  "id": "n5_0642",
+  "word": "来年",
+  "kana": "らいねん",
+  "romaji": "rainen",
+  "meaningEn": "next year",
+  "exampleJa": "来年は卯年だ。",
+  "exampleEn": "Next year is the year of the rabbit."
+ },
+ {
+  "id": "n5_0643",
+  "word": "頼む",
+  "kana": "たのむ",
+  "romaji": "tanomu",
+  "meaningEn": "to ask",
+  "exampleJa": "後で頼むよ。",
+  "exampleEn": "I'll order it later."
+ },
+ {
+  "id": "n5_0644",
+  "word": "卵",
+  "kana": "たまご",
+  "romaji": "tamago",
+  "meaningEn": "egg",
+  "exampleJa": "卵は嫌いです。",
+  "exampleEn": "I don't care for eggs."
+ },
+ {
+  "id": "n5_0645",
+  "word": "立つ",
+  "kana": "たつ",
+  "romaji": "tatsu",
+  "meaningEn": "to stand",
+  "exampleJa": "林に竹が目立つ。",
+  "exampleEn": "Bamboo stands out in the woods."
+ },
+ {
+  "id": "n5_0646",
+  "word": "留学生",
+  "kana": "りゅうがくせい",
+  "romaji": "ryuugakusei",
+  "meaningEn": "overseas student",
+  "exampleJa": "留学生の方ですか？",
+  "exampleEn": "Are you an exchange student?"
+ },
+ {
+  "id": "n5_0647",
+  "word": "旅行",
+  "kana": "りょこう",
+  "romaji": "ryokou",
+  "meaningEn": "travel",
+  "exampleJa": "旅行は好き？",
+  "exampleEn": "Do you like to travel?"
+ },
+ {
+  "id": "n5_0648",
+  "word": "両親",
+  "kana": "りょうしん",
+  "romaji": "ryoushin",
+  "meaningEn": "both parents",
+  "exampleJa": "両親が離婚した。",
+  "exampleEn": "My parents got divorced."
+ },
+ {
+  "id": "n5_0649",
+  "word": "料理",
+  "kana": "りょうり",
+  "romaji": "ryouri",
+  "meaningEn": "cuisine",
+  "exampleJa": "料理は得意？",
+  "exampleEn": "Are you a good cook?"
+ },
+ {
+  "id": "n5_0650",
+  "word": "涼しい",
+  "kana": "すずしい",
+  "romaji": "suzushii",
+  "meaningEn": "refreshing",
+  "exampleJa": "秋は涼しいです。",
+  "exampleEn": "Autumn is cool."
+ },
+ {
+  "id": "n5_0651",
+  "word": "緑",
+  "kana": "みどり",
+  "romaji": "midori",
+  "meaningEn": "green",
+  "exampleJa": "緑茶は無理。",
+  "exampleEn": "I can't drink green tea."
+ },
+ {
+  "id": "n5_0652",
+  "word": "隣",
+  "kana": "となり",
+  "romaji": "tonari",
+  "meaningEn": "next door to",
+  "exampleJa": "隣に座って。",
+  "exampleEn": "Come sit next to me."
+ },
+ {
+  "id": "n5_0653",
+  "word": "冷たい",
+  "kana": "つめたい",
+  "romaji": "tsumetai",
+  "meaningEn": "cold to the touch",
+  "exampleJa": "冷たいなあ。",
+  "exampleEn": "That's a bit cold."
+ },
+ {
+  "id": "n5_0654",
+  "word": "冷蔵庫",
+  "kana": "れいぞうこ",
+  "romaji": "reizouko",
+  "meaningEn": "refrigerator",
+  "exampleJa": "冷蔵庫の中だよ。",
+  "exampleEn": "It's in the fridge."
+ },
+ {
+  "id": "n5_0655",
+  "word": "零",
+  "kana": "れい",
+  "romaji": "rei",
+  "meaningEn": "zero",
+  "exampleJa": "今は零下１０度だ。",
+  "exampleEn": "It is ten degrees below zero now."
+ },
+ {
+  "id": "n5_0656",
+  "word": "練習",
+  "kana": "れんしゅうする",
+  "romaji": "renshuusuru",
+  "meaningEn": "to practice",
+  "exampleJa": "練習は熟達の道。",
+  "exampleEn": "Practice makes perfect."
+ },
+ {
+  "id": "n5_0657",
+  "word": "廊下",
+  "kana": "ろうか",
+  "romaji": "rouka",
+  "meaningEn": "corridor",
+  "exampleJa": "廊下に箱がある。",
+  "exampleEn": "There’s a box in the hall."
+ },
+ {
+  "id": "n5_0658",
+  "word": "六",
+  "kana": "ろく",
+  "romaji": "roku",
+  "meaningEn": "six",
+  "exampleJa": "六十の手習い。",
+  "exampleEn": "It is never too late to learn."
+ },
+ {
+  "id": "n5_0659",
+  "word": "六つ",
+  "kana": "むっつ",
+  "romaji": "muttsu",
+  "meaningEn": "six",
+  "exampleJa": "一つ、二つ、三つ、四つ、五つ、六つ、七つ、八つ、九つ、十。",
+  "exampleEn": "One, two, three, four, five, six, seven, eight, nine, ten."
+ },
+ {
+  "id": "n5_0660",
+  "word": "六日",
+  "kana": "むいか",
+  "romaji": "muika",
+  "meaningEn": "six days; sixth day of the month",
+  "exampleJa": "トムは、六日間だけ迷子の犬を預かることにしました。",
+  "exampleEn": "Tom only looked after the stray for 6 days."
+ },
+ {
+  "id": "n5_0661",
+  "word": "話",
+  "kana": "はなし",
+  "romaji": "hanashi",
+  "meaningEn": "talk; story",
+  "exampleJa": "話がそれた。",
+  "exampleEn": "The story wandered."
+ },
+ {
+  "id": "n5_0662",
+  "word": "話す",
+  "kana": "はなす",
+  "romaji": "hanasu",
+  "meaningEn": "to speak",
+  "exampleJa": "電話するよ。",
+  "exampleEn": "I'll phone you."
+ }
+]

@@ -25,8 +25,11 @@ interface LanguageModule {
     /** 归一化后用于判题比较（§5.7：先各自归一化再比较） */
     fun normalizeForCompare(s: String): String
 
-    /** 资产文件名三元组：(chart, deck, scenarios) */
+    /** 资产文件名三元组：(chart, deck, scenarios)。deck 为该语言的**默认词书**，多词书见 [books]。 */
     fun assetNames(): Triple<String, String, String>
+
+    /** 该语言的可选词书/级别列表（第一本为默认）。UI 按当前书加载牌堆。 */
+    fun books(): List<WordBook>
 
     /** 从资产 JSON 文本构建各语料（纯函数，输入是 JSON 字符串，便于单测） */
     fun buildChart(json: String): List<ChartEntry>

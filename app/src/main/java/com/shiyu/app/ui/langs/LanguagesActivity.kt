@@ -92,7 +92,7 @@ class LanguagesActivity : BaseActivity() {
     /** 真实条目数：卡片总数 + 场景总数，切之前就能看到这门语言有多少内容 */
     private fun metaFor(lang: LangId): String {
         val module = LanguageRegistry.module(lang)
-        val deck = module.buildDeck(AppGraph.assetRepository.deckJson(module))
+        val deck = module.buildDeck(AppGraph.activeDeckJson(module))
         val scenarios = module.buildScenarios(AppGraph.assetRepository.scenariosJson(module))
         return getString(R.string.langs_meta, deck.size, scenarios.size)
     }

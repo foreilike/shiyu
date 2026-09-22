@@ -9,6 +9,7 @@ import android.view.View
 import android.view.inputmethod.EditorInfo
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.lifecycleScope
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.shiyu.app.AppGraph
 import com.shiyu.app.R
 import com.shiyu.app.core.answer.AnswerJudge
@@ -65,6 +66,7 @@ class ReviewActivity : BaseActivity() {
         binding.btnChart.setOnClickListener {
             startActivity(Intent(this, ChartActivity::class.java))
         }
+        binding.btnBook.setOnClickListener { showBookPicker() }
         binding.btnConfirm.setOnClickListener { onConfirm() }
         binding.answerInput.setOnEditorActionListener { _, actionId, _ ->
             if (actionId == EditorInfo.IME_ACTION_DONE) {
@@ -100,10 +102,30 @@ class ReviewActivity : BaseActivity() {
         AppGraph.dailyStatsStore.record(today, studySeconds = seconds.coerceAtMost(MAX_SESSION_SECONDS))
     }
 
+    /** 选词书：单选对话框，切换后立刻重排今日队列。只有一本时也允许查看。 */
+    private fun showBookPicker() {
+        val books = module.books()
+        if (books.isEmpty()) return
+        val titles = books.map { it.title }.toTypedArray()
+        val curId = AppGraph.activeBook(module).id
+        val checked = books.indexOfFirst { it.id == curId }.coerceAtLeast(0)
+        MaterialAlertDialogBuilder(this)
+            .setTitle(R.string.review_pick_book)
+            .setSingleChoiceItems(titles, checked) { dialog, which ->
+                val picked = books[which]
+                AppGraph.settingsRepository.setActiveBook(module.id, picked.id)
+                dialog.dismiss()
+                reload()
+            }
+            .setNegativeButton(R.string.cancel, null)
+            .show()
+    }
+
     private fun reload() {
         val lang = AppGraph.settingsRepository.activeLang()
         module = LanguageRegistry.module(lang)
-        deck = module.buildDeck(AppGraph.assetRepository.deckJson(module))
+        binding.bookLabel.text = AppGraph.activeBook(module).title
+        deck = module.buildDeck(AppGraph.activeDeckJson(module))
         queue = AppGraph.studyStore.selectToday(module.id, deck.map { it.id }, today)
         queueIndex = 0
         renderChips()
@@ -163,6 +185,8 @@ class ReviewActivity : BaseActivity() {
         binding.cardMeaning.text = card.exampleBlank.ifEmpty { card.meaningZh }
         binding.cardBack.visibility = View.GONE
         binding.cardBackSub.visibility = View.GONE
+        binding.cardExample.visibility = View.GONE
+        binding.cardExampleZh.visibility = View.GONE
         binding.judgeResult.visibility = View.GONE
         binding.ratingRow.visibility = View.GONE
         binding.tapHint.visibility = View.VISIBLE
@@ -188,6 +212,16 @@ class ReviewActivity : BaseActivity() {
             binding.cardBackSub.text = card.backSub
             binding.cardBack.visibility = View.VISIBLE
             binding.cardBackSub.visibility = View.VISIBLE
+            // 翻面后给出完整例句 + 中文译文（参照跬步：发音在 backSub，例句在这里）。
+            // 没有例句的卡（旧数据）就不显示，不留空行。
+            if (card.example.isNotBlank()) {
+                binding.cardExample.text = card.example
+                binding.cardExample.visibility = View.VISIBLE
+                if (card.exampleZh.isNotBlank()) {
+                    binding.cardExampleZh.text = card.exampleZh
+                    binding.cardExampleZh.visibility = View.VISIBLE
+                }
+            }
             binding.tapHint.visibility = View.GONE
             binding.judgeResult.visibility = View.VISIBLE
             binding.judgeResult.text = if (result.correct) {

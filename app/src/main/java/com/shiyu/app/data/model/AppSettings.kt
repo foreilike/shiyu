@@ -26,6 +26,8 @@ data class AppSettings(
      * 半米外的人声和本人电平只差几个 dB，靠调阈值无解（实测踩过）。
      */
     val voicePushToTalk: Boolean = false,
+    /** 每门语言当前选中的词书 id（缺省用该语言 books() 的第一本）。后加字段，老文件缺失即空 map。 */
+    val activeBooks: Map<LangId, String> = emptyMap(),
     val langs: Map<LangId, LanguageConfig> = mapOf(
         LangId.JA to LanguageConfig(),
         LangId.EN to LanguageConfig()
