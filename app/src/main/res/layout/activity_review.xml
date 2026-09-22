@@ -206,6 +206,18 @@
                         android:textSize="19sp"
                         tools:text="推荐" />
 
+                    <ImageButton
+                        android:id="@+id/btnSpeak"
+                        android:layout_width="44dp"
+                        android:layout_height="44dp"
+                        android:layout_gravity="center_horizontal"
+                        android:layout_marginTop="6dp"
+                        android:background="?attr/selectableItemBackgroundBorderless"
+                        android:contentDescription="@string/review_speak"
+                        android:scaleType="centerInside"
+                        android:src="@drawable/ic_speaker"
+                        app:tint="@color/clay" />
+
                     <TextView
                         android:id="@+id/cardBack"
                         android:layout_width="match_parent"

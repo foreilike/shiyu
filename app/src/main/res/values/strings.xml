@@ -134,6 +134,8 @@
     <string name="review_progress">第 %1$d / %2$d 张</string>
     <string name="review_chart_entry">发音表</string>
     <string name="review_pick_book">选择词书</string>
+    <string name="review_speak">朗读这个单词</string>
+    <string name="review_speak_no_tts">设备缺少%1$s语音包，无法朗读</string>
     <!-- 对话中心 -->
     <string name="talk_title">对话</string>
     <string name="talk_sub">挑一个场景开口，或直接进实时语音</string>

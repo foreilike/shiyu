@@ -7,6 +7,7 @@ import android.os.Bundle
 import android.os.SystemClock
 import android.view.View
 import android.view.inputmethod.EditorInfo
+import android.widget.Toast
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.lifecycleScope
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
@@ -21,6 +22,7 @@ import com.shiyu.app.core.srs.Sm2Scheduler
 import com.shiyu.app.data.model.Card
 import com.shiyu.app.databinding.ActivityReviewBinding
 import com.shiyu.app.ui.BaseActivity
+import com.shiyu.app.ui.Speaker
 import com.shiyu.app.ui.chart.ChartActivity
 import com.shiyu.app.ui.nav.BottomNav
 import kotlinx.coroutines.Dispatchers
@@ -45,6 +47,9 @@ class ReviewActivity : BaseActivity() {
     private var currentCard: Card? = null
     private var flipped = false
 
+    /** 单词朗读（系统 TTS）。与发音表/对话页共用 Speaker。 */
+    private var speaker: Speaker? = null
+
     /** 本次停留在复习页的计时起点（elapsedRealtime，不受系统改时间影响） */
     private var enteredAt = 0L
 
@@ -62,6 +67,12 @@ class ReviewActivity : BaseActivity() {
         BottomNav.bind(this, binding.bottomNavBar, BottomNav.Tab.REVIEW)
 
         binding.flipCard.cameraDistance = FLIP_CAMERA_DISTANCE * resources.displayMetrics.density
+
+        // 朗读用系统 TTS（与发音表/对话页同一个 Speaker）。语言在 reload() 拿到 module 后再设。
+        speaker = Speaker(this)
+        binding.btnSpeak.setOnClickListener {
+            speaker?.speak(currentCard?.speakText.orEmpty())
+        }
 
         binding.btnChart.setOnClickListener {
             startActivity(Intent(this, ChartActivity::class.java))
@@ -91,6 +102,12 @@ class ReviewActivity : BaseActivity() {
     override fun onPause() {
         flushStudyTime()
         super.onPause()
+    }
+
+    override fun onDestroy() {
+        speaker?.shutdown()
+        speaker = null
+        super.onDestroy()
     }
 
     /** 把这次前台停留的秒数计入今天；不足 5 秒视为误触，不计 */
@@ -125,6 +142,15 @@ class ReviewActivity : BaseActivity() {
         val lang = AppGraph.settingsRepository.activeLang()
         module = LanguageRegistry.module(lang)
         binding.bookLabel.text = AppGraph.activeBook(module).title
+        // 每张卡都要能正确朗读：语言跟着当前学习语言走（英语/日语切换后不能还用上一个语言念）
+        speaker?.setLanguage(lang)
+        speaker?.onLanguageUnavailable = { locale ->
+            Toast.makeText(
+                this,
+                getString(R.string.review_speak_no_tts, locale.displayName),
+                Toast.LENGTH_SHORT
+            ).show()
+        }
         deck = module.buildDeck(AppGraph.activeDeckJson(module))
         queue = AppGraph.studyStore.selectToday(module.id, deck.map { it.id }, today)
         queueIndex = 0
