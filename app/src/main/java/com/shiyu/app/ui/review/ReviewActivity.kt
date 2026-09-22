@@ -70,9 +70,9 @@ class ReviewActivity : BaseActivity() {
         binding.btnSpeak.setOnClickListener {
             speaker?.speak(currentCard?.speakText.orEmpty())
         }
-        // 整句朗读：单词会了不等于句子听得懂，例句也给一条朗读
+        // 整句朗读：单词会了不等于句子听得懂，例句也给一条朗读；整句用更慢的语速
         binding.btnSpeakExample.setOnClickListener {
-            speaker?.speak(currentCard?.example.orEmpty())
+            speaker?.speak(currentCard?.example.orEmpty(), Speaker.SENTENCE_RATE)
         }
 
         binding.btnChart.setOnClickListener {

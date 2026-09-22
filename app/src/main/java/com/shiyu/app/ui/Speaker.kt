@@ -81,9 +81,23 @@ class Speaker(context: Context) : TextToSpeech.OnInitListener {
         }
     }
 
-    fun speak(text: String) {
+    fun speak(text: String) = speak(text, rate)
+
+    /**
+     * 指定语速朗读。[rate] 默认沿用实例语速（单词用 [SLOW_RATE]）；
+     * 整句例句可以传更慢的值 —— 句子更长、连读更多，跟单词一个速度来不及听清。
+     *
+     * 每次都显式 setSpeechRate：引擎的语速是「状态」而非「每句参数」，
+     * 不重设的话上一句的语速会漏到下一句。
+     */
+    fun speak(text: String, rate: Float) {
         if (text.isBlank()) return
         if (suppressed) return
+        try {
+            tts?.setSpeechRate(rate)
+        } catch (e: Exception) {
+            // 忽略：设不上按引擎当前语速读，不该打断朗读
+        }
         if (ready) speakNow(text) else pendingText = text
     }
 
@@ -100,7 +114,10 @@ class Speaker(context: Context) : TextToSpeech.OnInitListener {
     }
 
     companion object {
-        /** 朗读语速：0.5 = 系统默认的一半。默认 1.0 对初学者太快，0.7 仍偏快（实测反馈） */
+        /** 单词朗读语速：0.5 = 系统默认的一半。默认 1.0 对初学者太快，0.7 仍偏快（实测反馈） */
         const val SLOW_RATE = 0.5f
+
+        /** 例句语速：在单词语速基础上再降一半（0.25）。整句更长、连读更多，更慢才听得清 */
+        const val SENTENCE_RATE = SLOW_RATE * 0.5f
     }
 }
