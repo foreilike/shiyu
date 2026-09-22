@@ -36,10 +36,14 @@ class JaModule : LanguageModule {
     override fun assetNames(): Triple<String, String, String> =
         Triple("kana.json", "n5_vocab.json", "scenarios_ja.json")
 
-    // 日语词书：现有 138 词的 N5 先留着保底。OpenJLPT N5–N1（8334 词）的中文译文回收后，
-    // 换成 ja_n5.json … ja_n1.json 并在此登记（见 docs/ja-translation/PRD-日语翻译.md）。
+    // 日语词书：OpenJLPT N5–N1 共 8334 词，中文释义/例句译文由外部模型翻译后按 id 合并
+    // （见 docs/ja-translation/）。旧的 138 词 n5_vocab.json 已被完整 N5(662 词) 取代。
     override fun books(): List<WordBook> = listOf(
-        WordBook("n5", LangId.JA, "N5", "n5_vocab.json")
+        WordBook("n5", LangId.JA, "N5", "ja_n5.json"),
+        WordBook("n4", LangId.JA, "N4", "ja_n4.json"),
+        WordBook("n3", LangId.JA, "N3", "ja_n3.json"),
+        WordBook("n2", LangId.JA, "N2", "ja_n2.json"),
+        WordBook("n1", LangId.JA, "N1", "ja_n1.json")
     )
 
     override fun buildChart(json: String): List<ChartEntry> {

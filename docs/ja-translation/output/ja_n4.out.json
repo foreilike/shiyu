@@ -1,0 +1,3162 @@
+[
+ {
+  "id": "n4_0001",
+  "meaningZh": "啊；呀",
+  "exampleZh": "好凉啊。"
+ },
+ {
+  "id": "n4_0002",
+  "meaningZh": "啊；那样",
+  "exampleZh": "啊，好难过。"
+ },
+ {
+  "id": "n4_0003",
+  "meaningZh": "打招呼；问候",
+  "exampleZh": ""
+ },
+ {
+  "id": "n4_0004",
+  "meaningZh": "婴儿",
+  "exampleZh": "我是小宝宝。"
+ },
+ {
+  "id": "n4_0005",
+  "meaningZh": "饰品；配饰",
+  "exampleZh": "她在衣服上佩戴着饰品。"
+ },
+ {
+  "id": "n4_0006",
+  "meaningZh": "给（别人）",
+  "exampleZh": "我来帮你做。"
+ },
+ {
+  "id": "n4_0007",
+  "meaningZh": "亚洲",
+  "exampleZh": "日本在亚洲。"
+ },
+ {
+  "id": "n4_0008",
+  "meaningZh": "播音员；节目主持人",
+  "exampleZh": "播音员能说得很快。"
+ },
+ {
+  "id": "n4_0009",
+  "meaningZh": "非洲",
+  "exampleZh": "南非很远。"
+ },
+ {
+  "id": "n4_0010",
+  "meaningZh": "美国",
+  "exampleZh": "我来自美国。"
+ },
+ {
+  "id": "n4_0011",
+  "meaningZh": "酒精；酒",
+  "exampleZh": "酒精也是药物哦。"
+ },
+ {
+  "id": "n4_0012",
+  "meaningZh": "兼职；打工",
+  "exampleZh": "我也好想打工啊。"
+ },
+ {
+  "id": "n4_0013",
+  "meaningZh": "那样的",
+  "exampleZh": "我讨厌那种男人。"
+ },
+ {
+  "id": "n4_0014",
+  "meaningZh": "欺负；捉弄",
+  "exampleZh": "别欺负新人。"
+ },
+ {
+  "id": "n4_0015",
+  "meaningZh": "领取；吃（谦让语）",
+  "exampleZh": ""
+ },
+ {
+  "id": "n4_0016",
+  "meaningZh": "满；一杯",
+  "exampleZh": "吃饱了吗？"
+ },
+ {
+  "id": "n4_0017",
+  "meaningZh": "在；来；去（敬语）",
+  "exampleZh": "您有孩子吗？"
+ },
+ {
+  "id": "n4_0018",
+  "meaningZh": "拜访；请教（谦让语）",
+  "exampleZh": ""
+ },
+ {
+  "id": "n4_0019",
+  "meaningZh": "谎言",
+  "exampleZh": "别撒谎。"
+ },
+ {
+  "id": "n4_0020",
+  "meaningZh": "里面；我家",
+  "exampleZh": "我家老公。"
+ },
+ {
+  "id": "n4_0021",
+  "meaningZh": "美味的；高明的",
+  "exampleZh": "菜做得真好吃啊。"
+ },
+ {
+  "id": "n4_0022",
+  "meaningZh": "高兴的",
+  "exampleZh": "能见到你真高兴。"
+ },
+ {
+  "id": "n4_0023",
+  "meaningZh": "嗯",
+  "exampleZh": "嗯，你呢？"
+ },
+ {
+  "id": "n4_0024",
+  "meaningZh": "自动扶梯",
+  "exampleZh": "自动扶梯在哪里？"
+ },
+ {
+  "id": "n4_0025",
+  "meaningZh": "在；来（敬语）",
+  "exampleZh": ""
+ },
+ {
+  "id": "n4_0026",
+  "meaningZh": "摩托车",
+  "exampleZh": "我要买辆摩托车。"
+ },
+ {
+  "id": "n4_0027",
+  "meaningZh": "多亏；托……的福",
+  "exampleZh": "托你的福，我几乎熬了个通宵。"
+ },
+ {
+  "id": "n4_0028",
+  "meaningZh": "奇怪的；可笑的",
+  "exampleZh": "有点不对劲。"
+ },
+ {
+  "id": "n4_0029",
+  "meaningZh": "说（敬语）",
+  "exampleZh": "正如您所说。"
+ },
+ {
+  "id": "n4_0030",
+  "meaningZh": "找零",
+  "exampleZh": "给，这是找零。"
+ },
+ {
+  "id": "n4_0031",
+  "meaningZh": "玩具",
+  "exampleZh": "把玩具修好。"
+ },
+ {
+  "id": "n4_0032",
+  "meaningZh": "有钱人",
+  "exampleZh": "我想成为有钱人。"
+ },
+ {
+  "id": "n4_0033",
+  "meaningZh": "探望；慰问",
+  "exampleZh": "谢谢你来看我。"
+ },
+ {
+  "id": "n4_0034",
+  "meaningZh": "祭典；节日",
+  "exampleZh": "他们中止了祭典。"
+ },
+ {
+  "id": "n4_0035",
+  "meaningZh": "祝贺；庆祝",
+  "exampleZh": "祝贺您取得成功。"
+ },
+ {
+  "id": "n4_0036",
+  "meaningZh": "令爱；小姐",
+  "exampleZh": "小姐您叫什么名字？"
+ },
+ {
+  "id": "n4_0037",
+  "meaningZh": "贵府；您家",
+  "exampleZh": "明天我去府上拜访。"
+ },
+ {
+  "id": "n4_0038",
+  "meaningZh": "土特产；伴手礼",
+  "exampleZh": "这是伴手礼。"
+ },
+ {
+  "id": "n4_0039",
+  "meaningZh": "谢意；谢礼",
+  "exampleZh": "这是致谢卡片。"
+ },
+ {
+  "id": "n4_0040",
+  "meaningZh": "窗帘",
+  "exampleZh": "把窗帘拉上。"
+ },
+ {
+  "id": "n4_0041",
+  "meaningZh": "煤气；汽油",
+  "exampleZh": "车没油了。"
+ },
+ {
+  "id": "n4_0042",
+  "meaningZh": "汽油",
+  "exampleZh": "有汽油味哦。"
+ },
+ {
+  "id": "n4_0043",
+  "meaningZh": "加油站",
+  "exampleZh": "在下一个加油站停一下吧。"
+ },
+ {
+  "id": "n4_0044",
+  "meaningZh": "样子；姿态",
+  "exampleZh": ""
+ },
+ {
+  "id": "n4_0045",
+  "meaningZh": "介意；理睬",
+  "exampleZh": ""
+ },
+ {
+  "id": "n4_0046",
+  "meaningZh": "玻璃",
+  "exampleZh": "玻璃易碎。"
+ },
+ {
+  "id": "n4_0047",
+  "meaningZh": "一定",
+  "exampleZh": "他一定会来。"
+ },
+ {
+  "id": "n4_0048",
+  "meaningZh": "给（我）（敬语）",
+  "exampleZh": "能让我在最近的车站下车吗？"
+ },
+ {
+  "id": "n4_0049",
+  "meaningZh": "给（我）",
+  "exampleZh": "你能帮我做吗？"
+ },
+ {
+  "id": "n4_0050",
+  "meaningZh": "蛋糕",
+  "exampleZh": "蛋糕是骗人的。"
+ },
+ {
+  "id": "n4_0051",
+  "meaningZh": "受伤",
+  "exampleZh": ""
+ },
+ {
+  "id": "n4_0052",
+  "meaningZh": "但是；然而",
+  "exampleZh": ""
+ },
+ {
+  "id": "n4_0053",
+  "meaningZh": "吵架；打架",
+  "exampleZh": "我经常和她吵架。"
+ },
+ {
+  "id": "n4_0054",
+  "meaningZh": "这样",
+  "exampleZh": "开车去吧。"
+ },
+ {
+  "id": "n4_0055",
+  "meaningZh": "盛宴；佳肴",
+  "exampleZh": "多谢款待。"
+ },
+ {
+  "id": "n4_0056",
+  "meaningZh": "事情",
+  "exampleZh": "这叫什么事啊！"
+ },
+ {
+  "id": "n4_0057",
+  "meaningZh": "前几天；最近",
+  "exampleZh": ""
+ },
+ {
+  "id": "n4_0058",
+  "meaningZh": "最近；近来",
+  "exampleZh": "最近暖和的日子很多。"
+ },
+ {
+  "id": "n4_0059",
+  "meaningZh": "垃圾",
+  "exampleZh": "我最讨厌人挤人了。"
+ },
+ {
+  "id": "n4_0060",
+  "meaningZh": "看（敬语）",
+  "exampleZh": ""
+ },
+ {
+  "id": "n4_0061",
+  "meaningZh": "从现在起；今后",
+  "exampleZh": "我这就回去。"
+ },
+ {
+  "id": "n4_0062",
+  "meaningZh": "音乐会",
+  "exampleZh": "音乐会好看吗？"
+ },
+ {
+  "id": "n4_0063",
+  "meaningZh": "计算机；电脑",
+  "exampleZh": ""
+ },
+ {
+  "id": "n4_0064",
+  "meaningZh": "知道（敬语）",
+  "exampleZh": "您之前知道吗？"
+ },
+ {
+  "id": "n4_0065",
+  "meaningZh": "刚才",
+  "exampleZh": "刚才发生什么了吗？"
+ },
+ {
+  "id": "n4_0066",
+  "meaningZh": "沙拉",
+  "exampleZh": "沙拉好吃吗？"
+ },
+ {
+  "id": "n4_0067",
+  "meaningZh": "凉鞋",
+  "exampleZh": "我买了凉鞋。"
+ },
+ {
+  "id": "n4_0068",
+  "meaningZh": "三明治",
+  "exampleZh": "来份三明治怎么样？"
+ },
+ {
+  "id": "n4_0069",
+  "meaningZh": "下下个月",
+  "exampleZh": ""
+ },
+ {
+  "id": "n4_0070",
+  "meaningZh": "下下个星期",
+  "exampleZh": ""
+ },
+ {
+  "id": "n4_0071",
+  "meaningZh": "责备；训斥",
+  "exampleZh": ""
+ },
+ {
+  "id": "n4_0072",
+  "meaningZh": "牢牢地；振作",
+  "exampleZh": "振作点！"
+ },
+ {
+  "id": "n4_0073",
+  "meaningZh": "许久；一会儿",
+  "exampleZh": "好久不见。"
+ },
+ {
+  "id": "n4_0074",
+  "meaningZh": "妨碍；打扰",
+  "exampleZh": "那回头见啦。"
+ },
+ {
+  "id": "n4_0075",
+  "meaningZh": "果酱",
+  "exampleZh": "草莓可以做成果酱哦。"
+ },
+ {
+  "id": "n4_0076",
+  "meaningZh": "相当；非常",
+  "exampleZh": "相当旧了啊。"
+ },
+ {
+  "id": "n4_0077",
+  "meaningZh": "西装",
+  "exampleZh": "换上西装。"
+ },
+ {
+  "id": "n4_0078",
+  "meaningZh": "行李箱",
+  "exampleZh": "那个行李箱重吗？"
+ },
+ {
+  "id": "n4_0079",
+  "meaningZh": "空；变少",
+  "exampleZh": "她耸了耸肩。"
+ },
+ {
+  "id": "n4_0080",
+  "meaningZh": "屏幕；银幕",
+  "exampleZh": "汤姆目不转睛地盯着银幕。"
+ },
+ {
+  "id": "n4_0081",
+  "meaningZh": "完全；全部",
+  "exampleZh": "我忘得一干二净了。"
+ },
+ {
+  "id": "n4_0082",
+  "meaningZh": "迅速地；一下子",
+  "exampleZh": ""
+ },
+ {
+  "id": "n4_0083",
+  "meaningZh": "牛排",
+  "exampleZh": "我想吃牛排。"
+ },
+ {
+  "id": "n4_0084",
+  "meaningZh": "立体声音响",
+  "exampleZh": "把音响的声音调小点。"
+ },
+ {
+  "id": "n4_0085",
+  "meaningZh": "极好的；精彩的",
+  "exampleZh": "哇，太棒了。"
+ },
+ {
+  "id": "n4_0086",
+  "meaningZh": "扒手；小偷",
+  "exampleZh": "鞋子磨破了。"
+ },
+ {
+  "id": "n4_0087",
+  "meaningZh": "于是；这样一来",
+  "exampleZh": "我觉得他会迟到。"
+ },
+ {
+  "id": "n4_0088",
+  "meaningZh": "一定；务必",
+  "exampleZh": "就这么定了。"
+ },
+ {
+  "id": "n4_0089",
+  "meaningZh": "完全（不）",
+  "exampleZh": "我一点也不在意。"
+ },
+ {
+  "id": "n4_0090",
+  "meaningZh": "那样；是的",
+  "exampleZh": "确实如此。"
+ },
+ {
+  "id": "n4_0091",
+  "meaningZh": "柔软的；软件",
+  "exampleZh": "我想吃软冰淇淋。"
+ },
+ {
+  "id": "n4_0092",
+  "meaningZh": "因此；那么",
+  "exampleZh": "那个你会做吗？"
+ },
+ {
+  "id": "n4_0093",
+  "meaningZh": "而且；加上",
+  "exampleZh": "别碰那个。"
+ },
+ {
+  "id": "n4_0094",
+  "meaningZh": "那样；那么",
+  "exampleZh": "没那么简单。"
+ },
+ {
+  "id": "n4_0095",
+  "meaningZh": "快要；渐渐",
+  "exampleZh": "时间差不多了。"
+ },
+ {
+  "id": "n4_0096",
+  "meaningZh": "那样的",
+  "exampleZh": "怎么可能有这种事。"
+ },
+ {
+  "id": "n4_0097",
+  "meaningZh": "那么；那样",
+  "exampleZh": "别那么吵闹。"
+ },
+ {
+  "id": "n4_0098",
+  "meaningZh": "大体；通常",
+  "exampleZh": ""
+ },
+ {
+  "id": "n4_0099",
+  "meaningZh": "类型；风格",
+  "exampleZh": "他就是我喜欢的类型！"
+ },
+ {
+  "id": "n4_0100",
+  "meaningZh": "所以；因此",
+  "exampleZh": "所以又怎样？"
+ },
+ {
+  "id": "n4_0101",
+  "meaningZh": "偶尔",
+  "exampleZh": "我偶尔会做晚饭哦。"
+ },
+ {
+  "id": "n4_0102",
+  "meaningZh": "不行；没用",
+  "exampleZh": "已经不行了。"
+ },
+ {
+  "id": "n4_0103",
+  "meaningZh": "检查；核对",
+  "exampleZh": "我每完成一项工作就在清单上打勾。"
+ },
+ {
+  "id": "n4_0104",
+  "meaningZh": "一点也（不）",
+  "exampleZh": "一点也没关系哦。"
+ },
+ {
+  "id": "n4_0105",
+  "meaningZh": "……酱（亲昵后缀）",
+  "exampleZh": "好好干。"
+ },
+ {
+  "id": "n4_0106",
+  "meaningZh": "月亮",
+  "exampleZh": "冷静点。"
+ },
+ {
+  "id": "n4_0107",
+  "meaningZh": "打算；意图",
+  "exampleZh": "你打算做什么？"
+ },
+ {
+  "id": "n4_0108",
+  "meaningZh": "教材；文本",
+  "exampleZh": "你在用哪本教材？"
+ },
+ {
+  "id": "n4_0109",
+  "meaningZh": "尽可能",
+  "exampleZh": "请尽量早哦。"
+ },
+ {
+  "id": "n4_0110",
+  "meaningZh": "网球",
+  "exampleZh": "你擅长网球吗？"
+ },
+ {
+  "id": "n4_0111",
+  "meaningZh": "终于",
+  "exampleZh": "他终于出现了。"
+ },
+ {
+  "id": "n4_0112",
+  "meaningZh": "理发店；理发师",
+  "exampleZh": ""
+ },
+ {
+  "id": "n4_0113",
+  "meaningZh": "不断地；顺利地",
+  "exampleZh": "时间飞快流逝。"
+ },
+ {
+  "id": "n4_0114",
+  "meaningZh": "做（敬语）",
+  "exampleZh": "祝您彻底痊愈。"
+ },
+ {
+  "id": "n4_0115",
+  "meaningZh": "尽量",
+  "exampleZh": "我尽量早点回来。"
+ },
+ {
+  "id": "n4_0116",
+  "meaningZh": "原来如此",
+  "exampleZh": "原来如此啊。"
+ },
+ {
+  "id": "n4_0117",
+  "meaningZh": "气味",
+  "exampleZh": "来我家吧。"
+ },
+ {
+  "id": "n4_0118",
+  "meaningZh": "淋湿；浸湿",
+  "exampleZh": "脚淋湿了会感冒哦。"
+ },
+ {
+  "id": "n4_0119",
+  "meaningZh": "价格；价钱",
+  "exampleZh": ""
+ },
+ {
+  "id": "n4_0120",
+  "meaningZh": "热心；热衷",
+  "exampleZh": ""
+ },
+ {
+  "id": "n4_0121",
+  "meaningZh": "喉咙；嗓子",
+  "exampleZh": "口渴了。"
+ },
+ {
+  "id": "n4_0122",
+  "meaningZh": "兼职；部分",
+  "exampleZh": "真是不错的公寓呢。"
+ },
+ {
+  "id": "n4_0123",
+  "meaningZh": "理应；应该",
+  "exampleZh": "你浑身都湿透了。"
+ },
+ {
+  "id": "n4_0124",
+  "meaningZh": "个人电脑",
+  "exampleZh": "我玩过电脑了。"
+ },
+ {
+  "id": "n4_0125",
+  "meaningZh": "清楚地",
+  "exampleZh": "说清楚点。"
+ },
+ {
+  "id": "n4_0126",
+  "meaningZh": "手提包",
+  "exampleZh": "那个手提包是我的。"
+ },
+ {
+  "id": "n4_0127",
+  "meaningZh": "钢琴",
+  "exampleZh": "你喜欢钢琴吗？"
+ },
+ {
+  "id": "n4_0128",
+  "meaningZh": "胡子",
+  "exampleZh": "昨天刮胡子了吗？"
+ },
+ {
+  "id": "n4_0129",
+  "meaningZh": "吃惊；吓一跳",
+  "exampleZh": "汤姆绝对会吓一跳的。"
+ },
+ {
+  "id": "n4_0130",
+  "meaningZh": "过分的；糟糕的",
+  "exampleZh": "天气真糟糕！"
+ },
+ {
+  "id": "n4_0131",
+  "meaningZh": "大楼；账单",
+  "exampleZh": "喂，比尔。"
+ },
+ {
+  "id": "n4_0132",
+  "meaningZh": "传真",
+  "exampleZh": "得发传真了。"
+ },
+ {
+  "id": "n4_0133",
+  "meaningZh": "葡萄",
+  "exampleZh": "没有葡萄酒。"
+ },
+ {
+  "id": "n4_0134",
+  "meaningZh": "礼物",
+  "exampleZh": "请收下礼物。"
+ },
+ {
+  "id": "n4_0135",
+  "meaningZh": "铃；钟",
+  "exampleZh": "铃响了。"
+ },
+ {
+  "id": "n4_0136",
+  "meaningZh": "程度；左右",
+  "exampleZh": "原来如此啊。"
+ },
+ {
+  "id": "n4_0137",
+  "meaningZh": "几乎",
+  "exampleZh": "几乎没有书。"
+ },
+ {
+  "id": "n4_0138",
+  "meaningZh": "表扬；夸奖",
+  "exampleZh": "她优秀得让人不知该怎么夸才好。"
+ },
+ {
+  "id": "n4_0139",
+  "meaningZh": "认真的；踏实的",
+  "exampleZh": "他是个认真的少年。"
+ },
+ {
+  "id": "n4_0140",
+  "meaningZh": "首先",
+  "exampleZh": "先去京都。"
+ },
+ {
+  "id": "n4_0141",
+  "meaningZh": "或者",
+  "exampleZh": ""
+ },
+ {
+  "id": "n4_0142",
+  "meaningZh": "马上；快要",
+  "exampleZh": "马上就到冬天了。"
+ },
+ {
+  "id": "n4_0143",
+  "meaningZh": "如果；假如",
+  "exampleZh": "我什么都不做哦。"
+ },
+ {
+  "id": "n4_0144",
+  "meaningZh": "当然",
+  "exampleZh": "当然了。"
+ },
+ {
+  "id": "n4_0145",
+  "meaningZh": "理所当然；最",
+  "exampleZh": "你生气也是理所当然的。"
+ },
+ {
+  "id": "n4_0146",
+  "meaningZh": "领取；得到",
+  "exampleZh": "请他过来。"
+ },
+ {
+  "id": "n4_0147",
+  "meaningZh": "终于",
+  "exampleZh": "终于到了。"
+ },
+ {
+  "id": "n4_0148",
+  "meaningZh": "果然；还是",
+  "exampleZh": ""
+ },
+ {
+  "id": "n4_0149",
+  "meaningZh": "好的；可以",
+  "exampleZh": "一切妥当。"
+ },
+ {
+  "id": "n4_0150",
+  "meaningZh": "收银台",
+  "exampleZh": "收银台在那边哦。"
+ },
+ {
+  "id": "n4_0151",
+  "meaningZh": "报告",
+  "exampleZh": ""
+ },
+ {
+  "id": "n4_0152",
+  "meaningZh": "文字处理机",
+  "exampleZh": "我想买台文字处理机。"
+ },
+ {
+  "id": "n4_0153",
+  "meaningZh": "放心；安心",
+  "exampleZh": "我放心了。"
+ },
+ {
+  "id": "n4_0154",
+  "meaningZh": "安全",
+  "exampleZh": "祝你旅途平安。"
+ },
+ {
+  "id": "n4_0155",
+  "meaningZh": "引导；带路",
+  "exampleZh": "我来为您带路。"
+ },
+ {
+  "id": "n4_0156",
+  "meaningZh": "以下",
+  "exampleZh": "以下是他说的话。"
+ },
+ {
+  "id": "n4_0157",
+  "meaningZh": "以外",
+  "exampleZh": "非工作人员禁止入内。"
+ },
+ {
+  "id": "n4_0158",
+  "meaningZh": "以上；就这些",
+  "exampleZh": "就这些吗？"
+ },
+ {
+  "id": "n4_0159",
+  "meaningZh": "以内",
+  "exampleZh": "最多控制在200词以内。"
+ },
+ {
+  "id": "n4_0160",
+  "meaningZh": "意见",
+  "exampleZh": "意见相同。"
+ },
+ {
+  "id": "n4_0161",
+  "meaningZh": "为了",
+  "exampleZh": "那是沽名钓誉的行为。"
+ },
+ {
+  "id": "n4_0162",
+  "meaningZh": "转移；搬迁",
+  "exampleZh": "热情是会传染的。"
+ },
+ {
+  "id": "n4_0163",
+  "meaningZh": "医学",
+  "exampleZh": "他是医学生。"
+ },
+ {
+  "id": "n4_0164",
+  "meaningZh": "培育；抚养",
+  "exampleZh": "读书能陶冶情操。"
+ },
+ {
+  "id": "n4_0165",
+  "meaningZh": "拼命地；努力地",
+  "exampleZh": "拼命工作了。"
+ },
+ {
+  "id": "n4_0166",
+  "meaningZh": "一次；一度",
+  "exampleZh": "我改天再去拜访。"
+ },
+ {
+  "id": "n4_0167",
+  "meaningZh": "抽屉",
+  "exampleZh": "书桌的抽屉开着。"
+ },
+ {
+  "id": "n4_0168",
+  "meaningZh": "抽出；提取（款）",
+  "exampleZh": "我们从学习中发掘更多乐趣。"
+ },
+ {
+  "id": "n4_0169",
+  "meaningZh": "搬家",
+  "exampleZh": "你要搬家吗？"
+ },
+ {
+  "id": "n4_0170",
+  "meaningZh": "搬运；运送",
+  "exampleZh": "风把种子带到远方。"
+ },
+ {
+  "id": "n4_0171",
+  "meaningZh": "驾驶；开车",
+  "exampleZh": "我会开车哦。"
+ },
+ {
+  "id": "n4_0172",
+  "meaningZh": "司机",
+  "exampleZh": "他是公交车司机。"
+ },
+ {
+  "id": "n4_0173",
+  "meaningZh": "运动",
+  "exampleZh": "我去运动。"
+ },
+ {
+  "id": "n4_0174",
+  "meaningZh": "云",
+  "exampleZh": "云是什么颜色的？"
+ },
+ {
+  "id": "n4_0175",
+  "meaningZh": "游泳方式；游法",
+  "exampleZh": "他学了游泳。"
+ },
+ {
+  "id": "n4_0176",
+  "meaningZh": "远处；远方",
+  "exampleZh": "你在远处吗？"
+ },
+ {
+  "id": "n4_0177",
+  "meaningZh": "客气；顾虑",
+  "exampleZh": "别客气。"
+ },
+ {
+  "id": "n4_0178",
+  "meaningZh": "弄脏；变脏",
+  "exampleZh": "衣服会弄脏哦。"
+ },
+ {
+  "id": "n4_0179",
+  "meaningZh": "壁橱",
+  "exampleZh": "汤姆把妹妹关进了壁橱。"
+ },
+ {
+  "id": "n4_0180",
+  "meaningZh": "亿",
+  "exampleZh": "汤姆是亿万富翁。"
+ },
+ {
+  "id": "n4_0181",
+  "meaningZh": "屋顶；天台",
+  "exampleZh": "屋顶上有一只猫在走。"
+ },
+ {
+  "id": "n4_0182",
+  "meaningZh": "声音",
+  "exampleZh": "你喜欢音乐吗？"
+ },
+ {
+  "id": "n4_0183",
+  "meaningZh": "降低；悬挂",
+  "exampleZh": "希望降低关税。"
+ },
+ {
+  "id": "n4_0184",
+  "meaningZh": "下（车）；下来",
+  "exampleZh": "下楼梯很费劲。"
+ },
+ {
+  "id": "n4_0185",
+  "meaningZh": "下；下降",
+  "exampleZh": "下了坡就看到海了。"
+ },
+ {
+  "id": "n4_0186",
+  "meaningZh": "寄宿；租住",
+  "exampleZh": "我在外面租房子住。"
+ },
+ {
+  "id": "n4_0187",
+  "meaningZh": "内衣",
+  "exampleZh": "汤姆只穿着内衣。"
+ },
+ {
+  "id": "n4_0188",
+  "meaningZh": "妻子；内人",
+  "exampleZh": "我妻子是医生。"
+ },
+ {
+  "id": "n4_0189",
+  "meaningZh": "科学",
+  "exampleZh": "他是科学家。"
+ },
+ {
+  "id": "n4_0190",
+  "meaningZh": "火",
+  "exampleZh": "火会燃烧。"
+ },
+ {
+  "id": "n4_0191",
+  "meaningZh": "火灾",
+  "exampleZh": "我家着火了。"
+ },
+ {
+  "id": "n4_0192",
+  "meaningZh": "赏樱花",
+  "exampleZh": "看那朵花。"
+ },
+ {
+  "id": "n4_0193",
+  "meaningZh": "课长",
+  "exampleZh": "他升为课长了。"
+ },
+ {
+  "id": "n4_0194",
+  "meaningZh": "过度；经过",
+  "exampleZh": "太安静了。"
+ },
+ {
+  "id": "n4_0195",
+  "meaningZh": "会议",
+  "exampleZh": "会议室在哪儿？"
+ },
+ {
+  "id": "n4_0196",
+  "meaningZh": "会议室",
+  "exampleZh": "会议室在哪儿？"
+ },
+ {
+  "id": "n4_0197",
+  "meaningZh": "会场",
+  "exampleZh": "我们坐在会场后排。"
+ },
+ {
+  "id": "n4_0198",
+  "meaningZh": "对话；会话",
+  "exampleZh": "加入聊天怎么样？"
+ },
+ {
+  "id": "n4_0199",
+  "meaningZh": "转；围绕",
+  "exampleZh": "蜜蜂飞来飞去。"
+ },
+ {
+  "id": "n4_0200",
+  "meaningZh": "弄坏；破坏",
+  "exampleZh": "文化会破坏语言。"
+ },
+ {
+  "id": "n4_0201",
+  "meaningZh": "坏；碎",
+  "exampleZh": "有形之物终有一坏。"
+ },
+ {
+  "id": "n4_0202",
+  "meaningZh": "海岸；海边",
+  "exampleZh": "我去海边了哦。"
+ },
+ {
+  "id": "n4_0203",
+  "meaningZh": "大家；诸位",
+  "exampleZh": "大家都笑了。"
+ },
+ {
+  "id": "n4_0204",
+  "meaningZh": "开；召开",
+  "exampleZh": "别打开书。"
+ },
+ {
+  "id": "n4_0205",
+  "meaningZh": "确实；可靠",
+  "exampleZh": "你脑子清醒吗？"
+ },
+ {
+  "id": "n4_0206",
+  "meaningZh": "期待；乐趣",
+  "exampleZh": "真期待明天啊。"
+ },
+ {
+  "id": "n4_0207",
+  "meaningZh": "享受；享乐",
+  "exampleZh": ""
+ },
+ {
+  "id": "n4_0208",
+  "meaningZh": "挂；乘",
+  "exampleZh": "四乘二等于八。"
+ },
+ {
+  "id": "n4_0209",
+  "meaningZh": "碎；裂",
+  "exampleZh": "你能单手打鸡蛋吗？"
+ },
+ {
+  "id": "n4_0210",
+  "meaningZh": "比例；比率",
+  "exampleZh": "他们以每小时三英里的速度步行。"
+ },
+ {
+  "id": "n4_0211",
+  "meaningZh": "滑；滑倒",
+  "exampleZh": "你会滑雪吗？"
+ },
+ {
+  "id": "n4_0212",
+  "meaningZh": "咬；嚼",
+  "exampleZh": "狗急跳墙。"
+ },
+ {
+  "id": "n4_0213",
+  "meaningZh": "干；干燥",
+  "exampleZh": "皮子一干就变硬了。"
+ },
+ {
+  "id": "n4_0214",
+  "meaningZh": "习惯；适应",
+  "exampleZh": "马上就会习惯的。"
+ },
+ {
+  "id": "n4_0215",
+  "meaningZh": "护士",
+  "exampleZh": "我是护士。"
+ },
+ {
+  "id": "n4_0216",
+  "meaningZh": "简单；容易",
+  "exampleZh": "简单，简单。"
+ },
+ {
+  "id": "n4_0217",
+  "meaningZh": "间隔；期间",
+  "exampleZh": "有房间出租。"
+ },
+ {
+  "id": "n4_0218",
+  "meaningZh": "来得及；赶得上",
+  "exampleZh": "还来得及。"
+ },
+ {
+  "id": "n4_0219",
+  "meaningZh": "弄错；搞错",
+  "exampleZh": "我经常弄错。"
+ },
+ {
+  "id": "n4_0220",
+  "meaningZh": "关系",
+  "exampleZh": "没有关系。"
+ },
+ {
+  "id": "n4_0221",
+  "meaningZh": "危险",
+  "exampleZh": "火很危险。"
+ },
+ {
+  "id": "n4_0222",
+  "meaningZh": "高兴；喜悦",
+  "exampleZh": "别高兴得太早。"
+ },
+ {
+  "id": "n4_0223",
+  "meaningZh": "靠近；顺路去",
+  "exampleZh": "别靠近狗。"
+ },
+ {
+  "id": "n4_0224",
+  "meaningZh": "机会",
+  "exampleZh": "等待下一个机会吧。"
+ },
+ {
+  "id": "n4_0225",
+  "meaningZh": "回来；归途",
+  "exampleZh": "回去吧。"
+ },
+ {
+  "id": "n4_0226",
+  "meaningZh": "精神；心情",
+  "exampleZh": "你是认真的吗？"
+ },
+ {
+  "id": "n4_0227",
+  "meaningZh": "心情；感受",
+  "exampleZh": "好恶心！"
+ },
+ {
+  "id": "n4_0228",
+  "meaningZh": "心情；情绪",
+  "exampleZh": "我有点不舒服。"
+ },
+ {
+  "id": "n4_0229",
+  "meaningZh": "火车",
+  "exampleZh": "火车脱轨了。"
+ },
+ {
+  "id": "n4_0230",
+  "meaningZh": "祈祷；祝愿",
+  "exampleZh": "祝你成功哦。"
+ },
+ {
+  "id": "n4_0231",
+  "meaningZh": "季节",
+  "exampleZh": "春天是个愉快的季节。"
+ },
+ {
+  "id": "n4_0232",
+  "meaningZh": "规则；规章",
+  "exampleZh": "别违反规则。"
+ },
+ {
+  "id": "n4_0233",
+  "meaningZh": "唤起；引起",
+  "exampleZh": "考试会引出重大问题。"
+ },
+ {
+  "id": "n4_0234",
+  "meaningZh": "技术",
+  "exampleZh": "这技术蠢透了。"
+ },
+ {
+  "id": "n4_0235",
+  "meaningZh": "客人；顾客",
+  "exampleZh": "汤姆是客人。"
+ },
+ {
+  "id": "n4_0236",
+  "meaningZh": "好久不见",
+  "exampleZh": "好久不见。"
+ },
+ {
+  "id": "n4_0237",
+  "meaningZh": "急的；陡峭的",
+  "exampleZh": "欲速则不达。"
+ },
+ {
+  "id": "n4_0238",
+  "meaningZh": "着急；赶紧",
+  "exampleZh": "没必要着急哦。"
+ },
+ {
+  "id": "n4_0239",
+  "meaningZh": "快车",
+  "exampleZh": "这是快车吗？"
+ },
+ {
+  "id": "n4_0240",
+  "meaningZh": "哭",
+  "exampleZh": "我才不哭呢。"
+ },
+ {
+  "id": "n4_0241",
+  "meaningZh": "竞争",
+  "exampleZh": "我和他竞争了。"
+ },
+ {
+  "id": "n4_0242",
+  "meaningZh": "教育",
+  "exampleZh": "他是教育界出身。"
+ },
+ {
+  "id": "n4_0243",
+  "meaningZh": "教堂",
+  "exampleZh": "那是教堂。"
+ },
+ {
+  "id": "n4_0244",
+  "meaningZh": "兴趣",
+  "exampleZh": "我没兴趣。"
+ },
+ {
+  "id": "n4_0245",
+  "meaningZh": "镜子",
+  "exampleZh": "眼睛是心灵的镜子。"
+ },
+ {
+  "id": "n4_0246",
+  "meaningZh": "吃惊；惊讶",
+  "exampleZh": "她一定会大吃一惊。"
+ },
+ {
+  "id": "n4_0247",
+  "meaningZh": "附近；邻居",
+  "exampleZh": "是附近的人哦。"
+ },
+ {
+  "id": "n4_0248",
+  "meaningZh": "苦的",
+  "exampleZh": "特别苦。"
+ },
+ {
+  "id": "n4_0249",
+  "meaningZh": "状况；身体状况",
+  "exampleZh": "身体不舒服吗？"
+ },
+ {
+  "id": "n4_0250",
+  "meaningZh": "空；有空",
+  "exampleZh": "再过十分钟我就有空了。"
+ },
+ {
+  "id": "n4_0251",
+  "meaningZh": "空气；气氛",
+  "exampleZh": "你真不会看场合。"
+ },
+ {
+  "id": "n4_0252",
+  "meaningZh": "机场",
+  "exampleZh": "去机场。"
+ },
+ {
+  "id": "n4_0253",
+  "meaningZh": "角落",
+  "exampleZh": "放到角落里。"
+ },
+ {
+  "id": "n4_0254",
+  "meaningZh": "你",
+  "exampleZh": "全看你了哦。"
+ },
+ {
+  "id": "n4_0255",
+  "meaningZh": "形状；样子",
+  "exampleZh": "那个人偶好吓人。"
+ },
+ {
+  "id": "n4_0256",
+  "meaningZh": "景色；风景",
+  "exampleZh": "真是绝美的景色。"
+ },
+ {
+  "id": "n4_0257",
+  "meaningZh": "经验",
+  "exampleZh": "他经验不足。"
+ },
+ {
+  "id": "n4_0258",
+  "meaningZh": "经济",
+  "exampleZh": "他是经济专家。"
+ },
+ {
+  "id": "n4_0259",
+  "meaningZh": "计划",
+  "exampleZh": "计划做好了。"
+ },
+ {
+  "id": "n4_0260",
+  "meaningZh": "警察",
+  "exampleZh": "叫警察！"
+ },
+ {
+  "id": "n4_0261",
+  "meaningZh": "迎接；迎来",
+  "exampleZh": "汤姆明年就满一百岁了。"
+ },
+ {
+  "id": "n4_0262",
+  "meaningZh": "决（不）；千万",
+  "exampleZh": "请千万不要放手。"
+ },
+ {
+  "id": "n4_0263",
+  "meaningZh": "决定",
+  "exampleZh": "投票决定。"
+ },
+ {
+  "id": "n4_0264",
+  "meaningZh": "决定；定下来",
+  "exampleZh": "青春期持续多久由生物学因素决定。"
+ },
+ {
+  "id": "n4_0265",
+  "meaningZh": "血",
+  "exampleZh": "我有高血压。"
+ },
+ {
+  "id": "n4_0266",
+  "meaningZh": "硬的；坚固的",
+  "exampleZh": ""
+ },
+ {
+  "id": "n4_0267",
+  "meaningZh": "建造；盖",
+  "exampleZh": "爸爸忙着砌墙。"
+ },
+ {
+  "id": "n4_0268",
+  "meaningZh": "研究",
+  "exampleZh": "他埋头于研究。"
+ },
+ {
+  "id": "n4_0269",
+  "meaningZh": "研究室；实验室",
+  "exampleZh": "回研究室去。"
+ },
+ {
+  "id": "n4_0270",
+  "meaningZh": "丝绸",
+  "exampleZh": "丝绸很贵的哦。"
+ },
+ {
+  "id": "n4_0271",
+  "meaningZh": "看得见",
+  "exampleZh": "能看到什么吗？"
+ },
+ {
+  "id": "n4_0272",
+  "meaningZh": "被找到；找到",
+  "exampleZh": "我觉得很容易找到。"
+ },
+ {
+  "id": "n4_0273",
+  "meaningZh": "找到；发现",
+  "exampleZh": "你能找到我吗？"
+ },
+ {
+  "id": "n4_0274",
+  "meaningZh": "观光；游览",
+  "exampleZh": "要不要逛逛镇子？"
+ },
+ {
+  "id": "n4_0275",
+  "meaningZh": "原因",
+  "exampleZh": "是什么原因？"
+ },
+ {
+  "id": "n4_0276",
+  "meaningZh": "严厉的；严峻的",
+  "exampleZh": "社会很严酷。"
+ },
+ {
+  "id": "n4_0277",
+  "meaningZh": "故障；毛病",
+  "exampleZh": "电视出故障了。"
+ },
+ {
+  "id": "n4_0278",
+  "meaningZh": "湖",
+  "exampleZh": "这个湖很深。"
+ },
+ {
+  "id": "n4_0279",
+  "meaningZh": "您丈夫",
+  "exampleZh": ""
+ },
+ {
+  "id": "n4_0280",
+  "meaningZh": "交通",
+  "exampleZh": "车流量很小。"
+ },
+ {
+  "id": "n4_0281",
+  "meaningZh": "光；光亮",
+  "exampleZh": "受之有愧的荣耀。"
+ },
+ {
+  "id": "n4_0282",
+  "meaningZh": "发光；闪耀",
+  "exampleZh": "手中的镰刀闪闪发亮。"
+ },
+ {
+  "id": "n4_0283",
+  "meaningZh": "公务员",
+  "exampleZh": "我是公务员。"
+ },
+ {
+  "id": "n4_0284",
+  "meaningZh": "朝向；前往",
+  "exampleZh": "女人向恶魔的盛宴走去。"
+ },
+ {
+  "id": "n4_0285",
+  "meaningZh": "工业",
+  "exampleZh": "是座工业城市。"
+ },
+ {
+  "id": "n4_0286",
+  "meaningZh": "工厂",
+  "exampleZh": "他们在工厂工作过。"
+ },
+ {
+  "id": "n4_0287",
+  "meaningZh": "校长",
+  "exampleZh": "他讨厌校长。"
+ },
+ {
+  "id": "n4_0288",
+  "meaningZh": "港口",
+  "exampleZh": "去机场。"
+ },
+ {
+  "id": "n4_0289",
+  "meaningZh": "思考；考虑",
+  "exampleZh": "你为什么那么想？"
+ },
+ {
+  "id": "n4_0290",
+  "meaningZh": "做；举行",
+  "exampleZh": "说起来容易做起来难。"
+ },
+ {
+  "id": "n4_0291",
+  "meaningZh": "讲课；讲座",
+  "exampleZh": "讲文学课。"
+ },
+ {
+  "id": "n4_0292",
+  "meaningZh": "礼堂；讲堂",
+  "exampleZh": "那位老师把学生集合到礼堂。"
+ },
+ {
+  "id": "n4_0293",
+  "meaningZh": "郊外",
+  "exampleZh": "我家在郊外。"
+ },
+ {
+  "id": "n4_0294",
+  "meaningZh": "下起来（雨、雪）",
+  "exampleZh": "马上就要下雪了吧。"
+ },
+ {
+  "id": "n4_0295",
+  "meaningZh": "高中",
+  "exampleZh": "你是高中生吗？"
+ },
+ {
+  "id": "n4_0296",
+  "meaningZh": "高中生",
+  "exampleZh": "你是高中生吗？"
+ },
+ {
+  "id": "n4_0297",
+  "meaningZh": "高中",
+  "exampleZh": "他不是高中生。"
+ },
+ {
+  "id": "n4_0298",
+  "meaningZh": "合适；会合",
+  "exampleZh": "黑色很适合你呢。"
+ },
+ {
+  "id": "n4_0299",
+  "meaningZh": "国际",
+  "exampleZh": "需要世界通用语吗？"
+ },
+ {
+  "id": "n4_0300",
+  "meaningZh": "拥挤；包含",
+  "exampleZh": "棉花会吸水。"
+ },
+ {
+  "id": "n4_0301",
+  "meaningZh": "这次；下次",
+  "exampleZh": "下次再说吧！"
+ },
+ {
+  "id": "n4_0302",
+  "meaningZh": "今晚",
+  "exampleZh": "今晚能见面吗？"
+ },
+ {
+  "id": "n4_0303",
+  "meaningZh": "给；呈上（谦让语）",
+  "exampleZh": "请原谅我冒昧写来这么一封奇怪的信。"
+ },
+ {
+  "id": "n4_0304",
+  "meaningZh": "沙子",
+  "exampleZh": "没有糖了。"
+ },
+ {
+  "id": "n4_0305",
+  "meaningZh": "最近",
+  "exampleZh": "最近怎么样？"
+ },
+ {
+  "id": "n4_0306",
+  "meaningZh": "最后",
+  "exampleZh": "那是最后一次了！"
+ },
+ {
+  "id": "n4_0307",
+  "meaningZh": "最初；首先",
+  "exampleZh": "他最先来的。"
+ },
+ {
+  "id": "n4_0308",
+  "meaningZh": "妻子",
+  "exampleZh": "我怕老婆。"
+ },
+ {
+  "id": "n4_0309",
+  "meaningZh": "结束；解决",
+  "exampleZh": "做到你满意为止吧。"
+ },
+ {
+  "id": "n4_0310",
+  "meaningZh": "细小的；仔细的",
+  "exampleZh": "我这个人很在意细节。"
+ },
+ {
+  "id": "n4_0311",
+  "meaningZh": "斜坡；坡",
+  "exampleZh": "下那个坡吧。"
+ },
+ {
+  "id": "n4_0312",
+  "meaningZh": "去；来（谦让语）；认输",
+  "exampleZh": "我真服了你了。"
+ },
+ {
+  "id": "n4_0313",
+  "meaningZh": "产业",
+  "exampleZh": "日本是工业国。"
+ },
+ {
+  "id": "n4_0314",
+  "meaningZh": "留下；剩余",
+  "exampleZh": "这首曲子很让人难忘呢。"
+ },
+ {
+  "id": "n4_0315",
+  "meaningZh": "遗憾；可惜",
+  "exampleZh": "很遗憾。"
+ },
+ {
+  "id": "n4_0316",
+  "meaningZh": "做法；办法",
+  "exampleZh": "没办法啊。"
+ },
+ {
+  "id": "n4_0317",
+  "meaningZh": "开始",
+  "exampleZh": "重新开始。"
+ },
+ {
+  "id": "n4_0318",
+  "meaningZh": "孩子",
+  "exampleZh": "舍华求实。"
+ },
+ {
+  "id": "n4_0319",
+  "meaningZh": "市；城市",
+  "exampleZh": "去市场。"
+ },
+ {
+  "id": "n4_0320",
+  "meaningZh": "市民",
+  "exampleZh": "我是札幌市民。"
+ },
+ {
+  "id": "n4_0321",
+  "meaningZh": "想起；回忆起",
+  "exampleZh": "想起最初的时候。"
+ },
+ {
+  "id": "n4_0322",
+  "meaningZh": "想；认为",
+  "exampleZh": "你以为是谁？"
+ },
+ {
+  "id": "n4_0323",
+  "meaningZh": "手指；指",
+  "exampleZh": "把手指张开。"
+ },
+ {
+  "id": "n4_0324",
+  "meaningZh": "戒指",
+  "exampleZh": "戒指不见了。"
+ },
+ {
+  "id": "n4_0325",
+  "meaningZh": "准备；预备",
+  "exampleZh": "过冬准备万无一失！"
+ },
+ {
+  "id": "n4_0326",
+  "meaningZh": "树枝",
+  "exampleZh": "别折断树枝。"
+ },
+ {
+  "id": "n4_0327",
+  "meaningZh": "停止（雨、雪）",
+  "exampleZh": "雨没有要停的迹象。"
+ },
+ {
+  "id": "n4_0328",
+  "meaningZh": "停止；阻止",
+  "exampleZh": "我要拦住你。"
+ },
+ {
+  "id": "n4_0329",
+  "meaningZh": "线",
+  "exampleZh": "线缠在一起了。"
+ },
+ {
+  "id": "n4_0330",
+  "meaningZh": "考试",
+  "exampleZh": "下周有考试。"
+ },
+ {
+  "id": "n4_0331",
+  "meaningZh": "比赛",
+  "exampleZh": "那场比赛看了吗？"
+ },
+ {
+  "id": "n4_0332",
+  "meaningZh": "牙医",
+  "exampleZh": "他去看牙医了。"
+ },
+ {
+  "id": "n4_0333",
+  "meaningZh": "事故",
+  "exampleZh": "发生事故了。"
+ },
+ {
+  "id": "n4_0334",
+  "meaningZh": "事务所；办公室",
+  "exampleZh": "我在办公室。"
+ },
+ {
+  "id": "n4_0335",
+  "meaningZh": "相似；像",
+  "exampleZh": "儿子像父亲。"
+ },
+ {
+  "id": "n4_0336",
+  "meaningZh": "字",
+  "exampleZh": "生意亏损。"
+ },
+ {
+  "id": "n4_0337",
+  "meaningZh": "寺庙",
+  "exampleZh": "寺庙隔壁住着鬼。"
+ },
+ {
+  "id": "n4_0338",
+  "meaningZh": "时代",
+  "exampleZh": "他的衣服过时了。"
+ },
+ {
+  "id": "n4_0339",
+  "meaningZh": "治愈；痊愈",
+  "exampleZh": "希望能早日康复。"
+ },
+ {
+  "id": "n4_0340",
+  "meaningZh": "自由",
+  "exampleZh": "你现在是自由身了呢。"
+ },
+ {
+  "id": "n4_0341",
+  "meaningZh": "辞典",
+  "exampleZh": "汤姆买了一本中日词典。"
+ },
+ {
+  "id": "n4_0342",
+  "meaningZh": "失败",
+  "exampleZh": "会失败的哦。"
+ },
+ {
+  "id": "n4_0343",
+  "meaningZh": "抄写；拍摄",
+  "exampleZh": "她抄朋友的笔记。"
+ },
+ {
+  "id": "n4_0344",
+  "meaningZh": "扔；丢弃",
+  "exampleZh": "此处禁止乱扔垃圾。"
+ },
+ {
+  "id": "n4_0345",
+  "meaningZh": "社会",
+  "exampleZh": "暴力是社会的毒瘤。"
+ },
+ {
+  "id": "n4_0346",
+  "meaningZh": "社长；总经理",
+  "exampleZh": "社长外出了。"
+ },
+ {
+  "id": "n4_0347",
+  "meaningZh": "道歉",
+  "exampleZh": "只能道歉了。"
+ },
+ {
+  "id": "n4_0348",
+  "meaningZh": "寂寞的；荒凉的",
+  "exampleZh": "我也很寂寞啊。"
+ },
+ {
+  "id": "n4_0349",
+  "meaningZh": "更换；交换",
+  "exampleZh": "我决定更换木板套窗。"
+ },
+ {
+  "id": "n4_0350",
+  "meaningZh": "手套",
+  "exampleZh": "你戴手套了吗？"
+ },
+ {
+  "id": "n4_0351",
+  "meaningZh": "帮忙；帮助",
+  "exampleZh": "我来帮忙。"
+ },
+ {
+  "id": "n4_0352",
+  "meaningZh": "爱好；兴趣",
+  "exampleZh": "他兴趣广泛。"
+ },
+ {
+  "id": "n4_0353",
+  "meaningZh": "脖子；解雇",
+  "exampleZh": "你被解雇了。"
+ },
+ {
+  "id": "n4_0354",
+  "meaningZh": "接受；参加（考试）",
+  "exampleZh": "你要打疫苗吗？"
+ },
+ {
+  "id": "n4_0355",
+  "meaningZh": "接待处；受理",
+  "exampleZh": "接待处两点半开始。"
+ },
+ {
+  "id": "n4_0356",
+  "meaningZh": "周围",
+  "exampleZh": "我环顾了一下四周。"
+ },
+ {
+  "id": "n4_0357",
+  "meaningZh": "捡；接（人）",
+  "exampleZh": "我打算去接汤姆。"
+ },
+ {
+  "id": "n4_0358",
+  "meaningZh": "结束；末尾",
+  "exampleZh": "没有尽头。"
+ },
+ {
+  "id": "n4_0359",
+  "meaningZh": "习惯",
+  "exampleZh": "已经习惯成自然了。"
+ },
+ {
+  "id": "n4_0360",
+  "meaningZh": "船；小舟",
+  "exampleZh": "船下落不明。"
+ },
+ {
+  "id": "n4_0361",
+  "meaningZh": "收集",
+  "exampleZh": "收集明信片。"
+ },
+ {
+  "id": "n4_0362",
+  "meaningZh": "聚集；集合",
+  "exampleZh": ""
+ },
+ {
+  "id": "n4_0363",
+  "meaningZh": "住所；地址",
+  "exampleZh": "这是地址。"
+ },
+ {
+  "id": "n4_0364",
+  "meaningZh": "充分；足够",
+  "exampleZh": "已经够了！"
+ },
+ {
+  "id": "n4_0365",
+  "meaningZh": "柔软的",
+  "exampleZh": "你身体真柔软啊。"
+ },
+ {
+  "id": "n4_0366",
+  "meaningZh": "柔道",
+  "exampleZh": "我在练习柔道。"
+ },
+ {
+  "id": "n4_0367",
+  "meaningZh": "出席",
+  "exampleZh": "我会出席。"
+ },
+ {
+  "id": "n4_0368",
+  "meaningZh": "出发",
+  "exampleZh": "早点出发吧。"
+ },
+ {
+  "id": "n4_0369",
+  "meaningZh": "准备",
+  "exampleZh": "准备好了吗？"
+ },
+ {
+  "id": "n4_0370",
+  "meaningZh": "女性",
+  "exampleZh": "妩媚的女人。"
+ },
+ {
+  "id": "n4_0371",
+  "meaningZh": "赢；战胜",
+  "exampleZh": "赢得战斗。"
+ },
+ {
+  "id": "n4_0372",
+  "meaningZh": "吃；喝（敬语）",
+  "exampleZh": "来来来，说说您想吃点什么。"
+ },
+ {
+  "id": "n4_0373",
+  "meaningZh": "将来",
+  "exampleZh": "为将来做准备吧。"
+ },
+ {
+  "id": "n4_0374",
+  "meaningZh": "小学",
+  "exampleZh": "你在上小学吗？"
+ },
+ {
+  "id": "n4_0375",
+  "meaningZh": "小说",
+  "exampleZh": "我要当小说家。"
+ },
+ {
+  "id": "n4_0376",
+  "meaningZh": "小鸟",
+  "exampleZh": "他瞄准了小鸟。"
+ },
+ {
+  "id": "n4_0377",
+  "meaningZh": "知道；同意",
+  "exampleZh": "我知道了。"
+ },
+ {
+  "id": "n4_0378",
+  "meaningZh": "邀请；招待",
+  "exampleZh": "你被邀请了吗？"
+ },
+ {
+  "id": "n4_0379",
+  "meaningZh": "橡皮",
+  "exampleZh": "把橡皮还给我。"
+ },
+ {
+  "id": "n4_0380",
+  "meaningZh": "烤；烧",
+  "exampleZh": "别吃醋嘛。"
+ },
+ {
+  "id": "n4_0381",
+  "meaningZh": "着火；烤熟",
+  "exampleZh": "像火烧一样烫。"
+ },
+ {
+  "id": "n4_0382",
+  "meaningZh": "笑；微笑",
+  "exampleZh": "汤姆笑了。"
+ },
+ {
+  "id": "n4_0383",
+  "meaningZh": "介绍",
+  "exampleZh": "谢谢你的介绍。"
+ },
+ {
+  "id": "n4_0384",
+  "meaningZh": "登；上升",
+  "exampleZh": "月亮从东边升起。"
+ },
+ {
+  "id": "n4_0385",
+  "meaningZh": "换乘",
+  "exampleZh": "要换乘吗？"
+ },
+ {
+  "id": "n4_0386",
+  "meaningZh": "交通工具；乘坐设施",
+  "exampleZh": "这个乘坐设施是面向儿童的。"
+ },
+ {
+  "id": "n4_0387",
+  "meaningZh": "场合；情况",
+  "exampleZh": "那是极端情况。"
+ },
+ {
+  "id": "n4_0388",
+  "meaningZh": "场所；位置",
+  "exampleZh": "在这个地方吗？"
+ },
+ {
+  "id": "n4_0389",
+  "meaningZh": "榻榻米",
+  "exampleZh": "把伞折起来。"
+ },
+ {
+  "id": "n4_0390",
+  "meaningZh": "装饰",
+  "exampleZh": "我喜欢用花装饰房间。"
+ },
+ {
+  "id": "n4_0391",
+  "meaningZh": "种植",
+  "exampleZh": "春天是种树的季节。"
+ },
+ {
+  "id": "n4_0392",
+  "meaningZh": "触摸；碰",
+  "exampleZh": "别碰那个。"
+ },
+ {
+  "id": "n4_0393",
+  "meaningZh": "吃饭；饭菜",
+  "exampleZh": "开饭了哦。"
+ },
+ {
+  "id": "n4_0394",
+  "meaningZh": "食品；食材",
+  "exampleZh": "得去买食品了。"
+ },
+ {
+  "id": "n4_0395",
+  "meaningZh": "睡懒觉；睡过头",
+  "exampleZh": "我睡过头了。"
+ },
+ {
+  "id": "n4_0396",
+  "meaningZh": "心；内心",
+  "exampleZh": "眼睛是心灵的镜子。"
+ },
+ {
+  "id": "n4_0397",
+  "meaningZh": "担心",
+  "exampleZh": "别担心。"
+ },
+ {
+  "id": "n4_0398",
+  "meaningZh": "报社",
+  "exampleZh": "您在哪家报社工作？"
+ },
+ {
+  "id": "n4_0399",
+  "meaningZh": "森林",
+  "exampleZh": "他在森林里迷路了。"
+ },
+ {
+  "id": "n4_0400",
+  "meaningZh": "深的",
+  "exampleZh": "这个湖很深。"
+ },
+ {
+  "id": "n4_0401",
+  "meaningZh": "说；讲（谦让语）",
+  "exampleZh": "我完全没有表示反对的意思。"
+ },
+ {
+  "id": "n4_0402",
+  "meaningZh": "叫；说（谦让语）",
+  "exampleZh": ""
+ },
+ {
+  "id": "n4_0403",
+  "meaningZh": "正中央",
+  "exampleZh": "那座岛在湖的正中央。"
+ },
+ {
+  "id": "n4_0404",
+  "meaningZh": "神社",
+  "exampleZh": "京都以神社和寺院闻名。"
+ },
+ {
+  "id": "n4_0405",
+  "meaningZh": "父母",
+  "exampleZh": "父母会付的。"
+ },
+ {
+  "id": "n4_0406",
+  "meaningZh": "亲切；热心",
+  "exampleZh": "她很热心。"
+ },
+ {
+  "id": "n4_0407",
+  "meaningZh": "前进；（钟表）快",
+  "exampleZh": "我的手表有点快。"
+ },
+ {
+  "id": "n4_0408",
+  "meaningZh": "人偶；玩偶",
+  "exampleZh": "那个人偶好吓人。"
+ },
+ {
+  "id": "n4_0409",
+  "meaningZh": "人口",
+  "exampleZh": "那个镇子人口很多。"
+ },
+ {
+  "id": "n4_0410",
+  "meaningZh": "询问；寻找",
+  "exampleZh": "值得一问。"
+ },
+ {
+  "id": "n4_0411",
+  "meaningZh": "游泳",
+  "exampleZh": "你喜欢游泳吗？"
+ },
+ {
+  "id": "n4_0412",
+  "meaningZh": "自来水；水道",
+  "exampleZh": "水管破裂了。"
+ },
+ {
+  "id": "n4_0413",
+  "meaningZh": "数学",
+  "exampleZh": "数学好难。"
+ },
+ {
+  "id": "n4_0414",
+  "meaningZh": "世界",
+  "exampleZh": "世界很广阔。"
+ },
+ {
+  "id": "n4_0415",
+  "meaningZh": "照顾；帮忙",
+  "exampleZh": "真是多管闲事。"
+ },
+ {
+  "id": "n4_0416",
+  "meaningZh": "厉害的；惊人的",
+  "exampleZh": "那家伙真厉害！"
+ },
+ {
+  "id": "n4_0417",
+  "meaningZh": "政治",
+  "exampleZh": "他完全是个政客。"
+ },
+ {
+  "id": "n4_0418",
+  "meaningZh": "星星",
+  "exampleZh": "向星星许愿。"
+ },
+ {
+  "id": "n4_0419",
+  "meaningZh": "正确的",
+  "exampleZh": "大体正确。"
+ },
+ {
+  "id": "n4_0420",
+  "meaningZh": "活；生活",
+  "exampleZh": "活着是危险的。"
+ },
+ {
+  "id": "n4_0421",
+  "meaningZh": "生活",
+  "exampleZh": "过着放荡的生活。"
+ },
+ {
+  "id": "n4_0422",
+  "meaningZh": "生产",
+  "exampleZh": "产量开始下滑。"
+ },
+ {
+  "id": "n4_0423",
+  "meaningZh": "兴盛的；热烈的",
+  "exampleZh": "他干得很红火。"
+ },
+ {
+  "id": "n4_0424",
+  "meaningZh": "西洋；西方",
+  "exampleZh": "他喜欢西方文化。"
+ },
+ {
+  "id": "n4_0425",
+  "meaningZh": "座位",
+  "exampleZh": "我会出席。"
+ },
+ {
+  "id": "n4_0426",
+  "meaningZh": "从前；昔日",
+  "exampleZh": "以前经常做。"
+ },
+ {
+  "id": "n4_0427",
+  "meaningZh": "石头",
+  "exampleZh": "滴水穿石。"
+ },
+ {
+  "id": "n4_0428",
+  "meaningZh": "婴儿",
+  "exampleZh": "他简直像个婴儿。"
+ },
+ {
+  "id": "n4_0429",
+  "meaningZh": "折断；折叠",
+  "exampleZh": "别折断树枝。"
+ },
+ {
+  "id": "n4_0430",
+  "meaningZh": "折断；拐弯",
+  "exampleZh": "宁弯不折。"
+ },
+ {
+  "id": "n4_0431",
+  "meaningZh": "说明",
+  "exampleZh": "让我解释一下。"
+ },
+ {
+  "id": "n4_0432",
+  "meaningZh": "前辈；学长",
+  "exampleZh": "汤姆是我高中的学长。"
+ },
+ {
+  "id": "n4_0433",
+  "meaningZh": "战争",
+  "exampleZh": "我害怕战争。"
+ },
+ {
+  "id": "n4_0434",
+  "meaningZh": "浅的；肤浅的",
+  "exampleZh": "我睡得很浅。"
+ },
+ {
+  "id": "n4_0435",
+  "meaningZh": "线",
+  "exampleZh": "是中央线呢。"
+ },
+ {
+  "id": "n4_0436",
+  "meaningZh": "选择",
+  "exampleZh": "当初该选钱的。"
+ },
+ {
+  "id": "n4_0437",
+  "meaningZh": "祖父；爷爷",
+  "exampleZh": "他像爷爷。"
+ },
+ {
+  "id": "n4_0438",
+  "meaningZh": "祖母；奶奶",
+  "exampleZh": "奶奶说话慢条斯理。"
+ },
+ {
+  "id": "n4_0439",
+  "meaningZh": "瘦",
+  "exampleZh": "真遗憾你不需要减肥。"
+ },
+ {
+  "id": "n4_0440",
+  "meaningZh": "商量；咨询",
+  "exampleZh": "我和姐姐商量了。"
+ },
+ {
+  "id": "n4_0441",
+  "meaningZh": "草",
+  "exampleZh": "笑死我了！"
+ },
+ {
+  "id": "n4_0442",
+  "meaningZh": "送；寄",
+  "exampleZh": "送给谁？"
+ },
+ {
+  "id": "n4_0443",
+  "meaningZh": "吵闹；骚动",
+  "exampleZh": "别那么吵闹。"
+ },
+ {
+  "id": "n4_0444",
+  "meaningZh": "增加",
+  "exampleZh": "这下我的烦恼又多了。"
+ },
+ {
+  "id": "n4_0445",
+  "meaningZh": "礼物",
+  "exampleZh": "我有礼物要送你。"
+ },
+ {
+  "id": "n4_0446",
+  "meaningZh": "儿子",
+  "exampleZh": "是我的儿子。"
+ },
+ {
+  "id": "n4_0447",
+  "meaningZh": "加",
+  "exampleZh": "一加二等于三。"
+ },
+ {
+  "id": "n4_0448",
+  "meaningZh": "足够",
+  "exampleZh": "这些够吗？"
+ },
+ {
+  "id": "n4_0449",
+  "meaningZh": "继续；持续",
+  "exampleZh": "最近寒冷的日子持续不断。"
+ },
+ {
+  "id": "n4_0450",
+  "meaningZh": "继续",
+  "exampleZh": "我会一直走下去。"
+ },
+ {
+  "id": "n4_0451",
+  "meaningZh": "毕业",
+  "exampleZh": "从学校毕业了。"
+ },
+ {
+  "id": "n4_0452",
+  "meaningZh": "胖；发胖",
+  "exampleZh": "吃太多会胖。"
+ },
+ {
+  "id": "n4_0453",
+  "meaningZh": "打；击",
+  "exampleZh": "无计可施啊。"
+ },
+ {
+  "id": "n4_0454",
+  "meaningZh": "出院",
+  "exampleZh": "病人出院了。"
+ },
+ {
+  "id": "n4_0455",
+  "meaningZh": "代替；替代",
+  "exampleZh": "我换负责人来接。"
+ },
+ {
+  "id": "n4_0456",
+  "meaningZh": "台风",
+  "exampleZh": "台风过去了。"
+ },
+ {
+  "id": "n4_0457",
+  "meaningZh": "大学生",
+  "exampleZh": "我是大学生。"
+ },
+ {
+  "id": "n4_0458",
+  "meaningZh": "重要的；珍惜的",
+  "exampleZh": "有什么大不了的？"
+ },
+ {
+  "id": "n4_0459",
+  "meaningZh": "大体；大致",
+  "exampleZh": "大体正确。"
+ },
+ {
+  "id": "n4_0460",
+  "meaningZh": "相当；很",
+  "exampleZh": "今天暖和多了啊。"
+ },
+ {
+  "id": "n4_0461",
+  "meaningZh": "架子；棚",
+  "exampleZh": "架子上空空的。"
+ },
+ {
+  "id": "n4_0462",
+  "meaningZh": "寻找",
+  "exampleZh": "我要另找工作。"
+ },
+ {
+  "id": "n4_0463",
+  "meaningZh": "暖气；供暖",
+  "exampleZh": "你关暖气了吗？"
+ },
+ {
+  "id": "n4_0464",
+  "meaningZh": "男性",
+  "exampleZh": "女士优先于男士。"
+ },
+ {
+  "id": "n4_0465",
+  "meaningZh": "通知；告知",
+  "exampleZh": "稍后通知你。"
+ },
+ {
+  "id": "n4_0466",
+  "meaningZh": "地震",
+  "exampleZh": "刚才是地震了吗？"
+ },
+ {
+  "id": "n4_0467",
+  "meaningZh": "地理",
+  "exampleZh": "我地理不行。"
+ },
+ {
+  "id": "n4_0468",
+  "meaningZh": "害羞的；惭愧的",
+  "exampleZh": "真难为情啊！"
+ },
+ {
+  "id": "n4_0469",
+  "meaningZh": "做（谦让语）",
+  "exampleZh": "两个极端是一致的。"
+ },
+ {
+  "id": "n4_0470",
+  "meaningZh": "迟到；落后",
+  "exampleZh": "别迟到哦。"
+ },
+ {
+  "id": "n4_0471",
+  "meaningZh": "和服；衣服",
+  "exampleZh": "你穿和服吗？"
+ },
+ {
+  "id": "n4_0472",
+  "meaningZh": "相当；颇",
+  "exampleZh": ""
+ },
+ {
+  "id": "n4_0473",
+  "meaningZh": "初中",
+  "exampleZh": "他上初中了。"
+ },
+ {
+  "id": "n4_0474",
+  "meaningZh": "白天",
+  "exampleZh": "太阳在白天照耀。"
+ },
+ {
+  "id": "n4_0475",
+  "meaningZh": "午休",
+  "exampleZh": "午休是什么时候？"
+ },
+ {
+  "id": "n4_0476",
+  "meaningZh": "注意；当心",
+  "exampleZh": "当心恶犬！"
+ },
+ {
+  "id": "n4_0477",
+  "meaningZh": "注射；打针",
+  "exampleZh": "打一针吧。"
+ },
+ {
+  "id": "n4_0478",
+  "meaningZh": "虫子",
+  "exampleZh": "你怕虫子吗？"
+ },
+ {
+  "id": "n4_0479",
+  "meaningZh": "停车场",
+  "exampleZh": "有停车场吗？"
+ },
+ {
+  "id": "n4_0480",
+  "meaningZh": "礼貌的；认真的",
+  "exampleZh": "他客气得过分。"
+ },
+ {
+  "id": "n4_0481",
+  "meaningZh": "调查；查阅",
+  "exampleZh": "用词典查单词。"
+ },
+ {
+  "id": "n4_0482",
+  "meaningZh": "修理；改正",
+  "exampleZh": "我重新打给你。"
+ },
+ {
+  "id": "n4_0483",
+  "meaningZh": "修好；复原",
+  "exampleZh": "马上就能振作起来的吧！"
+ },
+ {
+  "id": "n4_0484",
+  "meaningZh": "罕见的；新奇的",
+  "exampleZh": "真是少见的名字啊。"
+ },
+ {
+  "id": "n4_0485",
+  "meaningZh": "往返；通勤上学",
+  "exampleZh": "我走路去上学。"
+ },
+ {
+  "id": "n4_0486",
+  "meaningZh": "通过；穿过",
+  "exampleZh": "别过这座桥。"
+ },
+ {
+  "id": "n4_0487",
+  "meaningZh": "浸泡；腌制",
+  "exampleZh": "介意袜子异味时，据说泡在柠檬酸水里很有效哦。"
+ },
+ {
+  "id": "n4_0488",
+  "meaningZh": "钓鱼",
+  "exampleZh": "抛砖引玉。"
+ },
+ {
+  "id": "n4_0489",
+  "meaningZh": "小偷；盗贼",
+  "exampleZh": "他是小偷。"
+ },
+ {
+  "id": "n4_0490",
+  "meaningZh": "适当；随便",
+  "exampleZh": "你看着办吧。"
+ },
+ {
+  "id": "n4_0491",
+  "meaningZh": "天气预报",
+  "exampleZh": "天气预报说准了。"
+ },
+ {
+  "id": "n4_0492",
+  "meaningZh": "展览会",
+  "exampleZh": "展览会正在举办。"
+ },
+ {
+  "id": "n4_0493",
+  "meaningZh": "店员",
+  "exampleZh": "他把钱递给了店员。"
+ },
+ {
+  "id": "n4_0494",
+  "meaningZh": "点；分数",
+  "exampleZh": "我明白论点。"
+ },
+ {
+  "id": "n4_0495",
+  "meaningZh": "传达；传导",
+  "exampleZh": "铁导热性好。"
+ },
+ {
+  "id": "n4_0496",
+  "meaningZh": "乡下；老家",
+  "exampleZh": "我在乡下长大。"
+ },
+ {
+  "id": "n4_0497",
+  "meaningZh": "电灯",
+  "exampleZh": "电灯灭了。"
+ },
+ {
+  "id": "n4_0498",
+  "meaningZh": "电报",
+  "exampleZh": "马上发电报。"
+ },
+ {
+  "id": "n4_0499",
+  "meaningZh": "涂；刷",
+  "exampleZh": "我打算刷墙。"
+ },
+ {
+  "id": "n4_0500",
+  "meaningZh": "途中；路上",
+  "exampleZh": "你在回家的路上吗？"
+ },
+ {
+  "id": "n4_0501",
+  "meaningZh": "都；城市",
+  "exampleZh": "是座工业城市。"
+ },
+ {
+  "id": "n4_0502",
+  "meaningZh": "情况；方便",
+  "exampleZh": "因个人原因。"
+ },
+ {
+  "id": "n4_0503",
+  "meaningZh": "生气",
+  "exampleZh": "他动不动就生气。"
+ },
+ {
+  "id": "n4_0504",
+  "meaningZh": "倒下；倒塌",
+  "exampleZh": "内部分裂的家族会垮掉。"
+ },
+ {
+  "id": "n4_0505",
+  "meaningZh": "岛",
+  "exampleZh": "日本是岛国。"
+ },
+ {
+  "id": "n4_0506",
+  "meaningZh": "投；扔",
+  "exampleZh": "投快速球。"
+ },
+ {
+  "id": "n4_0507",
+  "meaningZh": "偷；盗窃",
+  "exampleZh": "偷东西是坏事。"
+ },
+ {
+  "id": "n4_0508",
+  "meaningZh": "热水；澡堂",
+  "exampleZh": "这澡泡得真舒服啊。"
+ },
+ {
+  "id": "n4_0509",
+  "meaningZh": "回答；答案",
+  "exampleZh": "回答了几个问题？"
+ },
+ {
+  "id": "n4_0510",
+  "meaningZh": "踩",
+  "exampleZh": "别踩碎玻璃。"
+ },
+ {
+  "id": "n4_0511",
+  "meaningZh": "逃跑",
+  "exampleZh": "走为上策。"
+ },
+ {
+  "id": "n4_0512",
+  "meaningZh": "动；移动",
+  "exampleZh": "真让人动心啊。"
+ },
+ {
+  "id": "n4_0513",
+  "meaningZh": "动物园",
+  "exampleZh": "去动物园吧。"
+ },
+ {
+  "id": "n4_0514",
+  "meaningZh": "工具",
+  "exampleZh": "别糟蹋工具。"
+ },
+ {
+  "id": "n4_0515",
+  "meaningZh": "特别；尤其",
+  "exampleZh": "我尤其喜欢狗。"
+ },
+ {
+  "id": "n4_0516",
+  "meaningZh": "特快（列车）",
+  "exampleZh": "特快车在几号站台？"
+ },
+ {
+  "id": "n4_0517",
+  "meaningZh": "特别",
+  "exampleZh": "你很特别哦。"
+ },
+ {
+  "id": "n4_0518",
+  "meaningZh": "送达；递送",
+  "exampleZh": "有人托我把这个送到。"
+ },
+ {
+  "id": "n4_0519",
+  "meaningZh": "两层楼",
+  "exampleZh": ""
+ },
+ {
+  "id": "n4_0520",
+  "meaningZh": "日；太阳",
+  "exampleZh": "今日例行休息。"
+ },
+ {
+  "id": "n4_0521",
+  "meaningZh": "日记",
+  "exampleZh": "记日记。"
+ },
+ {
+  "id": "n4_0522",
+  "meaningZh": "住院",
+  "exampleZh": "正在住院。"
+ },
+ {
+  "id": "n4_0523",
+  "meaningZh": "入学",
+  "exampleZh": "他是走后门入学的。"
+ },
+ {
+  "id": "n4_0524",
+  "meaningZh": "发烧；热",
+  "exampleZh": "发烧吗？"
+ },
+ {
+  "id": "n4_0525",
+  "meaningZh": "看；拜见（谦让语）",
+  "exampleZh": "请让我看一下登机牌。"
+ },
+ {
+  "id": "n4_0526",
+  "meaningZh": "背；后背",
+  "exampleZh": "后背疼。"
+ },
+ {
+  "id": "n4_0527",
+  "meaningZh": "倍；加倍",
+  "exampleZh": "二的两倍是四。"
+ },
+ {
+  "id": "n4_0528",
+  "meaningZh": "柜台；卖场",
+  "exampleZh": "售票处在哪里？"
+ },
+ {
+  "id": "n4_0529",
+  "meaningZh": "住宿",
+  "exampleZh": "我决定住下了。"
+ },
+ {
+  "id": "n4_0530",
+  "meaningZh": "发音",
+  "exampleZh": "你发音真好。"
+ },
+ {
+  "id": "n4_0531",
+  "meaningZh": "头发",
+  "exampleZh": "他留长发。"
+ },
+ {
+  "id": "n4_0532",
+  "meaningZh": "反对；相反",
+  "exampleZh": "反对票占多数。"
+ },
+ {
+  "id": "n4_0533",
+  "meaningZh": "节目",
+  "exampleZh": "你看这个节目吗？"
+ },
+ {
+  "id": "n4_0534",
+  "meaningZh": "他；男朋友",
+  "exampleZh": "她在走路。"
+ },
+ {
+  "id": "n4_0535",
+  "meaningZh": "他们",
+  "exampleZh": "它们是蓝色的。"
+ },
+ {
+  "id": "n4_0536",
+  "meaningZh": "她；女朋友",
+  "exampleZh": "她在走路。"
+ },
+ {
+  "id": "n4_0537",
+  "meaningZh": "悲伤的",
+  "exampleZh": "我很难过。"
+ },
+ {
+  "id": "n4_0538",
+  "meaningZh": "比较",
+  "exampleZh": "和以前相比变好了。"
+ },
+ {
+  "id": "n4_0539",
+  "meaningZh": "非常",
+  "exampleZh": "他非常热心。"
+ },
+ {
+  "id": "n4_0540",
+  "meaningZh": "机场",
+  "exampleZh": "机票能在机场取吗？"
+ },
+ {
+  "id": "n4_0541",
+  "meaningZh": "美丽的",
+  "exampleZh": "我很美。"
+ },
+ {
+  "id": "n4_0542",
+  "meaningZh": "美术馆",
+  "exampleZh": "我们去了美术馆。"
+ },
+ {
+  "id": "n4_0543",
+  "meaningZh": "一定；必定",
+  "exampleZh": "我一定做。"
+ },
+ {
+  "id": "n4_0544",
+  "meaningZh": "必要；需要",
+  "exampleZh": "我需要你。"
+ },
+ {
+  "id": "n4_0545",
+  "meaningZh": "表面；正面",
+  "exampleZh": "真是不错的表达。"
+ },
+ {
+  "id": "n4_0546",
+  "meaningZh": "物品；商品",
+  "exampleZh": "这件商品很便宜。"
+ },
+ {
+  "id": "n4_0547",
+  "meaningZh": "不方便",
+  "exampleZh": "没有电话很不方便。"
+ },
+ {
+  "id": "n4_0548",
+  "meaningZh": "附上；带有",
+  "exampleZh": "她的泳衣很惹眼。"
+ },
+ {
+  "id": "n4_0549",
+  "meaningZh": "丈夫",
+  "exampleZh": "看起来没事吧？"
+ },
+ {
+  "id": "n4_0550",
+  "meaningZh": "被褥；被子",
+  "exampleZh": "把被子晒一下。"
+ },
+ {
+  "id": "n4_0551",
+  "meaningZh": "可怕的",
+  "exampleZh": "还害怕吗？"
+ },
+ {
+  "id": "n4_0552",
+  "meaningZh": "普通；一般",
+  "exampleZh": "视力正常。"
+ },
+ {
+  "id": "n4_0553",
+  "meaningZh": "输；负",
+  "exampleZh": "输即是赢。"
+ },
+ {
+  "id": "n4_0554",
+  "meaningZh": "部长",
+  "exampleZh": "他是销售部部长。"
+ },
+ {
+  "id": "n4_0555",
+  "meaningZh": "复习",
+  "exampleZh": "复习第五课吧。"
+ },
+ {
+  "id": "n4_0556",
+  "meaningZh": "复杂",
+  "exampleZh": "真的很复杂！"
+ },
+ {
+  "id": "n4_0557",
+  "meaningZh": "支付",
+  "exampleZh": "今天我来付。"
+ },
+ {
+  "id": "n4_0558",
+  "meaningZh": "烧开；使沸腾",
+  "exampleZh": ""
+ },
+ {
+  "id": "n4_0559",
+  "meaningZh": "沸腾；激动",
+  "exampleZh": "汤姆在等水壶烧开。"
+ },
+ {
+  "id": "n4_0560",
+  "meaningZh": "文化",
+  "exampleZh": "是个文化人。"
+ },
+ {
+  "id": "n4_0561",
+  "meaningZh": "文学",
+  "exampleZh": "他是文学家。"
+ },
+ {
+  "id": "n4_0562",
+  "meaningZh": "语法",
+  "exampleZh": "我讨厌语法。"
+ },
+ {
+  "id": "n4_0563",
+  "meaningZh": "听得见",
+  "exampleZh": "听到什么了吗？"
+ },
+ {
+  "id": "n4_0564",
+  "meaningZh": "米；大米",
+  "exampleZh": "把米煮了。"
+ },
+ {
+  "id": "n4_0565",
+  "meaningZh": "墙壁",
+  "exampleZh": "隔墙有耳。"
+ },
+ {
+  "id": "n4_0566",
+  "meaningZh": "别的；分别",
+  "exampleZh": "像变了个人。"
+ },
+ {
+  "id": "n4_0567",
+  "meaningZh": "分别；分手",
+  "exampleZh": "你要和汤姆分手吗？"
+ },
+ {
+  "id": "n4_0568",
+  "meaningZh": "奇怪；变化",
+  "exampleZh": "别来无恙？"
+ },
+ {
+  "id": "n4_0569",
+  "meaningZh": "改变；变更",
+  "exampleZh": "热使冰变成水。"
+ },
+ {
+  "id": "n4_0570",
+  "meaningZh": "变化；改变",
+  "exampleZh": "水变成蒸汽。"
+ },
+ {
+  "id": "n4_0571",
+  "meaningZh": "整理；收拾",
+  "exampleZh": "得收拾屋子。"
+ },
+ {
+  "id": "n4_0572",
+  "meaningZh": "回信；回复",
+  "exampleZh": "没有回音。"
+ },
+ {
+  "id": "n4_0573",
+  "meaningZh": "抓住",
+  "exampleZh": "抓虫子。"
+ },
+ {
+  "id": "n4_0574",
+  "meaningZh": "天黑；岁暮",
+  "exampleZh": "冬天黑得早。"
+ },
+ {
+  "id": "n4_0575",
+  "meaningZh": "包；裹",
+  "exampleZh": "不需要包装。"
+ },
+ {
+  "id": "n4_0576",
+  "meaningZh": "广播；播放",
+  "exampleZh": "正在热播中！"
+ },
+ {
+  "id": "n4_0577",
+  "meaningZh": "法律",
+  "exampleZh": "因为这是法律。"
+ },
+ {
+  "id": "n4_0578",
+  "meaningZh": "拜访",
+  "exampleZh": "我打算明天去拜访他。"
+ },
+ {
+  "id": "n4_0579",
+  "meaningZh": "去世",
+  "exampleZh": "也有很多人因交通事故丧生。"
+ },
+ {
+  "id": "n4_0580",
+  "meaningZh": "遗忘的物品",
+  "exampleZh": "没落下东西吧？"
+ },
+ {
+  "id": "n4_0581",
+  "meaningZh": "贸易",
+  "exampleZh": "贸易增加了国家财富。"
+ },
+ {
+  "id": "n4_0582",
+  "meaningZh": "我（男性用语）",
+  "exampleZh": "我很忙。"
+ },
+ {
+  "id": "n4_0583",
+  "meaningZh": "翻译",
+  "exampleZh": "被翻译出来了！"
+ },
+ {
+  "id": "n4_0584",
+  "meaningZh": "漫画",
+  "exampleZh": "我是漫画家。"
+ },
+ {
+  "id": "n4_0585",
+  "meaningZh": "味道",
+  "exampleZh": "事后感觉不太舒服。"
+ },
+ {
+  "id": "n4_0586",
+  "meaningZh": "味噌；豆酱",
+  "exampleZh": "味噌汤热好了。"
+ },
+ {
+  "id": "n4_0587",
+  "meaningZh": "困的",
+  "exampleZh": "困吗？"
+ },
+ {
+  "id": "n4_0588",
+  "meaningZh": "睡觉；长眠",
+  "exampleZh": "和我一同长眠。"
+ },
+ {
+  "id": "n4_0589",
+  "meaningZh": "梦；梦想",
+  "exampleZh": "抓住梦想！"
+ },
+ {
+  "id": "n4_0590",
+  "meaningZh": "丢失；消失",
+  "exampleZh": "会议恐怕要取消了。"
+ },
+ {
+  "id": "n4_0591",
+  "meaningZh": "不可能；勉强",
+  "exampleZh": "绝对不可能。"
+ },
+ {
+  "id": "n4_0592",
+  "meaningZh": "女儿；姑娘",
+  "exampleZh": "我喜欢猫娘。"
+ },
+ {
+  "id": "n4_0593",
+  "meaningZh": "明天",
+  "exampleZh": "明天能来吗？"
+ },
+ {
+  "id": "n4_0594",
+  "meaningZh": "鸣；响",
+  "exampleZh": "别大吼大叫。"
+ },
+ {
+  "id": "n4_0595",
+  "meaningZh": "毛；毛发",
+  "exampleZh": "给，毛毯。"
+ },
+ {
+  "id": "n4_0596",
+  "meaningZh": "棉花；棉织品",
+  "exampleZh": "这件衬衫是棉制的。"
+ },
+ {
+  "id": "n4_0597",
+  "meaningZh": "返回",
+  "exampleZh": "我马上回来。"
+ },
+ {
+  "id": "n4_0598",
+  "meaningZh": "有用；派上用场",
+  "exampleZh": "应该会派上用场。"
+ },
+ {
+  "id": "n4_0599",
+  "meaningZh": "约定；承诺",
+  "exampleZh": "我保证。"
+ },
+ {
+  "id": "n4_0600",
+  "meaningZh": "意思；理由",
+  "exampleZh": "明细是什么？"
+ },
+ {
+  "id": "n4_0601",
+  "meaningZh": "出口",
+  "exampleZh": "出口行业叫苦连天。"
+ },
+ {
+  "id": "n4_0602",
+  "meaningZh": "进口",
+  "exampleZh": "进口车需求强劲。"
+ },
+ {
+  "id": "n4_0603",
+  "meaningZh": "温柔的；亲切的",
+  "exampleZh": "是个温柔的人。"
+ },
+ {
+  "id": "n4_0604",
+  "meaningZh": "玩耍",
+  "exampleZh": "来玩吧。"
+ },
+ {
+  "id": "n4_0605",
+  "meaningZh": "预习",
+  "exampleZh": "他预习了。"
+ },
+ {
+  "id": "n4_0606",
+  "meaningZh": "预定；计划",
+  "exampleZh": "下一个安排是什么？"
+ },
+ {
+  "id": "n4_0607",
+  "meaningZh": "预约",
+  "exampleZh": "已经预约好了。"
+ },
+ {
+  "id": "n4_0608",
+  "meaningZh": "摇晃",
+  "exampleZh": "我感觉到房子在摇晃。"
+ },
+ {
+  "id": "n4_0609",
+  "meaningZh": "事情；用途",
+  "exampleZh": "您还有别的事吗？"
+ },
+ {
+  "id": "n4_0610",
+  "meaningZh": "准备",
+  "exampleZh": "快点准备。"
+ },
+ {
+  "id": "n4_0611",
+  "meaningZh": "事情",
+  "exampleZh": "今天有事吗？"
+ },
+ {
+  "id": "n4_0612",
+  "meaningZh": "叶子",
+  "exampleZh": "叶子落了。"
+ },
+ {
+  "id": "n4_0613",
+  "meaningZh": "舞蹈",
+  "exampleZh": "继续跳吧。"
+ },
+ {
+  "id": "n4_0614",
+  "meaningZh": "跳舞",
+  "exampleZh": "我最讨厌跳舞。"
+ },
+ {
+  "id": "n4_0615",
+  "meaningZh": "扔下；使落下",
+  "exampleZh": "别把杯子弄掉了。"
+ },
+ {
+  "id": "n4_0616",
+  "meaningZh": "落下；掉落",
+  "exampleZh": ""
+ },
+ {
+  "id": "n4_0617",
+  "meaningZh": "利用",
+  "exampleZh": "要回收再利用吗？"
+ },
+ {
+  "id": "n4_0618",
+  "meaningZh": "理由",
+  "exampleZh": "理由很简单哦。"
+ },
+ {
+  "id": "n4_0619",
+  "meaningZh": "背面；后面",
+  "exampleZh": "他背叛了。"
+ },
+ {
+  "id": "n4_0620",
+  "meaningZh": "立起；竖立",
+  "exampleZh": "别生气。"
+ },
+ {
+  "id": "n4_0621",
+  "meaningZh": "不在家",
+  "exampleZh": "妈妈不在家。"
+ },
+ {
+  "id": "n4_0622",
+  "meaningZh": "日式旅馆",
+  "exampleZh": "那家旅馆很有家的感觉。"
+ },
+ {
+  "id": "n4_0623",
+  "meaningZh": "双方；两边",
+  "exampleZh": "两个我都喜欢。"
+ },
+ {
+  "id": "n4_0624",
+  "meaningZh": "力；力量",
+  "exampleZh": "力气用尽了。"
+ },
+ {
+  "id": "n4_0625",
+  "meaningZh": "树林",
+  "exampleZh": "林中的竹子很显眼。"
+ },
+ {
+  "id": "n4_0626",
+  "meaningZh": "例如",
+  "exampleZh": "例如，这是一支笔。"
+ },
+ {
+  "id": "n4_0627",
+  "meaningZh": "变冷；降温",
+  "exampleZh": "天真冷啊。"
+ },
+ {
+  "id": "n4_0628",
+  "meaningZh": "冷气；空调",
+  "exampleZh": "这个房间开着空调。"
+ },
+ {
+  "id": "n4_0629",
+  "meaningZh": "历史",
+  "exampleZh": "历史会重演。"
+ },
+ {
+  "id": "n4_0630",
+  "meaningZh": "带领；带着",
+  "exampleZh": ""
+ },
+ {
+  "id": "n4_0631",
+  "meaningZh": "联系",
+  "exampleZh": "记得联系我哦。"
+ },
+ {
+  "id": "n4_0632",
+  "meaningZh": "胳膊；本事",
+  "exampleZh": "放开我的胳膊。"
+ }
+]
