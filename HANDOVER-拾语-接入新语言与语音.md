@@ -19,6 +19,9 @@
 | 别重复踩坑 | §6 |
 | 还欠什么 | §7 |
 | 数据文件格式规格 | §8 |
+| 常见小改动怎么改（配方） | §9 |
+| 出问题怎么排查 | §10 |
+| 新语言验收清单 | §11 |
 
 ---
 
@@ -131,6 +134,14 @@ audio/  平台音频（AudioRecord / AudioTrack）
 `app/src/test/java/com/shiyu/app/SourcePolicyTest.kt` 会**扫源码强制这条规矩**
 （`ui/` 与 `ai/` 里出现 `KanaConverter` / `romaji` / `EnModule` 等词直接测试失败）。
 加新语言时，语言细节只能写在 `core/lang/<语言>/` 里。
+
+被禁的符号（**完整列表**，来自 `SourcePolicyTest`）：`KanaConverter`、`KanaNormalizer`、
+`EnTokenizer`、`EnSentenceSplitter`、`EnNormalizer`、`JaModule`、`EnModule`、`toHiragana`、
+`romaji`、`katakana`、`hiragana`、`tokenize`。
+
+⚠️ 注意 `romaji` / `tokenize` 这类**通用词也在禁用之列** —— 新语言的模块要引用它们时，
+只能在 `core/lang/` 里用，别让这些名字漏进 `ui/` 或 `ai/`（比如 UI 代码里命名一个变量叫
+`romajiText` 就会让测试挂掉）。
 
 ### 3.2 包结构
 
@@ -377,8 +388,95 @@ private val modules: Map<LangId, LanguageModule> = mapOf(
 ---
 
 
-## 5. 新语言的词库从哪来、怎么造
+### 4.12 端到端示例：接韩语（模块骨架）
 
+以韩语为例把 §4.10 的映射落地。**这是骨架**，`buildDeck` / `buildChart` 照抄现有模块即可：
+
+```kotlin
+package com.shiyu.app.core.lang.ko
+
+class KoModule : LanguageModule {
+
+    override val id: LangId = LangId.KO
+    override val answerHint: String = "拼写韩语单词"   // 考试页输入框占位
+    override val replyTag: String = "KO"
+
+    /**
+     * 判题归一化。**先做 Unicode NFC** —— 韩文/拉丁的变音符既可能是单码点，
+     * 也可能是组合字符；手机上打出来的与词库里存的很可能不是同一种码点序列，
+     * 不归一化就会「明明拼对了却判错」。
+     */
+    override fun normalizeForCompare(s: String): String {
+        val nfc = java.text.Normalizer.normalize(s, java.text.Normalizer.Form.NFC)
+        val sb = StringBuilder()
+        for (ch in nfc) {
+            if (ch.isWhitespace()) continue
+            if (ch in PUNCT) continue
+            sb.append(ch.lowercaseChar())
+        }
+        return sb.toString()
+    }
+
+    /** Triple(发音表, **默认词书**, 场景) —— 第二个要与 books() 的第一本一致 */
+    override fun assetNames(): Triple<String, String, String> =
+        Triple("ko_chart.json", "ko_topik1.json", "scenarios_ko.json")
+
+    override fun books(): List<WordBook> = listOf(
+        WordBook("topik1", LangId.KO, "TOPIK I",  "ko_topik1.json"),
+        WordBook("topik2", LangId.KO, "TOPIK II", "ko_topik2.json")
+    )
+
+    /** 韩语：front=韩文、back=罗马字转写，两种写法都算对（同日语「假名与汉字都算对」） */
+    override fun examAnswers(card: Card): List<String> =
+        listOf(card.front, card.back).filter { it.isNotBlank() }.distinct()
+
+    /**
+     * 词书 JSON → Card。映射规则见 §4.10：
+     *   front = 韩文原词       frontSub  = 级别/词性
+     *   back  = 罗马字转写      backSub   = ""（韩语不需要第二个读音位）
+     *   meaningZh = 中文释义    example / exampleZh = 例句与译文
+     */
+    override fun buildDeck(json: String): List<Card> { /* 照抄 EnModule，换字段名 */ }
+
+    override fun buildChart(json: String): List<ChartEntry> { /* 照抄 kana.json 那套 */ }
+
+    override fun buildScenarios(json: String): List<Scenario> = ScenarioParser.parse(json)
+
+    /** 西文标点分句 */
+    override fun splitSentences(text: String): List<String> = WesternSentenceSplitter.split(text)
+}
+```
+
+> 🔧 **顺手该做的一处小重构**：`ScenarioParser` 现在放在 `core/lang/ja/` 包里，
+> 但它**语言无关** —— 现在的 `EnModule` 就已经在跨包 import
+> `com.shiyu.app.core.lang.ja.ScenarioParser`（还有那个 `str` JSON 取值助手）。
+> 接第三门语言之前，建议把它们挪到 `core/lang/common/`，
+> 否则每加一门语言就多一处这种别扭的跨包引用。
+> `WesternSentenceSplitter` 同理，应放 `common/` 由 EN 和新语言共用。
+
+---
+
+### 4.13 改动文件速查表
+
+加一门语言要动的**全部**文件（★ = 只写本语言内容；⚠️ = 容易漏）：
+
+| 文件 | 改什么 |
+|---|---|
+| `core/lang/LangId.kt` | ⚠️ 加枚举项 **+ 把 `fromTag` 改成通用查找**（步骤 1） |
+| `core/lang/<语言>/XxModule.kt` | ★ 新建，实现 11 个成员（步骤 2 / §4.12） |
+| `core/lang/<语言>/XxNormalizer.kt` | ★ 新建，判题归一化 |
+| `core/lang/LanguageRegistry.kt` | 注册新模块（步骤 3） |
+| `ui/Speaker.kt` | ⚠️ `setLanguage` 加 locale 分支（步骤 4） |
+| `ui/LangStyle.kt` | `accentRes` 的 `when` 加分支（编译器会报错提醒） |
+| `ui/langs/LanguagesActivity.kt` | 从 `COMING` 列表移除 |
+| `res/values/colors.xml` | 多数已存在（`lang_ko`/`lang_es`/`lang_fr`），缺了才加 |
+| `assets/` | ★ 发音表 + 词书（可多本）+ 场景，共三份 JSON |
+| `app/src/test/.../LanguageModuleTest.kt` | 补新语言的模块与 `LangId` 断言 |
+| `app/src/test/.../SourcePolicyTest.kt` | **不用改**，但新代码要能过它（禁用词表见 §3.1） |
+
+---
+
+## 5. 新语言的词库从哪来、怎么造
 接一门新语言，**代码半天就改完，真正的工作量在词库**。英语和日语这次是怎么来的，可以照搬：
 
 ### 5.1 两条现成的路
@@ -584,4 +682,89 @@ docs/ja-translation/
 首次启动、且本地一份配置都没有时写入。**对所有语言生效** —— 新语言会自动拿到同一套网关。
 里面是**明文 API Key**：只适合自用/内部分发，**不要外传安装包**。
 
+---
 
+## 9. 常见改动配方
+
+想改这些小地方时，直接从这张表找入口。
+
+### 9.1 调整每日新词 / 复习量
+改 `core/srs/DailyQuota.kt`。**注意**：首页与复习页都从这里派生，改一处两边同步。
+别绕过它自己算——历史上出现过「首页说 20 张、复习页说 0 张」的两套真相。
+
+### 9.2 改朗读语速
+改 `ui/Speaker.kt` 的三个常量：`SLOW_RATE`（单词）、`EXAMPLE_RATE_EN`、`EXAMPLE_RATE_JA`。
+**这是唯一改语速的地方**，各页面都调 `Speaker`，没有第二处。
+例句语速按语言分，加语言时在 `exampleRateFor` 加分支。
+
+### 9.3 加一档自评 / 改自评文案
+- 文案：`res/values/strings.xml` 的 `quality_forgot` / `quality_vague` / `quality_recalled` / `quality_easy`
+- 档位本身：`ui/review/ReviewActivity.kt` 里 `btnQ2..btnQ5` → `onRate(quality)`，
+  quality 直接喂给 `Sm2Scheduler.review(...)`（SM-2 的 quality 取值见 `core/srs/Sm2Scheduler.kt`）。
+  加减档位要同时改布局 `activity_review.xml` 的 `ratingRow`。
+
+### 9.4 加一个成就徽章
+1. `core/stats/Achievements.kt` —— 加 `Id` 枚举项 + 在 `evaluate` 里加一条判定；
+2. `ui/profile/ProfileActivity.kt` 的 `BADGE_META` 映射 —— **必须加**，
+   否则该徽章不显示（代码用 `?:` 兜底，不会崩，只是少显示一个）；
+3. `res/values/strings.xml` 加徽章名与描述。
+
+### 9.5 改拼写考试题量 / 行为
+`ui/exam/ExamActivity.kt` 的 `QUESTION_COUNT`（当前 20）。
+抽题规则是「过滤掉没有中文释义的卡 → 洗牌 → 取前 N」，改这里即可。
+
+### 9.6 加一本新词书（语言已有）
+只需要两步，**不用改任何 UI**：
+1. 数据文件放进 `assets/`；
+2. 在该语言的 `XxModule.books()` 里加一条 `WordBook(...)`。
+   选书页与复习页会自动出现新书。**卡片 id 记得带书前缀**（跨书唯一）。
+
+### 9.7 改语伴名字 / 语言配色
+`ui/LangStyle.kt`：`partnerName()`（现在两门语言都是 `yoyo`）、`accentRes()`。
+
+### 9.8 加一个设置开关
+1. `data/model/AppSettings.kt` 加字段（**给默认值**，老配置文件就能自愈）；
+2. `data/store/SettingsRepository.kt`：加存取方法 + 在 `parse` / `toJson` 里读写
+   （**后加字段必须能容忍缺失**，这是本项目的既定约定）；
+3. `res/layout/activity_profile.xml` 加一行 + `ProfileActivity` 接线。
+
+---
+
+## 10. 排障速查表
+
+| 症状 | 最可能的原因 | 怎么办 |
+|---|---|---|
+| **语音页一进去就闪退** | Kotlin 接口默认方法的桥接在增量编译下丢失 → `AbstractMethodError` | 见 §6.1：实现类显式 `override` + `clean` 重新构建 |
+| 实时语音「连上了但 AI 一声不吭」 | 推流采样率不是 24kHz（服务端不报错、静默当没人说话） | 查 `RealtimeAudioController.SAMPLE_RATE` 必须是 `24000` |
+| 「测试连接」一直转圈 | 模型名非法 / Key 无效 —— 握手成功 ≠ 会话可用 | 看 logcat 有没有 `session.created`；`onReady` 才是真连上 |
+| 朗读**完全没声音** | 设备缺该语言语音包 / 忘了 manifest 的 `<queries>` TTS 声明 | 看有没有「缺少语音包」Toast；查 `AndroidManifest.xml` |
+| 朗读**用错语言**念 | `Speaker.setLanguage` 的时机或分支问题 | §4 步骤 4；注意它是**静默** bug，不报错 |
+| 新语言的记录跑进了日语 | `LangId.fromTag` 没改成通用查找 | §4 步骤 1，这是硬编码遗留 |
+| 首页与「我的」页数字对不上 | 统计有两套真相 | 两边都必须从会话文件 / `DailyQuota` 派生，见 §9.1 |
+| 卡片上有一条空白 | 该卡本来就没有例句或译文 | **正常**，代码已做容错（空则隐藏，不留空行） |
+| `input tap` 点了没反应 | 魅族 22 上连续点击常丢 | 先 `uiautomator dump` 拿真实坐标再点，点完复核 |
+| 单测全绿但装到手机上崩 | 单测覆盖不到 UI | 这个项目**栽过两次**，UI 改动必须真机验 |
+| 构建报找不到符号 / 行为诡异 | 用了增量产物 | `./gradlew :app:clean` 再来 |
+
+---
+
+## 11. 新语言验收清单（真机走查）
+
+接完一门新语言，**逐条点一遍**才算完成：
+
+- [ ] 课程页能在语言列表里看到新语言，点进去能切换
+- [ ] 切过去后，首页的语伴名、语言名、配色都跟着变
+- [ ] 首页「今日待复习 / 对话轮数」没有串到其它语言的数字
+- [ ] 复习页：正面只显示外语词（**不是中文**）
+- [ ] 点卡片 → 翻面揭示：中文释义 + 读音 + 例句 + 例句中文译文都正确
+- [ ] 卡片上的喇叭能读**正确语言**的音（不是英语音色）
+- [ ] 「听例句」能读整句
+- [ ] 选书页能列出该语言的所有词书，切换后卡片确实换了
+- [ ] 自评四个按钮点下去能推进到下一张，进度正常累加
+- [ ] 拼写考试：看释义能拼出词 → 判对 / 判错都正确 → 能走到结算页
+- [ ] 实时语音：能连上、AI 能开口、能打断（**别一进页面就崩**）
+- [ ] 场景对话能进、AI 用新语言回
+- [ ] **切回原来的语言，一切照旧**（没被新语言的改动影响）
+- [ ] 杀掉进程重开，配置与进度都还在
+- [ ] 「我的」页各项统计数字合理（没有负数、没有暴涨）
+- [ ] `./gradlew :app:testDebugUnitTest` 全绿
