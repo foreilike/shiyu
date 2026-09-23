@@ -14,3 +14,7 @@ local.properties
 # IDE
 .idea/
 *.iml
+
+# 真机抓的日志与临时分析脚本不入库
+.workbuddy/*.log
+.workbuddy/*.py
