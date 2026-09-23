@@ -23,7 +23,7 @@
 | 学习语言 | 日语 + 英语双语，可切换，进度/配置全隔离；韩/西/法在「课程」页标为即将支持 |
 | 工程根目录 | `D:\AI project\lang-partner`（目录名保留，未随应用改名） |
 | 主源码规模 | **82 个 `.kt`（9,743 行）+ 21 个布局 + 45 个 drawable + 18 份 assets JSON**<br>（核对于 2026-09-23；原文写的 72 / 6,519 / 16 / 36 / 6 均已过时） |
-| 测试 | **28 个测试类 / 401 个单测，全绿**（fail=0 err=0 skip=0），`lintDebug` 0 error<br>（原文写的 26 类 / 387 例已过时，明细见 §11.2） |
+| 测试 | **29 个测试类 / 417 个单测，全绿**（fail=0 err=0 skip=0），`lintDebug` 0 error<br>（原文写的 26 类 / 387 例已过时，明细见 §11.2） |
 | 交付 APK | `Shiyu-v1.0.3-release.apk`（9.62 MB，已签名）<br>历史包 `Shiyu-v1.0.0/1.0.1/1.0.2-release.apk` 全部保留 |
 | 构建命令 | 见 §2.2（**必须显式设置 `JAVA_HOME=D:\a\jbr`**） |
 | 联网能力 | 4 种 AI 能力（对话 / 识别 / 合成 / 实时语音）；**未配置凭证时全部降级为本地 Mock，App 照常可跑完流程** |
@@ -58,7 +58,7 @@
 | 路径 | 说明 |
 |---|---|
 | `app/src/main/java/com/shiyu/app/` | 主源码（**82 个 .kt / 9,743 行**），分层见 §3 |
-| `app/src/test/java/com/shiyu/app/` | 单元测试（**28 个类 / 401 例**） |
+| `app/src/test/java/com/shiyu/app/` | 单元测试（**29 个类 / 417 例**） |
 | `app/src/main/assets/*.json` | **18 份**内容资产（假名/词汇/音素/场景/预置配置），见 §10 |
 | `app/src/main/res/` | **21 布局 + 45 drawable** + mipmap-anydpi/-v26（自适应图标）+ values / values-v27 |
 | `app/src/main/AndroidManifest.xml` | **12 个 Activity**，恰好 2 条权限（INTERNET / RECORD_AUDIO） |
@@ -688,9 +688,9 @@ $env:JAVA_HOME = "D:\a\jbr"; .\gradlew.bat :app:testDebugUnitTest --console=plai
 
 ### 11.2 明细（27 类 / **387 例**，全绿）
 
-> **2026-09-23 重新核对**：下表原为 **26 类 / 387 例**，实际已增长到 **28 类 / 401 例**。
+> **2026-09-23 重新核对**：下表原为 **26 类 / 387 例**，实际已增长到 **29 类 / 417 例**。
 > 下面按最新实测值重写（新增 `RealtimeProtocolTest` +2、`TtsDiskCacheTest` +11、
-> `LanguageModuleTest` 13→14、`SettingsRepositoryTest` 22，其余有微调）。
+> `ScenarioParserTest` +16、`LanguageModuleTest` 13→14、`SettingsRepositoryTest` 22，其余有微调）。
 
 | 测试类 | 例数 | | 测试类 | 例数 |
 |---|---|---|---|---|
@@ -707,19 +707,27 @@ $env:JAVA_HOME = "D:\a\jbr"; .\gradlew.bat :app:testDebugUnitTest --console=plai
 | `core.lang.en.EnSentenceSplitterTest` | 25 | | `data.store.SettingsRepositoryTest` | 22 |
 | `core.lang.en.EnTokenizerTest` | 27 | | `data.store.StudyStoreTest` | 12 |
 | `core.lang.ja.KanaConverterTest` | 40 | | `core.lang.ja.KanaNormalizerTest` | 7 |
-| `core.log.LogRedactorTest` | 5 | | **`data.store.TtsDiskCacheTest`** | **11** |
-| | | | **合计（28 类）** | **401** |
+| `core.log.LogRedactorTest` | 5 | | `data.store.TtsDiskCacheTest` | 11 |
+| **`core.lang.ja.ScenarioParserTest`** | **16** | | | |
+| | | | **合计（29 类）** | **417** |
 
-**测试盲区（2026-09-23 审计发现）**：下列**纯逻辑**类目前没有对应 `*Test`，
-其中前两个有实际风险，建议优先补：
+**测试盲区（2026-09-23 审计发现，状态已更新）**：下列**纯逻辑**类当时没有对应 `*Test`。
 
-| 类 | 为什么该测 |
-|---|---|
-| `data/asset/PresetConfig.kt` | 含**版本迁移与强制同步**逻辑（`PRESET_VERSION = 2`，本地版本低就覆盖推送）。目前零覆盖，改错会让所有人的配置被静默重置 |
-| `core/lang/ja/ScenarioParser.kt` | 场景 JSON 解析，解析失败会直接让场景对话页空掉 |
-| `core/lang/LanguageRegistry.kt` | 语言注册表，**接新语言时第一处要改的地方**（见 `HANDOVER-拾语-接入新语言与语音.md`） |
-| `core/lang/VoicePrompts.kt` | 实时语音提示词生成（纯拼字符串，最好测） |
-| `core/lang/ja/JaModule.kt` / `core/lang/en/EnModule.kt` | 语言模块实现（目前只测了 `LanguageModule` 接口） |
+| 类 | 为什么该测 | 状态 |
+|---|---|---|
+| `core/lang/ja/ScenarioParser.kt` | 场景 JSON 解析，**被日英模块共用**，一个 bug 同时废掉两门语言的场景对话页；类注释承诺「不抛异常」却无人守 | ✅ **已补（16 例）**，见 §11.4 |
+| `data/asset/PresetConfig.kt` | 含**版本迁移与强制同步**逻辑（`PRESET_VERSION = 2`，本地版本低就覆盖推送）。改错会**静默冲掉用户填的 API Key**，且不可恢复 | ❌ 未补 —— **当前测不了**，见下方说明 |
+| `core/lang/LanguageRegistry.kt` | 语言注册表，**接新语言时第一处要改的地方**（见 `HANDOVER-拾语-接入新语言与语音.md`） | ❌ 未补 |
+| `core/lang/VoicePrompts.kt` | 实时语音提示词生成（纯拼字符串，最好测） | ❌ 未补 |
+| `core/lang/ja/JaModule.kt` / `core/lang/en/EnModule.kt` | 语言模块实现（目前只测了 `LanguageModule` 接口） | ❌ 未补 |
+
+> **`PresetConfig` 为什么现在测不了**：它在 `data/asset`，读 assets 需要 `android.content.Context`；
+> 而本工程测试依赖只有 **JUnit4 + org.json，没有 Mockito / Robolectric**
+> （`unitTests.isReturnDefaultValues = true`）。直接写会得到 android.jar 的桩，
+> `context.assets.open()` 返回 `null` 并被 `catch` 吞掉 —— **测出来永远是"啥也没干"，
+> 看着全绿实则零验证**。
+> **必须先做一次小重构**：把「决定写哪些组」的纯逻辑从「读 assets」里抽出来放进 `core/`，
+> 才能按工程既有约定单测。该改动会碰到配置推送路径，**属需真机验的改动，不要顺手做**。
 
 加粗为本次改造新增：`AchievementsTest`（成就判定）、`DailyStatsStoreTest`（每日统计 / 连续天数 /
 本周切片 / 坏 JSON 隔离），另外 `SettingsRepositoryTest` 从 12 例加到 17 例（新增 nickname 的
@@ -735,6 +743,24 @@ lint error 会直接让这条命令失败，别忽略。
 2. **测试源里的罕见字符统一用 `\uXXXX` 转义书写**（弯引号、半角片假名、`´`、`″`）。原因：开发期间真的发生过 2 次源文件字节损坏，转义后彻底规避。**新增测试请沿用这个习惯。**
 3. 判题/协议类断言全部基于**纯函数 + 假 Transport**，不依赖设备与网络。
 4. `unitTests.isReturnDefaultValues = true`（android.jar 方法默认返回，不抛 `not mocked`）。
+   副作用：**凡是依赖 `Context` 的类都没法直接单测**（拿到的是桩，例如 `assets.open()` 返回 `null`
+   且常被 try/catch 吞掉 → 测试恒绿但零验证）。要测就得先把纯逻辑抽到 `core/`。
+
+### 11.4 新增：`ScenarioParserTest`（2026-09-23 补测，16 例）
+
+补测的缘由见 §11.2 的盲区表。这个类**被日英两个模块共用**，且类注释承诺
+「损坏字段用缺省值跳过，**不抛异常**」却无人守，所以重心放在**坏输入**上：
+
+| 组 | 用例 | 守的是什么 |
+|---|---|---|
+| 正常路径 | 全字段解析 / 顺序与多条目 / 多个 goalExpressions | 基本正确性 |
+| **坏输入** | 空串 / 乱码 / **顶层是对象而非数组** / JSON 截断 | **一律返回 `emptyList`，绝不抛异常**（注释的核心承诺） |
+| 字段缺失 | 空对象 → 全空串；`goalExpressions` 缺失 / 空数组 / 含空串被过滤 | 缺省回落不崩 |
+| 混入坏条目 | `["string", null, 42, {...}]` → **跳过坏的、保留好的**（断言剩 1 条且是 good） | `optJSONObject(i) ?: continue` 这条防御 |
+| 配套扩展 | `JSONObject.str()`：缺失 / `NULL` → 空串；有值 → 原值 | `EnModule` 在读 symbol/example/exampleZh/type/id |
+
+> 写这个测试时的一个注意点：`ScenarioParser` 是 `internal`，测试必须放在**同包**
+> `com.shiyu.app.core.lang.ja` 才能访问（Kotlin 的 test source set 与 main 属同一 module，可以）。
 
 ---
 
