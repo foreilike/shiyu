@@ -112,7 +112,12 @@
 "D:/AndroidSdk/platform-tools/adb.exe" install -r "D:/AI project/lang-partner/Shiyu-v1.0.3-release.apk"
 ```
 
-### A. 实时语音 ASR 语言（本次主要修复，对应 HANDOVER §17.21.1）
+> ⚠️ **本节已作废，见下方更正（2026-09-23 当晚）**：查证阶跃官方文档后确认，
+> stepfun 的 realtime `session.update` **没有 ASR 语种字段**，v1.0.3 加的那个字段会被忽略；
+> 说日语显示中文的根因是 `stepaudio-3-realtime-preview` **只支持中英文**（模型能力边界）。
+> 因此 16–19 项**不用再测了**，测也不会变。等 §B 之后的方案决策。
+
+### A. 实时语音 ASR 语言（~~本次主要修复~~ **已证实无效**，对应 HANDOVER §17.21.1）
 
 | # | 操作 | 预期 | 判定 |
 |---|---|---|---|

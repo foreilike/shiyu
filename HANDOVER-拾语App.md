@@ -1645,9 +1645,38 @@ if (!tmp.renameTo(target)) { ... }
 4. 单测 `RealtimeProtocolTest` +2 例：`session_update_carries_input_transcription_language`
    / `session_update_omits_language_when_blank`。
 
-**待验证**：装 v1.0.3 后在实时语音页说日语，气泡应显示日文而不是中文。
-若仍显示中文，下一步是抓 `session.update` 的实际报文（见 §15 排障表）
-确认字段是否被服务端接受，以及 `lang.tag` 是否真是 `ja`。
+#### ⚠️ 17.21.1 的修正（2026-09-23 当晚）：上面的修法对 stepfun **无效**
+
+查了阶跃官方文档后必须更正上面这段判断 —— **根因判断错了，改法也不生效**：
+
+1. **stepfun 的 realtime `session.update` 根本没有 ASR 语种字段。**
+   官方文档（`platform.stepfun.com/docs/docs/zh/api-reference/realtime/chat`）里
+   session 对象**只有 7 个字段**：`modalities` / `instructions` / `voice` /
+   `turn_detection` / `input_audio_format` / `output_audio_format` / `tools`。
+   `input_audio_transcription` 在文档里**只作为 Server Event 名出现**
+   （`conversation.item.input_audio_transcription.completed`），不是可配置项。
+   → 我们多发的那个字段服务端会**直接忽略**，是 no-op。
+2. **真正的根因是模型语言边界，不是参数漏传。**
+   我们用的是 `stepaudio-3-realtime-preview`（`wss://api.stepfun.com/v1/realtime`）。
+   StepAudio 3 系列里 **TTS / ASR 支持中英日韩法西，但 Realtime 目前只支持中文和英文**
+   （第三方对官方 API 文档的汇总口径；官方中文介绍里 ASR 也只写了「中文、英文、方言、中英混说」）。
+   所以用户说日语 → 端到端模型按它熟悉的中英解码 → 吐出中文，
+   **这是模型能力边界，不是配置项能调的**。
+   中文/英文「能识别对」是因为它们在支持范围内，不是撞默认值。
+
+**代码怎么处理**：`input_audio_transcription.language` 这段**先留着**（对 stepfun 是无效字段，
+但 `RealtimeProtocol` 是按 OpenAI Realtime 协议写的，将来换 OpenAI 兼容通道时它是正确的；
+且多发一个字段无害）。注释已改成「stepfun 会忽略，保留是协议兼容」。
+**不要**再指望它能修日语转写。
+
+**真正的出路（未做，需决策）**：
+- A. 认了：UI 上明确写「实时语音当前仅支持中英文，日语识别不准」，避免用户困惑；
+- B. 只把「转写」换成独立 ASR（`wss://.../realtime/asr/stream`，其
+  `session.audio.input.transcription.language` 是**真实存在**的字段，见 ASR 流式文档），
+  日语文本能显示对；**但 realtime 本体仍听不懂日语**，AI 的回复质量不会变好，
+  且要同时维护两条 WebSocket；
+- C. 换一家支持日语的实时语音通道（如 OpenAI Realtime），改动集中在
+  `StepfunRealtimeProvider` 与 `RealtimeProtocol`。
 
 #### 17.21.2 首次朗读再快一点（免凭据那一半）
 

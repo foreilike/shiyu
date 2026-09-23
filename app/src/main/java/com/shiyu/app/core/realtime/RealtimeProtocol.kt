@@ -92,8 +92,11 @@ object RealtimeProtocol {
         session.put("voice", voice)
         session.put("input_audio_format", inputAudioFormat)
         session.put("output_audio_format", outputAudioFormat)
-        // 用户侧转写（ASR）的语种。**不传就会走服务端默认** —— 中文厂商的默认一般是 zh，
-        // 于是「用户说日语、气泡里显示中文」（真机实测）。显式给语种才对得上当前学习语言。
+        // 用户侧转写（ASR）的语种 —— OpenAI Realtime 协议的标准字段。
+        // ⚠️ 注意：**stepfun 的 realtime 不支持这个字段**（其 session 只有 7 个字段，
+        // 见 HANDOVER §17.21.1），发过去会被忽略，是 no-op —— 它修不了「说日语显示中文」，
+        // 那个问题的根因是 stepaudio-3-realtime 只支持中英（模型能力边界）。
+        // 保留的原因：本类按 OpenAI Realtime 协议写，换 OpenAI 兼容通道时它是对的，且多发无害。
         if (!inputLanguage.isNullOrBlank()) {
             session.put(
                 "input_audio_transcription",

@@ -46,8 +46,8 @@ class AiProviderRegistry(
             StepfunRealtimeProvider(
                 config = langConfig.realtime,
                 options = langConfig.realtimeOptions,
-                // 不传语种服务端就按默认（中文厂商多为 zh）转写，说日语时气泡会显示中文。
-                // 用 sttLanguage 而非 tag：前者语义就是「ASR 接口的语言参数」
+                // 用 sttLanguage 而非 tag：前者语义就是「ASR 接口的语言参数」。
+                // ⚠️ stepfun realtime 会忽略这个字段（§17.21.1），保留只为协议兼容
                 inputLanguage = lang.sttLanguage
             )
         } else {
