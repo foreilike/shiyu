@@ -13,6 +13,13 @@
       "apiKey": "REDACTED_API_KEY",
       "model": "stepaudio-3-realtime-preview",
       "enabled": true
+    },
+    "tts": {
+      "baseUrl": "https://api.stepfun.com/step_plan/v1",
+      "apiKey": "REDACTED_API_KEY",
+      "model": "stepaudio-2.5-tts",
+      "voice": "jilingshaonv",
+      "enabled": true
     }
   }
 }

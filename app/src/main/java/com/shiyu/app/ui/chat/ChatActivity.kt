@@ -31,6 +31,7 @@ import com.shiyu.app.ui.AiErrorMessages
 import com.shiyu.app.ui.BaseActivity
 import java.time.LocalDate
 import com.shiyu.app.ui.Speaker
+import com.shiyu.app.ui.WordTtsPlayer
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -52,6 +53,9 @@ class ChatActivity : BaseActivity() {
     private val items = mutableListOf<MsgItem>()
     private lateinit var adapter: MessageAdapter
     private var speaker: Speaker? = null
+
+    /** 云优先朗读：日语点句重播走云端 TTS（避开系统 TTS 联网找 Google 在国内网络的静默失败），失败回落 [speaker]。 */
+    private var ttsPlayer: WordTtsPlayer? = null
 
     private var recorder: MediaRecorder? = null
     private var recordingFile: File? = null
@@ -88,6 +92,7 @@ class ChatActivity : BaseActivity() {
         val lang = AppGraph.settingsRepository.activeLang()
         module = LanguageRegistry.module(lang)
         speaker?.setLanguage(module.id)
+        ttsPlayer = WordTtsPlayer(this, speaker!!)
 
         val scenarioId = intent.getStringExtra(EXTRA_SCENARIO_ID)
         val loaded = module.buildScenarios(AppGraph.assetRepository.scenariosJson(module))
@@ -103,7 +108,10 @@ class ChatActivity : BaseActivity() {
             getString(R.string.chat_goal) + "：" + scenario.goalExpressions.joinToString("　")
         binding.goalText.visibility = View.VISIBLE
 
-        adapter = MessageAdapter(items) { sentence -> speaker?.speak(sentence) }
+        // 点历史消息重播：录音期间不外放（回环双保险）；日语走云端 TTS，失败回落系统 Speaker
+        adapter = MessageAdapter(items) { sentence ->
+            if (!recording) ttsPlayer?.speakWord(lifecycleScope, module.id, sentence)
+        }
         binding.messageList.layoutManager = LinearLayoutManager(this)
         binding.messageList.adapter = adapter
 
@@ -148,6 +156,8 @@ class ChatActivity : BaseActivity() {
         handler.removeCallbacks(autoStopRunnable)
         releaseRecorder()
         releasePlayer()
+        ttsPlayer?.releasePlayer()
+        ttsPlayer = null
         speaker?.shutdown()
         super.onDestroy()
     }

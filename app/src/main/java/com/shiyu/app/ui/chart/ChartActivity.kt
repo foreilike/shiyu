@@ -7,13 +7,16 @@ import android.widget.GridLayout
 import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.core.content.ContextCompat
+import androidx.lifecycle.lifecycleScope
 import com.shiyu.app.AppGraph
 import com.shiyu.app.R
+import com.shiyu.app.core.lang.LangId
 import com.shiyu.app.core.lang.LanguageRegistry
 import com.shiyu.app.data.model.ChartEntry
 import com.shiyu.app.databinding.ActivityChartBinding
 import com.shiyu.app.ui.BaseActivity
 import com.shiyu.app.ui.Speaker
+import com.shiyu.app.ui.WordTtsPlayer
 
 /**
  * 发音表（二级页）：日语 = 五十音表（两套字形切换）；英语 = IPA 音素表（按 vowel/consonant 分节）。
@@ -27,6 +30,12 @@ class ChartActivity : BaseActivity() {
     private var entries: List<ChartEntry> = emptyList()
     private var speaker: Speaker? = null
 
+    /** 云优先朗读：日语走云端 TTS（避开系统 TTS 联网找 Google 在国内网络的静默失败），失败回落 [speaker]。 */
+    private var ttsPlayer: WordTtsPlayer? = null
+
+    /** 当前发音表语种；格子点击朗读要按它决定走云端还是系统 TTS。 */
+    private var lang: LangId = LangId.JA
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityChartBinding.inflate(layoutInflater)
@@ -39,6 +48,7 @@ class ChartActivity : BaseActivity() {
         binding.headerBar.btnBack.setOnClickListener { finish() }
 
         speaker = Speaker(this)
+        ttsPlayer = WordTtsPlayer(this, speaker!!)
         binding.scriptSwitch.setOnCheckedChangeListener { _, _ -> buildGrid() }
     }
 
@@ -48,12 +58,15 @@ class ChartActivity : BaseActivity() {
     }
 
     override fun onDestroy() {
+        ttsPlayer?.releasePlayer()
+        ttsPlayer = null
         speaker?.shutdown()
         super.onDestroy()
     }
 
     private fun reload() {
         val module = LanguageRegistry.module(AppGraph.settingsRepository.activeLang())
+        lang = module.id
         speaker?.setLanguage(module.id)
         entries = module.buildChart(AppGraph.assetRepository.chartJson(module))
         val hasAlt = entries.any { it.alt.isNotEmpty() }
@@ -149,6 +162,6 @@ class ChartActivity : BaseActivity() {
             if (entry.note.isNotEmpty()) append("　").append(entry.note)
         }
         binding.chartDescription.text = desc
-        speaker?.speak(entry.speak)
+        ttsPlayer?.speakWord(lifecycleScope, lang, entry.speak)
     }
 }

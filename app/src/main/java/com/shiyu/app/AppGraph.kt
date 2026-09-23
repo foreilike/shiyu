@@ -43,6 +43,8 @@ object AppGraph {
         providerRegistry = AiProviderRegistry(settingsRepository)
         // 出厂预置配置：只在本地一份配置都没有时写入（不会覆盖用户已改的设置）
         PresetConfig.seedIfEmpty(app, settingsRepository)
+        // 预置迁移：版本升级时把修正过的组（如新增的 tts）同步到已装机器（见 WordTtsPlayer）
+        PresetConfig.applyPresetMigrations(app, settingsRepository)
     }
 
     /** 某语言当前选中的词书（未设或非法 → 该语言 books() 的第一本）。 */

@@ -5,6 +5,7 @@ import com.shiyu.app.core.lang.LangId
 import com.shiyu.app.data.model.ProviderConfig
 import com.shiyu.app.data.store.SettingsRepository
 import org.json.JSONObject
+import java.io.File
 
 /**
  * 出厂预置配置（`assets/preset_config.json`）。
@@ -65,4 +66,63 @@ object PresetConfig {
     }
 
     private const val FILE_NAME = "preset_config.json"
+
+    /**
+     * 预置组的版本号。**改了 [FILE_NAME] 里任何组的值（尤其 tts）就 +1**：
+     * 老机器下次启动会把这些组强制同步过去。
+     * v2：新增 tts 组（stepfun `/audio/speech`），修复日语朗读在国内网络静默失败。
+     */
+    private const val PRESET_VERSION = 2
+    private const val VERSION_FILE = "preset_seed.version"
+
+    /**
+     * 应用预置迁移（每次启动都跑，幂等）。
+     *
+     * - 本地版本 < [PRESET_VERSION]：把预置里定义的组**强制同步**到本地（覆盖），推送修正配置。
+     *   这就是已装机器拿到新增 tts 组的路径 —— [seedIfEmpty] 只在「一份配置都没有」时才动，
+     *   老机器早 seed 过 chat/realtime，光靠它 tts 永远进不去。
+     * - 版本相同：只补**本地空着**的组，绝不覆盖用户已填 / 已改的配置。
+     *
+     * 版本标记落在 `filesDir`（随卸载才清），跟加密的设置文件分开，读写都不影响学习进度。
+     */
+    fun applyPresetMigrations(context: Context, settings: SettingsRepository) {
+        val versionFile = File(context.filesDir, VERSION_FILE)
+        val localVersion = try {
+            versionFile.readText().trim().toIntOrNull()
+        } catch (e: Exception) {
+            null
+        } ?: 0
+        val force = localVersion < PRESET_VERSION
+        try {
+            val json = context.assets.open(FILE_NAME)
+                .bufferedReader(Charsets.UTF_8).use { it.readText() }
+            val groups = JSONObject(json).optJSONObject("groups") ?: return
+            for (lang in LangId.entries) {
+                for (group in SettingsRepository.Group.entries) {
+                    val o = groups.optJSONObject(group.name.lowercase()) ?: continue
+                    // 同版本时只补空组；版本升级时强制覆盖，把修正后的配置推下去
+                    if (!force && settings.groupFor(lang, group).baseUrl.isNotBlank()) continue
+                    settings.update(
+                        lang,
+                        group,
+                        ProviderConfig(
+                            baseUrl = o.optString("baseUrl", ""),
+                            apiKey = o.optString("apiKey", ""),
+                            model = o.optString("model", ""),
+                            voice = o.optString("voice", ""),
+                            enabled = o.optBoolean("enabled", false)
+                        )
+                    )
+                }
+            }
+        } catch (e: Exception) {
+            return // 迁移失败不写版本，下次启动再试；不影响启动
+        }
+        // 成功应用后才记下版本
+        try {
+            versionFile.writeText(PRESET_VERSION.toString())
+        } catch (e: Exception) {
+            // 写标记失败无妨：下次启动最多再强制同步一次（幂等）
+        }
+    }
 }

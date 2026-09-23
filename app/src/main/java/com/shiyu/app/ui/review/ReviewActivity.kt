@@ -20,6 +20,7 @@ import com.shiyu.app.data.model.Card
 import com.shiyu.app.databinding.ActivityReviewBinding
 import com.shiyu.app.ui.BaseActivity
 import com.shiyu.app.ui.Speaker
+import com.shiyu.app.ui.WordTtsPlayer
 import com.shiyu.app.ui.chart.ChartActivity
 import com.shiyu.app.ui.nav.BottomNav
 import kotlinx.coroutines.Dispatchers
@@ -47,6 +48,9 @@ class ReviewActivity : BaseActivity() {
     /** 单词朗读（系统 TTS）。与发音表/对话页共用 Speaker。 */
     private var speaker: Speaker? = null
 
+    /** 云优先朗读：日语走云端 TTS（避开 Google 联网合成在国内网络的静默失败），失败回落 [speaker]。 */
+    private var ttsPlayer: WordTtsPlayer? = null
+
     /** 本次停留在复习页的计时起点（elapsedRealtime，不受系统改时间影响） */
     private var enteredAt = 0L
 
@@ -67,12 +71,13 @@ class ReviewActivity : BaseActivity() {
 
         // 朗读用系统 TTS（与发音表/对话页同一个 Speaker）。语言在 reload() 拿到 module 后再设。
         speaker = Speaker(this)
+        ttsPlayer = WordTtsPlayer(this, speaker!!)
         binding.btnSpeak.setOnClickListener {
-            speaker?.speak(currentCard?.speakText.orEmpty())
+            ttsPlayer?.speakWord(lifecycleScope, module.id, currentCard?.speakText.orEmpty())
         }
         // 整句朗读：单词会了不等于句子听得懂，例句也给一条朗读；语速按语言分（见 Speaker）
         binding.btnSpeakExample.setOnClickListener {
-            speaker?.speakExample(currentCard?.example.orEmpty())
+            ttsPlayer?.speakExample(lifecycleScope, module.id, currentCard?.example.orEmpty())
         }
 
         binding.btnChart.setOnClickListener {
@@ -99,6 +104,8 @@ class ReviewActivity : BaseActivity() {
     }
 
     override fun onDestroy() {
+        ttsPlayer?.releasePlayer()
+        ttsPlayer = null
         speaker?.shutdown()
         speaker = null
         super.onDestroy()
