@@ -3,6 +3,7 @@ package com.shiyu.app.ui
 import android.content.Context
 import android.os.Bundle
 import android.speech.tts.TextToSpeech
+import android.speech.tts.UtteranceProgressListener
 import com.shiyu.app.core.lang.LangId
 import java.util.Locale
 
@@ -25,6 +26,21 @@ class Speaker(context: Context) : TextToSpeech.OnInitListener {
 
     /** 语音包缺失时的回调，供 UI 提示（可为空） */
     var onLanguageUnavailable: ((Locale) -> Unit)? = null
+
+    /**
+     * 本句朗读**实际发声失败**时回调（缺语音包、引擎离线合成失败等），供 UI 兜底提示。
+     *
+     * 为什么需要它：这类失败是**静默**的——`speak()` 返回 OK 但一个字都不出，UI 无从判断。
+     * 典型场景：日语音色是「联网语音」，断网时既不报错也不出声。
+     */
+    var onSpeakFailed: ((Int) -> Unit)? = null
+
+    /** 最近这一次朗读是否已被判定失败（每次 [speak] 前清零，供调用方延迟复查） */
+    private var failed = false
+
+    /** 最近这一次是否真的开过口（[speakNow] 置 true，[onStart] 回调再确认） */
+    private var requested = false
+    private var started = false
 
     /** 抑制开关：录音期间置 true，阻断一切朗读，从根上避免「外放被录进麦克风」的回环。 */
     private var suppressed = false
@@ -54,6 +70,7 @@ class Speaker(context: Context) : TextToSpeech.OnInitListener {
         ready = status == TextToSpeech.SUCCESS
         if (ready) {
             applyRate(rate)
+            attachProgressListener()
             // 引擎连上后才真正生效：把调用方早先设过的语言补上
             locale?.let { applyLanguage(it) }
             val text = pendingText
@@ -102,6 +119,9 @@ class Speaker(context: Context) : TextToSpeech.OnInitListener {
     fun speak(text: String, rate: Float) {
         if (text.isBlank()) return
         if (suppressed) return
+        failed = false
+        requested = false
+        started = false
         try {
             tts?.setSpeechRate(rate)
         } catch (e: Exception) {
@@ -110,9 +130,51 @@ class Speaker(context: Context) : TextToSpeech.OnInitListener {
         if (ready) speakNow(text) else pendingText = text
     }
 
+    /**
+     * 最近一次朗读是否「没出声」（供调用方延迟复查）。
+     *
+     * 两个判据取或：显式报错（缺语音包 / 联网合成失败），或者**要它读了却从没回调 onStart** ——
+     * 有些引擎缺语音包时不报错、直接沉默，只有「没开始」能兜住。
+     * 引擎还没就绪（pendingText）时不算失败，避免误报。
+     */
+    fun lastAttemptFailed(): Boolean = failed || (requested && !started)
+
+    /** 挂 utterance 监听：缺语音包 / 联网合成失败时 `speak()` 仍返回 SUCCESS，只有这里能拿到。 */
+    private fun attachProgressListener() {
+        try {
+            tts?.setOnUtteranceProgressListener(object : UtteranceProgressListener() {
+                override fun onStart(utteranceId: String?) {
+                    started = true
+                }
+                override fun onDone(utteranceId: String?) {}
+                override fun onStop(utteranceId: String?, interrupted: Boolean) {}
+                override fun onError(utteranceId: String?, errorCode: Int) {
+                    failed = true
+                    onSpeakFailed?.invoke(errorCode)
+                }
+                // API 26 上旧签名也会被调用，一并兜住
+                override fun onError(utteranceId: String?) {
+                    failed = true
+                    onSpeakFailed?.invoke(-1)
+                }
+            })
+        } catch (e: Exception) {
+            // 忽略：拿不到失败回调不应影响朗读本身
+        }
+    }
+
     private fun speakNow(text: String) {
         val params: Bundle? = null
-        tts?.speak(text, TextToSpeech.QUEUE_FLUSH, params, "utterance-${text.hashCode()}")
+        requested = true
+        val result = try {
+            tts?.speak(text, TextToSpeech.QUEUE_FLUSH, params, UTTERANCE_ID)
+        } catch (e: Exception) {
+            TextToSpeech.ERROR
+        }
+        if (result != TextToSpeech.SUCCESS) {
+            failed = true
+            onSpeakFailed?.invoke(result ?: TextToSpeech.ERROR)
+        }
     }
 
     fun shutdown() {
@@ -131,6 +193,8 @@ class Speaker(context: Context) : TextToSpeech.OnInitListener {
 
         /** 例句语速——日语。日语音节短、语速本身快，0.3 太拖，0.4 更自然（实测听感） */
         const val EXAMPLE_RATE_JA = 0.4f
+
+        private const val UTTERANCE_ID = "shiyu-utterance"
 
         private fun exampleRateFor(langId: LangId?): Float =
             if (langId == LangId.JA) EXAMPLE_RATE_JA else EXAMPLE_RATE_EN

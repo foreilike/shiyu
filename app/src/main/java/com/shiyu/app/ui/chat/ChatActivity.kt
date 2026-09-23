@@ -93,6 +93,9 @@ class ChatActivity : BaseActivity() {
         module = LanguageRegistry.module(lang)
         speaker?.setLanguage(module.id)
         ttsPlayer = WordTtsPlayer(this, speaker!!)
+        ttsPlayer?.onNeedNetwork = {
+            Toast.makeText(this, R.string.tts_need_network, Toast.LENGTH_SHORT).show()
+        }
 
         val scenarioId = intent.getStringExtra(EXTRA_SCENARIO_ID)
         val loaded = module.buildScenarios(AppGraph.assetRepository.scenariosJson(module))

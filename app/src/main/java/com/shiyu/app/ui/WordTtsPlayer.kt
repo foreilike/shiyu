@@ -10,6 +10,7 @@ import com.shiyu.app.data.store.TtsDiskCache
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.sync.Semaphore
 import kotlinx.coroutines.sync.withPermit
@@ -46,6 +47,14 @@ class WordTtsPlayer(context: Context, private val speaker: Speaker) {
 
     /** key → 正在合成中的请求；同 key 的后来者 await 同一个结果。 */
     private val inFlight = ConcurrentHashMap<String, CompletableFuture<File?>>()
+
+    /**
+     * 云端走不通、系统 TTS 也悄悄失败时的兜底提示（由页面接 Toast）。
+     *
+     * 这个场景是**静默**的：断网时云端请求秒失败，回落到系统 TTS，而本机日语音色是
+     * 「联网语音」—— PHONE 侧既不报错也不出声，用户只看到点了没反应（真机实测确认）。
+     */
+    var onNeedNetwork: (() -> Unit)? = null
 
     /**
      * 预取并发闸门：快速翻卡时每张卡都起一个协程，不设上限会同时打出十几个合成请求
@@ -101,7 +110,15 @@ class WordTtsPlayer(context: Context, private val speaker: Speaker) {
         }
         scope.launch {
             val file = withContext(Dispatchers.IO) { obtainAudio(lang, text) }
-            if (file != null) playFile(file, fallback) else fallback()
+            if (file != null) {
+                playFile(file, fallback)
+                return@launch
+            }
+            // 云端没拿到音频：先回落系统 TTS，再复查它是不是也静默失败了。
+            // 失败常常晚于 speak() 返回（utterance 回调），所以得等一小会儿再判定。
+            fallback()
+            delay(FALLBACK_CHECK_DELAY_MS)
+            if (speaker.lastAttemptFailed()) onNeedNetwork?.invoke()
         }
     }
 
@@ -201,5 +218,8 @@ class WordTtsPlayer(context: Context, private val speaker: Speaker) {
 
         /** 预取最多同时 2 个请求：够覆盖「当前卡 + 下一张」的预热节奏，又不至于打爆限流。 */
         const val PREFETCH_CONCURRENCY = 2
+
+        /** 回落之后复查「系统 TTS 到底出没出声」的等待窗口（utterance 错误回调会晚到）。 */
+        const val FALLBACK_CHECK_DELAY_MS = 1500L
     }
 }

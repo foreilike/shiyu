@@ -152,6 +152,10 @@ class ReviewActivity : BaseActivity() {
                 Toast.LENGTH_SHORT
             ).show()
         }
+        // 云端失败 + 本机也念不出来 = 静默无声（断网实测），这里给个明确的「需要联网」
+        ttsPlayer?.onNeedNetwork = {
+            Toast.makeText(this, R.string.tts_need_network, Toast.LENGTH_SHORT).show()
+        }
         deck = module.buildDeck(AppGraph.activeDeckJson(module))
         queue = AppGraph.studyStore.selectToday(module.id, deck.map { it.id }, today)
         queueIndex = 0

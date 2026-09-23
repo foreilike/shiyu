@@ -6,6 +6,7 @@ import android.view.View
 import android.widget.GridLayout
 import android.widget.LinearLayout
 import android.widget.TextView
+import android.widget.Toast
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.lifecycleScope
 import com.shiyu.app.AppGraph
@@ -49,6 +50,9 @@ class ChartActivity : BaseActivity() {
 
         speaker = Speaker(this)
         ttsPlayer = WordTtsPlayer(this, speaker!!)
+        ttsPlayer?.onNeedNetwork = {
+            Toast.makeText(this, R.string.tts_need_network, Toast.LENGTH_SHORT).show()
+        }
         binding.scriptSwitch.setOnCheckedChangeListener { _, _ -> buildGrid() }
     }
 
