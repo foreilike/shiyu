@@ -91,7 +91,10 @@ cp ./Shiyu-v<新的版本号>-release.apk "/d/AI project/项目备份/拾语/发
 **② 深度自检整改 8 条**（四路并行审计查出）：
 1. `StepfunRealtimeProvider.closedByUser` 补 `@Volatile` + `reconnectTask` 复查它 —— 原来挂断后可能重开一条没人关的连接（实时语音按量计费）。
 2. `RealtimeAudioController` 加 `released` 标志，释放后迟到的音频包不再新建 AudioTrack。
-3. 静音门控的 `continue` 只在非「按住说话」模式生效。
+3. 静音门控的 `continue` 只在非 `pushToTalkMode` 时生效。
+   > 注：`pushToTalkMode` 是**历史命名** —— 手势早在下面 ⑧ 就改成单键点击了，
+   > 但标志位留了下来，且 `VoiceChatActivity` 里**硬编码 `= true`**。
+   > 语义现在是「点了开始说话才推真实麦克风，暂停时推静音帧」。
 4. 语音页 `turns++` 移入 `isNotBlank` 块（空白转写不再虚计一轮）。
 5. `ChatActivity` 助手轮落盘挪到 `Dispatchers.IO`。
 6. 语音页返回键图标换成 chevron、文案对齐行为。
@@ -115,6 +118,16 @@ cp ./Shiyu-v<新的版本号>-release.apk "/d/AI project/项目备份/拾语/发
 
 **⑧ 实时语音改单键**：中间大按钮点「开始说话」= 打断并开麦，再点「暂停说话」= 推静音让服务端断句。
 删掉了旧的「自动 / 按住」两模式和设置页开关。
+
+> ⚠️ **但底层标志位没清干净，接手时注意**：
+> - `RealtimeAudioController.pushToTalkMode` 仍在，且 `VoiceChatActivity:388` **硬编码 `= true`**
+>   —— 「按住」手势没了，但这个模式实际**一直开着**，靠上面那个单键驱动。
+> - `AppSettings.voicePushToTalk` + `SettingsRepository.voicePushToTalk()/setVoicePushToTalk()`
+>   是**死代码**：会持久化，但全工程**没有任何调用方**，UI 也不暴露。
+>   真正生效的是那个硬编码。建议下次清理时一并删掉，免得后人以为存在开关。
+> - 还有：**场景对话页的回合制录音是另一个按钮**，文案「录音」/「停止」
+>   （`ChatActivity.toggleRecording()`），也是**点击切换**，不是长按。
+>   全 App 没有任何「按住说话」手势，写文档时别写「按住 / 松手」。
 
 ### 2.3 单测
 
@@ -628,9 +641,13 @@ docs/ja-translation/
   后者现只被拼写考试使用。若将来不做拼写模式了，两者可一并清理。
 - **首页与复习页仍有少量主线程磁盘读**：首页是单次全目录扫描（比原先「我的」页的 4 遍轻得多），
   复习页 `flushStudyTime` 是**有意保留同步写**的（挪到异步反而有丢记录风险）。会话攒到几百条后可能变慢。
-- **没有做真正的 AEC（回声消除）**，靠三层逻辑规避：按住说话 / 录音期间抑制朗读 / 打断。
-  开着外放又用自动模式时，仍可能把 AI 的声音录进去。
-- 版本号仍是 **1.0.0 / versionCode 1**，一直没动过。
+- **没有做真正的 AEC（回声消除）**，靠三层逻辑规避：
+  **「点开始说话才收音」**（即 `pushToTalkMode`）/ 录音期间抑制朗读 / 打断。
+  （原文写的是「按住说话 / 开着外放又用自动模式」，但「按住」手势与「自动模式」都已在
+  §2.2 ⑧ 删除，这里已按现状改写。）
+  免提外放时仍可能把 AI 的声音录进去 —— 待补系统 `AcousticEchoCanceler`。
+- 版本号：**1.0.3 / versionCode 4**（2026-09-23）。每版必 +1，规矩见
+  `HANDOVER-拾语App.md` §14.1.1。
 
 ### 7.4 下一步（你要做的）
 
