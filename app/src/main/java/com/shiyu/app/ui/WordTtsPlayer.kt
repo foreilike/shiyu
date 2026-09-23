@@ -2,6 +2,7 @@ package com.shiyu.app.ui
 
 import android.content.Context
 import android.media.MediaPlayer
+import android.os.SystemClock
 import com.shiyu.app.AppGraph
 import com.shiyu.app.ai.AiResult
 import com.shiyu.app.core.lang.LangId
@@ -10,6 +11,8 @@ import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.sync.Semaphore
+import kotlinx.coroutines.sync.withPermit
 import kotlinx.coroutines.withContext
 import java.io.File
 import java.util.concurrent.CompletableFuture
@@ -44,6 +47,13 @@ class WordTtsPlayer(context: Context, private val speaker: Speaker) {
     /** key → 正在合成中的请求；同 key 的后来者 await 同一个结果。 */
     private val inFlight = ConcurrentHashMap<String, CompletableFuture<File?>>()
 
+    /**
+     * 预取并发闸门：快速翻卡时每张卡都起一个协程，不设上限会同时打出十几个合成请求
+     * （容易撞 429、也拖慢用户真正在等的那个请求）。
+     * 只管预取，**点播（play）不受限** —— 用户按下喇叭的等待时间优先。
+     */
+    private val prefetchGate = Semaphore(PREFETCH_CONCURRENCY)
+
     /** 该语言是否应走云端 TTS：日语且云端 TTS 已配置可用时才走（英语留给系统离线引擎）。 */
     private fun useCloud(lang: LangId): Boolean =
         lang == LangId.JA && AppGraph.providerRegistry.isTtsEnabled(lang)
@@ -59,20 +69,26 @@ class WordTtsPlayer(context: Context, private val speaker: Speaker) {
     /** 后台预取：只合成落缓存、不播放。复习页 showNext 后调，等用户点喇叭时已就绪。 */
     fun prefetch(scope: CoroutineScope, lang: LangId, text: String) {
         if (text.isBlank() || !useCloud(lang)) return
-        scope.launch(Dispatchers.IO) { obtainAudio(lang, text) }
+        scope.launch(Dispatchers.IO) {
+            prefetchGate.withPermit { obtainAudio(lang, text) }
+        }
     }
 
     /**
-     * 整表预取（发音表用）：**顺序**逐条合成 —— 几十个条目并发打过去容易撞限流（429），
-     * 顺序慢一点但稳；期间用户点某格会走 [obtainAudio] 的 in-flight 去重，不会重复请求。
+     * 整表预取（发音表用）：逐条合成、受 [prefetchGate] 限制并发 ——
+     * 几十个条目一起打过去容易撞限流（429）。
+     * 期间用户点某格会走 [obtainAudio] 的 in-flight 去重，不会重复请求。
      */
     fun prefetchAll(scope: CoroutineScope, lang: LangId, texts: List<String>) {
         if (!useCloud(lang)) return
         val distinct = texts.filter { it.isNotBlank() }.distinct()
         if (distinct.isEmpty()) return
         scope.launch(Dispatchers.IO) {
-            for (t in distinct) {
-                obtainAudio(lang, t)
+            prefetchGate.withPermit {
+                for (t in distinct) {
+                    // 已在缓存里的会被 obtainAudio 秒过；页面已销毁时协程取消，自然停
+                    obtainAudio(lang, t)
+                }
             }
         }
     }
@@ -96,19 +112,36 @@ class WordTtsPlayer(context: Context, private val speaker: Speaker) {
     private suspend fun obtainAudio(lang: LangId, text: String): File? {
         val config = AppGraph.settingsRepository.configFor(lang).tts
         val key = cache.key(text, config.model, config.voice)
-        cache.get(key)?.let { return it }
+        cache.get(key)?.let {
+            android.util.Log.i(TAG, "HIT ${key.take(8)} 0ms ${preview(text)}")
+            return it
+        }
 
         val mine = CompletableFuture<File?>()
         val existing = inFlight.putIfAbsent(key, mine)
-        if (existing != null) return suspendCoroutineFor(existing)
+        if (existing != null) {
+            android.util.Log.i(TAG, "WAIT ${key.take(8)} ${preview(text)}（已有同 key 请求在飞，不重复发）")
+            return awaitExisting(existing)
+        }
+        val startedAt = SystemClock.elapsedRealtime()
         try {
             val result = AppGraph.providerRegistry.factory(lang).tts().synthesize(text, null)
+            val ms = SystemClock.elapsedRealtime() - startedAt
             val file = when (result) {
                 is AiResult.Ok -> cache.put(key, result.value)
                 is AiResult.Err -> null // 失败不缓存：下次再试（可能是暂时性网络问题）
             }
+            if (file != null) {
+                android.util.Log.i(TAG, "MISS ${key.take(8)} ${ms}ms ${file.length()}B ${preview(text)}")
+            } else {
+                android.util.Log.w(TAG, "FAIL ${key.take(8)} ${ms}ms ${preview(text)}（回落系统 TTS）")
+            }
             mine.complete(file)
             return file
+        } catch (e: CancellationException) {
+            // 页面销毁 / 预取被取消：别吞掉取消信号，交回协程框架
+            mine.complete(null)
+            throw e
         } catch (e: Exception) {
             mine.complete(null)
             return null
@@ -120,8 +153,8 @@ class WordTtsPlayer(context: Context, private val speaker: Speaker) {
         }
     }
 
-    /** 把 [CompletableFuture] 的结果桥接成挂起（阻塞 IO 线程直到首个请求完成）。 */
-    private fun suspendCoroutineFor(future: CompletableFuture<File?>): File? =
+    /** 等同一个 in-flight 请求的结果（阻塞 IO 线程直到首个请求完成；阻塞期间取消不生效，最多等到超时）。 */
+    private fun awaitExisting(future: CompletableFuture<File?>): File? =
         try {
             future.get()
         } catch (e: Exception) {
@@ -157,8 +190,16 @@ class WordTtsPlayer(context: Context, private val speaker: Speaker) {
         player = null
     }
 
+    /** 日志里只给前 12 个字，够认是哪一条、又不刷屏（文本含多行例句时尤其有用）。 */
+    private fun preview(text: String) = "'${text.replace('\n', ' ').take(12)}'"
+
     private companion object {
+        const val TAG = "ShiyuTts"
+
         /** 缓存上限。MP3 一条约 20–80KB，64MB ≈ 上千条，够全书高频词常驻。 */
         const val MAX_CACHE_BYTES = 64L * 1024 * 1024
+
+        /** 预取最多同时 2 个请求：够覆盖「当前卡 + 下一张」的预热节奏，又不至于打爆限流。 */
+        const val PREFETCH_CONCURRENCY = 2
     }
 }

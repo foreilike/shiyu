@@ -21,8 +21,9 @@ android {
         applicationId = "com.shiyu.app"
         minSdk = 26
         targetSdk = 35
-        versionCode = 1
-        versionName = "1.0.0"
+        // 发版必须 +1（§14.1）：versionCode 是升级判定依据，versionName 只是给人看的
+        versionCode = 2
+        versionName = "1.0.1"
     }
 
     signingConfigs {
