@@ -18,13 +18,13 @@
 | 项 | 值 |
 |---|---|
 | 应用名 / 包名 | **拾语** / `com.shiyu.app` |
-| 版本 | `versionCode = 1`、`versionName = 1.0.0`（新包名 = 新应用身份，版本号重新起算） |
+| 版本 | `versionCode = 4`、`versionName = 1.0.3`（新包名 = 新应用身份，版本号重新起算；**每版必 +1，见 §14.1.1**） |
 | 形态 | **纯原生 Android（Kotlin + Views/XML + ViewBinding），单 module（`:app`）** |
 | 学习语言 | 日语 + 英语双语，可切换，进度/配置全隔离；韩/西/法在「课程」页标为即将支持 |
 | 工程根目录 | `D:\AI project\lang-partner`（目录名保留，未随应用改名） |
-| 主源码规模 | 72 个 `.kt`（6,519 行）+ 16 个布局 + 36 个 drawable + 6 份 assets JSON |
-| 测试 | **26 个测试类 / 387 个单测，全绿**（fail=0 err=0 skip=0），`lintDebug` 0 error |
-| 交付 APK | `Shiyu-v1.0.0-release.apk`（约 5.70 MB，已签名） |
+| 主源码规模 | **82 个 `.kt`（9,743 行）+ 21 个布局 + 45 个 drawable + 18 份 assets JSON**<br>（核对于 2026-09-23；原文写的 72 / 6,519 / 16 / 36 / 6 均已过时） |
+| 测试 | **28 个测试类 / 401 个单测，全绿**（fail=0 err=0 skip=0），`lintDebug` 0 error<br>（原文写的 26 类 / 387 例已过时，明细见 §11.2） |
+| 交付 APK | `Shiyu-v1.0.3-release.apk`（9.62 MB，已签名）<br>历史包 `Shiyu-v1.0.0/1.0.1/1.0.2-release.apk` 全部保留 |
 | 构建命令 | 见 §2.2（**必须显式设置 `JAVA_HOME=D:\a\jbr`**） |
 | 联网能力 | 4 种 AI 能力（对话 / 识别 / 合成 / 实时语音）；**未配置凭证时全部降级为本地 Mock，App 照常可跑完流程** |
 | 版本控制 | 已接入 Git（本地仓库，`.jks` 与 `keystore.properties` 已在 `.gitignore`） |
@@ -57,11 +57,11 @@
 
 | 路径 | 说明 |
 |---|---|
-| `app/src/main/java/com/shiyu/app/` | 主源码（72 个 .kt），分层见 §3 |
-| `app/src/test/java/com/shiyu/app/` | 单元测试（25 个类 / 349 例） |
-| `app/src/main/assets/*.json` | 6 份内容资产（假名/词汇/音素/场景），见 §10 |
-| `app/src/main/res/` | 16 布局 + 36 drawable + mipmap-anydpi/-v26（自适应图标）+ values / values-v27 |
-| `app/src/main/AndroidManifest.xml` | 9 个 Activity，恰好 2 条权限（INTERNET / RECORD_AUDIO） |
+| `app/src/main/java/com/shiyu/app/` | 主源码（**82 个 .kt / 9,743 行**），分层见 §3 |
+| `app/src/test/java/com/shiyu/app/` | 单元测试（**28 个类 / 401 例**） |
+| `app/src/main/assets/*.json` | **18 份**内容资产（假名/词汇/音素/场景/预置配置），见 §10 |
+| `app/src/main/res/` | **21 布局 + 45 drawable** + mipmap-anydpi/-v26（自适应图标）+ values / values-v27 |
+| `app/src/main/AndroidManifest.xml` | **12 个 Activity**，恰好 2 条权限（INTERNET / RECORD_AUDIO） |
 | `app/build.gradle.kts` | 模块构建脚本（含 release 签名配置） |
 | `build.gradle.kts` / `settings.gradle.kts` | 根构建脚本（module 名 `Shiyu`，include `:app`） |
 | `gradle.properties` | `-Dfile.encoding=UTF-8`、`android.useAndroidX=true` |
@@ -688,22 +688,38 @@ $env:JAVA_HOME = "D:\a\jbr"; .\gradlew.bat :app:testDebugUnitTest --console=plai
 
 ### 11.2 明细（27 类 / **387 例**，全绿）
 
+> **2026-09-23 重新核对**：下表原为 **26 类 / 387 例**，实际已增长到 **28 类 / 401 例**。
+> 下面按最新实测值重写（新增 `RealtimeProtocolTest` +2、`TtsDiskCacheTest` +11、
+> `LanguageModuleTest` 13→14、`SettingsRepositoryTest` 22，其余有微调）。
+
 | 测试类 | 例数 | | 测试类 | 例数 |
 |---|---|---|---|---|
 | `SourcePolicyTest` | 4 | | `core.net.BaseUrlNormalizerTest` | 16 |
 | `ai.OpenAiProviderTest` | 12 | | `core.net.HttpErrorsTest` | 16 |
 | `core.answer.AnswerJudgeTest` | 17 | | `core.net.OpenAiWireTest` | 14 |
-| `core.audio.VadPolicyTest` | 10 | | `core.realtime.RealtimeProtocolTest` | 17 |
+| `core.audio.VadPolicyTest` | 10 | | `core.realtime.RealtimeProtocolTest` | **20** |
 | `core.chat.ReplyParserTest` | 11 | | `core.srs.Sm2SchedulerTest` | 11 |
-| **`core.srs.DailyQuotaTest`** | **7** | | **`data.store.AtomicFileTest`** | **11** |
-| `core.context.ContextTrimmerTest` | 10 | | **`core.stats.AchievementsTest`** | **8** |
-| `core.lang.LanguageModuleTest` | 13 | | `data.asset.AssetContentTest` | 9 |
-| `core.lang.MockProviderTest` | 7 | | **`data.store.DailyStatsStoreTest`** | **21** |
+| `core.srs.DailyQuotaTest` | 7 | | `data.store.AtomicFileTest` | 11 |
+| `core.context.ContextTrimmerTest` | 10 | | `core.stats.AchievementsTest` | 8 |
+| `core.lang.LanguageModuleTest` | **14** | | `data.asset.AssetContentTest` | 9 |
+| `core.lang.MockProviderTest` | 7 | | `data.store.DailyStatsStoreTest` | 21 |
 | `core.lang.en.EnNormalizerTest` | 26 | | `data.store.SessionStoreTest` | 8 |
 | `core.lang.en.EnSentenceSplitterTest` | 25 | | `data.store.SettingsRepositoryTest` | 22 |
 | `core.lang.en.EnTokenizerTest` | 27 | | `data.store.StudyStoreTest` | 12 |
 | `core.lang.ja.KanaConverterTest` | 40 | | `core.lang.ja.KanaNormalizerTest` | 7 |
-| `core.log.LogRedactorTest` | 5 | | **合计** | **387** |
+| `core.log.LogRedactorTest` | 5 | | **`data.store.TtsDiskCacheTest`** | **11** |
+| | | | **合计（28 类）** | **401** |
+
+**测试盲区（2026-09-23 审计发现）**：下列**纯逻辑**类目前没有对应 `*Test`，
+其中前两个有实际风险，建议优先补：
+
+| 类 | 为什么该测 |
+|---|---|
+| `data/asset/PresetConfig.kt` | 含**版本迁移与强制同步**逻辑（`PRESET_VERSION = 2`，本地版本低就覆盖推送）。目前零覆盖，改错会让所有人的配置被静默重置 |
+| `core/lang/ja/ScenarioParser.kt` | 场景 JSON 解析，解析失败会直接让场景对话页空掉 |
+| `core/lang/LanguageRegistry.kt` | 语言注册表，**接新语言时第一处要改的地方**（见 `HANDOVER-拾语-接入新语言与语音.md`） |
+| `core/lang/VoicePrompts.kt` | 实时语音提示词生成（纯拼字符串，最好测） |
+| `core/lang/ja/JaModule.kt` / `core/lang/en/EnModule.kt` | 语言模块实现（目前只测了 `LanguageModule` 接口） |
 
 加粗为本次改造新增：`AchievementsTest`（成就判定）、`DailyStatsStoreTest`（每日统计 / 连续天数 /
 本周切片 / 坏 JSON 隔离），另外 `SettingsRepositoryTest` 从 12 例加到 17 例（新增 nickname 的
@@ -1683,6 +1699,60 @@ if (!tmp.renameTo(target)) { ... }
 > 本条只作为已知边界记录在案，不投入改动。
 > 日后若要重开，直接看本节的 A/B/C 三条，不用再查一遍文档。
 
+### 17.22 全盘审计：文档与代码不一致清单（2026-09-23）
+
+起因：用户指出「App 里根本没有『按住说话』，是点击开始/暂停」——文档把**已删除的旧交互**
+当成了现状。这说明交接文档存在系统性失真，于是做了一次全盘核对。**以下全部已核对过代码。**
+
+#### 17.22.1 高严重度（**照文档做会直接出问题**）
+
+| # | 文档原说法 | 代码实际 | 位置 |
+|---|---|---|---|
+| 1 | 实时采样率 **16000 Hz**（320 样本 / 640 B） | **24000 Hz**（480 样本 / **960 B**） | `RealtimeAudioController.SAMPLE_RATE` |
+| 2 | server_vad 能量阈值 **500** | **1300**（500 是**被否决**的值：2 米外人声就会触发） | `RealtimeOptions.DEFAULT_ENERGY_THRESHOLD` |
+
+> 第 1 条尤其危险：按 16kHz 推流，服务端**不报错也不回事件**，表现为
+> 「连上了、麦克风在采集、AI 一声不吭」。已在附录 A 加了醒目警告。
+
+#### 17.22.2 中严重度（描述与实现不符，误导判断）
+
+| # | 文档原说法 | 代码实际 | 位置 |
+|---|---|---|---|
+| 3 | 语伴名「日语 yoyo · **英语 Emma**」 | **两门语言都叫 yoyo**（注释写明是用户要求统一） | `ui/LangStyle.partnerName` |
+| 4 | 每日目标「30 分钟**常量，未做成可配置**，在 `HomeActivity.GOAL_MINUTES`」 | 是 `AppSettings.dailyGoalMinutes`，默认 30，**可在「我的」页改**（5–180 分钟，填 0 回落 30）。位置和"不可配置"两点都错 | `AppSettings.DEFAULT_DAILY_GOAL_MINUTES` |
+| 5 | 「回合制录音 = **按住**麦克风说一段 → 松手」 | **全 App 没有任何长按手势**：实时语音页是单键点击切换；场景对话页是「录音」/「停止」按钮点击切换 | `VoiceChatActivity.toggleSpeaking()` / `ChatActivity.toggleRecording()` |
+| 6 | 测试 26 类 / 387 例 | **28 类 / 401 例** | 见 §11.2 |
+| 7 | 主源码 72 个 .kt / 6,519 行 / 16 布局 / 36 drawable / 6 份 assets | **82 / 9,743 / 21 / 45 / 18** | 见 §0 与 §1.1 |
+
+#### 17.22.3 死代码与遗留（非本次引入，建议下次清理）
+
+| # | 现象 | 证据 | 建议 |
+|---|---|---|---|
+| 8 | **`voicePushToTalk` 是死设置** | `AppSettings` 有字段、`SettingsRepository` 有读写方法，但**全工程无调用方**，UI 也不暴露 | 删字段 + 读写方法 |
+| 9 | **`pushToTalkMode` 命名过时且被硬编码** | `VoiceChatActivity:388` 写死 `it.pushToTalkMode = true`；名字源自已删除的「按住」手势 | 改名（如 `gateMicByButton`）+ 注释说明为何恒为 true |
+| 10 | **5 个「按住说话」遗留字符串** | `profile_push_to_talk`、`profile_push_to_talk_sub`、`voice_btn_hold`、`voice_hold_to_talk`、`voice_release_to_send` —— 全工程零引用 | 删除 |
+| 11 | **`RealtimeOptions` 注释与常量自相矛盾** | 类注释正文写「实测定的值：**1200**」，常量 `DEFAULT_ENERGY_THRESHOLD = **1300**` | 以 1300 为准，改注释 |
+
+> 第 10 条是第 5 条的独立佐证：那次交互改造只删了代码与布局，**字符串没清**。
+> 这类"删一半"的改造正是交接文档失真的来源。
+
+#### 17.22.4 核对通过（文档正确，可放心引用）
+
+SM-2（ef 下限 1.3 / 初始 2.5 / 前两次 1 天 6 天）· VAD（-45 dBFS / 300 / 500 / 200ms / 0.98 / 60s）·
+上下文历史 24 条 · 单段录音 60s · 静音门控 800ms · 测试连接超时 8s ·
+默认音色 `qingchunshaonv` / TTS 回落 `alloy` · 密钥掩码（`take(3)+****+takeLast(4)`，<8 字符 → `****`）·
+配置 version 2 / 进度 version 2 / 每日统计 version 1 · 每日排卡 20（`DailyQuota.CARDS_PER_DAY`）·
+已掌握 `reps >= 5` · 成就阈值（开口/连续 7 天/100 词/200 词/10 小时/100 轮）·
+复习计入下限 5 秒 / 单次上限 30 分钟 · 实时会话单次上限 2 小时 · 昵称上限 12 ·
+底部导航 62dp + 22dp = 84dp · **`core/` 无任何 `android.*` 引用（分层干净）** ·
+`SourcePolicyTest` 存在且 4 例全绿。
+
+#### 17.22.5 给接手人的教训
+
+这份文档里的**数字和交互描述会随时间失真**，因为改造时往往只改代码不改文档。
+**凡是要动一个参数、一个交互前，先回代码里确认一次**，别直接信附录 A 的表。
+本次审计修正的值已在附录 A 就地改对，并在表下加了「照着改会出事」的警告。
+
 #### 17.21.2 首次朗读再快一点（免凭据那一半）
 
 §17.19 实测发音表 46 格顺序预热要 **53.4s**，一次只发一条，固有延迟被串行累加。
@@ -1715,22 +1785,33 @@ if (!tmp.renameTo(target)) { ... }
 | VAD 最短语音 | 200 ms | `VadPolicy.Params.minSpeechMs` |
 | VAD 裁剪比上限 | 0.98 | `VadPolicy.Params.maxTrimmedRatio` |
 | VAD 最长处理 | 60 s | `AudioVadTrimmer.MAX_SECONDS` |
-| 实时采样率 / 帧长 | 16000 Hz / 20 ms（320 样本 / 640 B） | `RealtimeAudioController` |
+| 实时采样率 / 帧长 | **24000 Hz** / 20 ms（480 样本 / **960 B**） | `RealtimeAudioController.SAMPLE_RATE`（**别改回 16000**，见下方警告）|
 | 实时静音门控 | 800 ms | `RealtimeAudioController.SILENCE_GATE_MS` |
-| 实时 server_vad 默认 | 开 / 100 ms / **500** / 500 ms | `RealtimeOptions`（阈值 500 是实测定的，非官方默认 2500）|
+| 实时 server_vad 默认 | 开 / 100 ms / **1300** / 500 ms | `RealtimeOptions.DEFAULT_ENERGY_THRESHOLD`（非官方默认 2500；**注意类注释正文写的 1200 是旧的，与常量 1300 不一致**）|
 | 实时测试连接超时 | 8 s | `SettingsActivity.probeRealtime` |
 | 默认音色 | `qingchunshaonv`（青春少女/女声） | `RealtimeProtocol.VOICE_FEMALE` |
 | TTS 默认音色 | `alloy` | `OpenAiWire.buildTtsBody` |
 | 密钥掩码 | `take(3)+"****"+takeLast(4)`；<8 字符 → `****` | `LogRedactor.mask` |
 | 配置 version / 进度 version | 2 / 2 | `AppSettings` / `StudyStore` |
 | 每日统计 version | 1 | `DailyStatsStore` |
-| 今日目标 | 30 分钟（常量，未做成可配置） | `HomeActivity.GOAL_MINUTES` |
+| 今日目标 | 默认 30 分钟，**可在「我的」页改**（5–180 分钟，填 0 回落 30） | `AppSettings.dailyGoalMinutes` / `DEFAULT_DAILY_GOAL_MINUTES = 30` |
 | 复习页时长计入下限 / 单次上限 | 5 秒 / 30 分钟 | `ReviewActivity` |
 | 实时会话时长单次上限 | 2 小时 | `VoiceChatActivity.MAX_SESSION_SECONDS` |
 | 昵称长度上限 | 12 字符 | `SettingsRepository.MAX_NICKNAME_LENGTH` |
 | 成就阈值 | 开口>0 / 连续 7 天 / 100 词 / 200 词 / 10 小时 / 100 轮 | `core/stats/Achievements` |
-| AI 语伴名 | 日语 yoyo · 英语 Emma | `ui/LangStyle.partnerName` |
+| AI 语伴名 | **两门语言都叫 yoyo**（用户要求统一成一个名字，不是日语 yoyo / 英语 Emma） | `ui/LangStyle.partnerName` |
 | 底部导航高度 | 导航条 62dp + 麦克风凸起 22dp = 84dp | `view_bottom_nav.xml` |
+
+> ### ⚠️ 两个「照着文档改就会出事」的值
+>
+> 1. **实时采样率是 24000 Hz，不是 16000。** 按 16kHz 推流时服务端**不报错、也不回任何事件**，
+>    表现为「连上了、麦克风在采集、但 AI 一声不吭」，极难排查。
+>    注意别被模型内部结构误导：Step-Audio 的 S3Tokenizer 确实在 16kHz 上工作，但那是**模型内部**的事，
+>    送进 `input_audio_buffer.append` 的必须是 24kHz。
+> 2. **server_vad 能量阈值是 1300，不是 500。** 500 是**被否决**的值 —— 实测「约 2 米外的人说话」就能触发。
+>    官方默认 2500 则连本人都唤不醒（本人说话实测电平换算幅度约 184~2900，短时均方根多数帧只有几百）。
+>    1300 落在两者中间。（`RealtimeOptions` 的类注释正文写的「实测定的值：1200」是旧数字，
+>    **以常量 1300 为准**，注释待修。）
 
 ## 附录 B：任务书章节索引（定位规格时用）
 
