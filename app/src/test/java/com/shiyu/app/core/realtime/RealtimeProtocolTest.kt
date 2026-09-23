@@ -41,6 +41,37 @@ class RealtimeProtocolTest {
     }
 
     @Test
+    fun session_update_carries_input_transcription_language() {
+        // 不传语种 → 服务端按默认（中文厂商多为 zh）转写，用户说日语时气泡会显示中文（真机实测）
+        val json = RealtimeProtocol.sessionUpdate(
+            instructions = "x", voice = "v", serverVad = false,
+            silenceDurationMs = 100, energyAwakenessThreshold = 2500, prefixPaddingMs = 500,
+            inputLanguage = "ja"
+        )
+        val s = JSONObject(json).getJSONObject("session")
+        assertEquals("ja", s.getJSONObject("input_audio_transcription").getString("language"))
+    }
+
+    @Test
+    fun session_update_omits_language_when_blank() {
+        val withEmpty = RealtimeProtocol.sessionUpdate(
+            instructions = "x", voice = "v", serverVad = false,
+            silenceDurationMs = 100, energyAwakenessThreshold = 2500, prefixPaddingMs = 500,
+            inputLanguage = ""
+        )
+        assertFalse(
+            JSONObject(withEmpty).getJSONObject("session").has("input_audio_transcription")
+        )
+        val withNull = RealtimeProtocol.sessionUpdate(
+            instructions = "x", voice = "v", serverVad = false,
+            silenceDurationMs = 100, energyAwakenessThreshold = 2500, prefixPaddingMs = 500
+        )
+        assertFalse(
+            JSONObject(withNull).getJSONObject("session").has("input_audio_transcription")
+        )
+    }
+
+    @Test
     fun session_update_without_vad_omits_turn_detection() {
         val json = RealtimeProtocol.sessionUpdate(
             instructions = "x", voice = "v", serverVad = false,

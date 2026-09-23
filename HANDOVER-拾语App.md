@@ -1621,6 +1621,49 @@ if (!tmp.renameTo(target)) { ... }
 说明这台机器的引擎是**真的判失败**（不是既不报错也不回调），`lastAttemptFailed()` 的两个判据够用，
 原先预留的「查 AudioTrack 是否起来」那层兜底不必做了。
 
+### 17.21 实时语音 ASR 语言修复 + 预取提并发（2026-09-23，v1.0.3 / versionCode 4）
+
+#### 17.21.1 ★ 实时语音说日语，转写出来是中文（用户实测反馈）
+
+**现象**：实时语音页，说中文 / 英文时转写正常；说日语时气泡里显示的是**中文**。
+
+**根因**：`RealtimeProtocol.sessionUpdate()` 里从来没有下发过 ASR 语言，
+`session` 对象只有 `input_audio_format` / `output_audio_format` 等字段 ——
+服务端拿不到语言就用**自己的默认值**；国内厂商的实时接口默认基本都是 `zh`，
+于是日语（以及除中英之外的一切语种）都被按中文解码。
+中文 / 英文「能识别对」不是因为代码正确，而是**撞上了默认值**。
+
+**改动**：
+1. `core/realtime/RealtimeProtocol.kt`：`sessionUpdate(..., inputLanguage: String? = null)`，
+   非空时写入 `session.input_audio_transcription = {"language": <tag>}`（stepfun 实时协议的 ASR 语言字段）。
+   空/空白时不写，保持旧行为，避免给不支持该字段的通道添麻烦。
+2. `ai/openai/StepfunRealtimeProvider.kt`：新增构造参数 `inputLanguage: String = ""`，
+   在**两处** `session.update` 都带上 —— 建连时的初始 `session.update`
+   和 `updateInstructions()`（后者会重建 session，漏了就前功尽弃）。
+3. `ai/AiProviderRegistry.kt`：创建时传 `inputLanguage = lang.tag`
+   （`lang.tag` 就是 `ja` / `en` / `zh`，与协议取值一致，不用再映射）。
+4. 单测 `RealtimeProtocolTest` +2 例：`session_update_carries_input_transcription_language`
+   / `session_update_omits_language_when_blank`。
+
+**待验证**：装 v1.0.3 后在实时语音页说日语，气泡应显示日文而不是中文。
+若仍显示中文，下一步是抓 `session.update` 的实际报文（见 §15 排障表）
+确认字段是否被服务端接受，以及 `lang.tag` 是否真是 `ja`。
+
+#### 17.21.2 首次朗读再快一点（免凭据那一半）
+
+§17.19 实测发音表 46 格顺序预热要 **53.4s**，一次只发一条，固有延迟被串行累加。
+在不能碰 API Key（配置里是明文，读出来会被安全策略拦）的前提下做了两件事：
+
+1. `ui/WordTtsPlayer.prefetchAll()`：从「整批抢一个 permit、内部串行」改成
+   **逐条 `launch { prefetchGate.withPermit { obtainAudio(...) } }`** ——
+   并发上限仍是 `PREFETCH_CONCURRENCY = 2`（守限流），但两条可以同时在飞。
+   理论上限 ≈ 53.4s / 2 ≈ **27s**；实测值待真机填。
+2. `ui/review/ReviewActivity`：`showNext()` 里除了当前卡，额外预取**下一张卡**
+   （抽 `prefetchAudio(card)`，词条和例句都预取）。翻卡时目标音频多半已热。
+
+> 剩下的「换更快的模型」那一半要凭据，留给用户在设置页改 TTS `model`
+> （如 `step-tts-mini`，厂商/三方反馈 TTFB 约快一半），用 `ShiyuTts` 的 `MISS` 耗时对比即可判断。
+
 
 
 ## 附录 A：关键常量速查

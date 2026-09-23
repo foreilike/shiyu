@@ -84,8 +84,8 @@ class WordTtsPlayer(context: Context, private val speaker: Speaker) {
     }
 
     /**
-     * 整表预取（发音表用）：逐条合成、受 [prefetchGate] 限制并发 ——
-     * 几十个条目一起打过去容易撞限流（429）。
+     * 整表预取（发音表用）：每条各抢一个 [prefetchGate] 许可，并发上限仍是 2 ——
+     * 几十个条目一起打过去会撞限流（429），但全串行太慢（46 格实测 53 秒）。
      * 期间用户点某格会走 [obtainAudio] 的 in-flight 去重，不会重复请求。
      */
     fun prefetchAll(scope: CoroutineScope, lang: LangId, texts: List<String>) {
@@ -93,11 +93,9 @@ class WordTtsPlayer(context: Context, private val speaker: Speaker) {
         val distinct = texts.filter { it.isNotBlank() }.distinct()
         if (distinct.isEmpty()) return
         scope.launch(Dispatchers.IO) {
-            prefetchGate.withPermit {
-                for (t in distinct) {
-                    // 已在缓存里的会被 obtainAudio 秒过；页面已销毁时协程取消，自然停
-                    obtainAudio(lang, t)
-                }
+            for (t in distinct) {
+                // 已在缓存里的会被 obtainAudio 秒过；页面已销毁时子协程随父取消
+                launch { prefetchGate.withPermit { obtainAudio(lang, t) } }
             }
         }
     }

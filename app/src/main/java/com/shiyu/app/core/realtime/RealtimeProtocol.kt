@@ -83,7 +83,8 @@ object RealtimeProtocol {
         energyAwakenessThreshold: Int,
         prefixPaddingMs: Int,
         inputAudioFormat: String = "pcm16",
-        outputAudioFormat: String = "pcm16"
+        outputAudioFormat: String = "pcm16",
+        inputLanguage: String? = null
     ): String {
         val session = JSONObject()
         session.put("modalities", JSONArray().put("text").put("audio"))
@@ -91,6 +92,14 @@ object RealtimeProtocol {
         session.put("voice", voice)
         session.put("input_audio_format", inputAudioFormat)
         session.put("output_audio_format", outputAudioFormat)
+        // 用户侧转写（ASR）的语种。**不传就会走服务端默认** —— 中文厂商的默认一般是 zh，
+        // 于是「用户说日语、气泡里显示中文」（真机实测）。显式给语种才对得上当前学习语言。
+        if (!inputLanguage.isNullOrBlank()) {
+            session.put(
+                "input_audio_transcription",
+                JSONObject().put("language", inputLanguage.trim())
+            )
+        }
         if (serverVad) {
             session.put(
                 "turn_detection",

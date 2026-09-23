@@ -24,7 +24,9 @@ import java.util.concurrent.TimeUnit
  */
 class StepfunRealtimeProvider(
     private val config: ProviderConfig,
-    private val options: RealtimeOptions
+    private val options: RealtimeOptions,
+    /** 当前学习语言的 tag（ja/en…）：用于告诉服务端按什么语种转写用户说的话 */
+    private val inputLanguage: String = ""
 ) : RealtimeVoiceProvider {
 
     private val TAG = "ShiyuRealtime"
@@ -118,7 +120,8 @@ class StepfunRealtimeProvider(
                         serverVad = options.serverVad,
                         silenceDurationMs = options.silenceDurationMs,
                         energyAwakenessThreshold = options.energyAwakenessThreshold,
-                        prefixPaddingMs = options.prefixPaddingMs
+                        prefixPaddingMs = options.prefixPaddingMs,
+                        inputLanguage = inputLanguage
                     )
                 )
                 listener?.onConnected()
@@ -258,7 +261,8 @@ class StepfunRealtimeProvider(
                 serverVad = options.serverVad,
                 silenceDurationMs = options.silenceDurationMs,
                 energyAwakenessThreshold = options.energyAwakenessThreshold,
-                prefixPaddingMs = options.prefixPaddingMs
+                prefixPaddingMs = options.prefixPaddingMs,
+                inputLanguage = inputLanguage
             )
         )
     }

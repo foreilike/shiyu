@@ -45,7 +45,10 @@ class AiProviderRegistry(
         val realtimeProvider = if (langConfig.realtime.isUsable()) {
             StepfunRealtimeProvider(
                 config = langConfig.realtime,
-                options = langConfig.realtimeOptions
+                options = langConfig.realtimeOptions,
+                // 不传语种服务端就按默认（中文厂商多为 zh）转写，说日语时气泡会显示中文。
+                // 用 sttLanguage 而非 tag：前者语义就是「ASR 接口的语言参数」
+                inputLanguage = lang.sttLanguage
             )
         } else {
             MockRealtimeProvider(lang)

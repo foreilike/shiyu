@@ -209,12 +209,11 @@ class ReviewActivity : BaseActivity() {
             return
         }
         currentCard = card
-        // 预取朗读音频（§17.17 Tier 1）：后台先合成当前卡的单词+例句落缓存，
-        // 用户点喇叭时已就绪、秒开。英语不走云端（useCloud 内部判断），此调用是空操作。
-        ttsPlayer?.prefetch(lifecycleScope, module.id, card.speakText)
-        if (card.example.isNotBlank()) {
-            ttsPlayer?.prefetch(lifecycleScope, module.id, card.example)
-        }
+        prefetchAudio(card)
+        // 多看一张：翻到下一张再点喇叭也能命中缓存（并发闸门 2，不会打爆限流）
+        queue.getOrNull(queueIndex + 1)
+            ?.let { nextId -> deck.firstOrNull { it.id == nextId } }
+            ?.let { next -> prefetchAudio(next) }
         binding.cardSource.visibility = View.VISIBLE
         binding.cardSource.text = module.id.displayName
         binding.btnSpeak.visibility = View.VISIBLE
@@ -238,6 +237,17 @@ class ReviewActivity : BaseActivity() {
         binding.tapHint.visibility = View.VISIBLE
         binding.chipIndex.text =
             getString(R.string.review_progress, queueIndex + 1, queue.size)
+    }
+
+    /**
+     * 预取一张卡的朗读音频（§17.17 Tier 1）：后台合成单词+例句落缓存，用户点喇叭时已就绪。
+     * 英语不走云端（useCloud 内部判断），此调用是空操作。
+     */
+    private fun prefetchAudio(card: Card) {
+        ttsPlayer?.prefetch(lifecycleScope, module.id, card.speakText)
+        if (card.example.isNotBlank()) {
+            ttsPlayer?.prefetch(lifecycleScope, module.id, card.example)
+        }
     }
 
     /** 揭示答案：点卡片即触发，翻面动画后把释义/读音/例句与自评按钮一并显示。 */
