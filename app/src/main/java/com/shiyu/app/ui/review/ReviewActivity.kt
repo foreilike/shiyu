@@ -145,10 +145,6 @@ class ReviewActivity : BaseActivity() {
                 Toast.LENGTH_SHORT
             ).show()
         }
-        // 合成真失败了（引擎报错）：这也是以前完全看不见的一种失败
-        speaker?.onSpeechError = {
-            Toast.makeText(this, R.string.review_speak_failed, Toast.LENGTH_SHORT).show()
-        }
         deck = module.buildDeck(AppGraph.activeDeckJson(module))
         queue = AppGraph.studyStore.selectToday(module.id, deck.map { it.id }, today)
         queueIndex = 0
