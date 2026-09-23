@@ -152,8 +152,7 @@
     <string name="review_pick_book">选择词书</string>
     <string name="review_speak">朗读这个单词</string>
     <string name="review_speak_example">听例句</string>
-    <string name="review_speak_no_tts">设备缺少%1$s语音包，无法朗读</string>
-    <string name="review_speak_network_only">%1$s只有联网语音包，离线时读不出来；可在系统「文字转语音」设置里下载离线语音</string>
+    <string name="review_speak_no_tts">%1$s朗读不可用：已装的语音引擎都读不了，请在系统「文字转语音」里安装对应语音</string>
     <string name="review_speak_failed">朗读失败，请检查系统的文字转语音设置</string>
     <!-- 对话中心 -->
     <string name="talk_title">对话</string>

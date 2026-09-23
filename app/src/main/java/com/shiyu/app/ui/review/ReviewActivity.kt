@@ -145,14 +145,6 @@ class ReviewActivity : BaseActivity() {
                 Toast.LENGTH_SHORT
             ).show()
         }
-        // 只有联网音色：能响但依赖网络，连不上就会「点了没声音」。提前说清楚，别让人以为按钮坏了。
-        speaker?.onNetworkVoiceOnly = { locale ->
-            Toast.makeText(
-                this,
-                getString(R.string.review_speak_network_only, locale.displayName),
-                Toast.LENGTH_LONG
-            ).show()
-        }
         // 合成真失败了（引擎报错）：这也是以前完全看不见的一种失败
         speaker?.onSpeechError = {
             Toast.makeText(this, R.string.review_speak_failed, Toast.LENGTH_SHORT).show()
