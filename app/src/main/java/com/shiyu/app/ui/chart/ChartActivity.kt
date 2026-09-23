@@ -69,6 +69,9 @@ class ChartActivity : BaseActivity() {
         lang = module.id
         speaker?.setLanguage(module.id)
         entries = module.buildChart(AppGraph.assetRepository.chartJson(module))
+        // 整表预取（§17.17 Tier 1）：五十音就几十格，进页后台逐条合成落缓存，
+        // 点格子秒开。英语走系统 TTS，prefetchAll 内部判空跳过。
+        ttsPlayer?.prefetchAll(lifecycleScope, lang, entries.map { it.speak })
         val hasAlt = entries.any { it.alt.isNotEmpty() }
         binding.scriptSwitch.visibility = if (hasAlt) View.VISIBLE else View.GONE
         binding.scriptSwitch.isChecked = false

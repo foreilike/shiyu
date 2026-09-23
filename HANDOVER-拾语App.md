@@ -1483,7 +1483,7 @@ if (!tmp.renameTo(target)) { ... }
 > tts 组给到 `jilingshaonv`。若日语朗读又没声，先查设置页「语音合成」组是否 baseUrl/voice 齐全、
 > 点「测试连接」；再确认 5G 能到 `api.stepfun.com`。
 
-### 17.17 朗读延迟优化路线（规划，未实现，2026-09-23）
+### 17.17 朗读延迟优化路线（规划，2026-09-23；Tier 1 已于 §17.18 落地）
 
 **驱动**：云端 TTS 每次朗读要等**约 1.4–1.7s**（实测 stepfun `stepaudio-2.5-tts`：单假名 1.39s、
 短词 1.52s、整句 1.69s）。关键是**首字节 ≈ 总耗时**——服务端是**非流式**，把整段音频合成完
@@ -1518,6 +1518,42 @@ if (!tmp.renameTo(target)) { ... }
 **建议节奏**：先做 **Tier 1**（尤其缓存 + 预取，直接对症用户的延迟痛点，成本极低），跑一段看体感；
 若仍要彻底离线，再做 **Tier 3 spike**——拿 sherpa-onnx 官方 Android demo 跑通一个日语模型，
 实测**真机首声延迟 / 暖延迟 / APK 体积增量**，用真实数字决定值不值得，再正式排期。
+
+### 17.18 朗读缓存 + 预取落地（Tier 1，2026-09-23）
+
+§17.17 的 Tier 1 已实现：**缓存命中秒开、预取让等待≈0、重复朗读零 API 消耗**。
+
+**新增 `data/store/TtsDiskCache.kt`**（纯 JVM 可单测）：
+- 键 = `sha256(model|voice|text)`——换模型/音色/文本任一项都重新合成，不会串音色；
+- 文件落 `cacheDir/tts_cache/<key>.mp3`，**上限 64MB，超限按 lastModified LRU 淘汰**；
+  `get` 命中即 touch（刚用过的先活）；原子写（tmp→rename），空字节不落盘、0 字节文件不算命中；
+- 缓存属于 cacheDir，「清空全部数据」不动它（系统磁盘紧张时自行清理）。
+
+**`WordTtsPlayer` 改造**：
+- 播放路径统一为「查缓存 → 未命中合成 → 落缓存 → 播本地文件」；**失败不缓存**（暂时性网络错误下次再试）；
+- **in-flight 去重**（`ConcurrentHashMap<String, CompletableFuture>`）：预取进行中用户就点了喇叭，
+  同一 key 只发一次网络请求，后来者等首个结果——没有这层，预取反而把并发请求翻倍；
+  协程取消时 future 兜底 complete(null)，等它的后来者不会永久挂起；
+- 新增 `prefetch(scope, lang, text)`（后台合成落缓存不播放）与
+  `prefetchAll(scope, lang, texts)`（发音表整表**顺序**预热——几十条并发容易撞 429）；
+- 旧的「播完即删临时文件」逻辑删除，文件由缓存统一管理。
+
+**接入点**：
+- `ReviewActivity.showNext()`：拿到卡即后台预取当前卡 `speakText` + `example`；
+- `ChartActivity.reload()`：建表后整表 `prefetchAll`（五十音 46 格）；
+- `ChatActivity` 点句重播无需改动——走同一 `speakWord` 入口，自动享缓存。
+
+**测试**：新增 `TtsDiskCacheTest` 11 例（命中/空字节/覆写/key 三要素/LRU 淘汰/touch 存活/tmp 不残留），
+**388 → 399 例全绿**，`lintDebug` 0 error，`clean assembleRelease` 通过。
+
+**待真机验证**（魅族 22，装 release 包）：
+1. 复习页日语卡：第一次点喇叭仍 ~1.5s（首合成），同一张卡第二次点应**秒开**；
+2. 连续翻几张卡后**回头重听**前几张 —— 全部秒开（预取已就绪）；
+3. 发音表进页等 ~30s 后点格子应秒开（整表预热完成）；期间提前点格子走 in-flight 等待，不重复请求；
+4. 英语朗读不受影响（仍走系统 TTS，prefetch 空操作）；
+5. `adb shell run-as com.shiyu.app ls cache/tts_cache`（debug 包）能看到 .mp3 落盘。
+
+
 
 ## 附录 A：关键常量速查
 

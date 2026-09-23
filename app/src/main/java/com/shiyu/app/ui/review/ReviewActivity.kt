@@ -205,6 +205,12 @@ class ReviewActivity : BaseActivity() {
             return
         }
         currentCard = card
+        // 预取朗读音频（§17.17 Tier 1）：后台先合成当前卡的单词+例句落缓存，
+        // 用户点喇叭时已就绪、秒开。英语不走云端（useCloud 内部判断），此调用是空操作。
+        ttsPlayer?.prefetch(lifecycleScope, module.id, card.speakText)
+        if (card.example.isNotBlank()) {
+            ttsPlayer?.prefetch(lifecycleScope, module.id, card.example)
+        }
         binding.cardSource.visibility = View.VISIBLE
         binding.cardSource.text = module.id.displayName
         binding.btnSpeak.visibility = View.VISIBLE
