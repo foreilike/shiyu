@@ -886,13 +886,30 @@ defaultConfig {
 
 > 两个字段都必须改。`versionCode` 是升级判定依据；`versionName` 只是给人看的。
 
-### 14.2 出 release 包
+### 14.1.1 ★ APK 发布约定（2026-09-23 定，务必照做）
+
+1. **每个新 APK 必须递增版本号**：`versionCode` +1、`versionName` 同步改，
+   产物按 `Shiyu-v<versionName>-release.apk` 命名（如 `Shiyu-v1.0.1-release.apk`）。
+   签名不变 → 手机上覆盖安装，学习进度不丢。
+2. **历史 APK 一律保留，不覆盖、不删除。**  Archived 副本同步进
+   `D:\AI project\项目备份\拾语\发布物\`。
+   - 唯一会被覆盖的是构建产物 `app/build/outputs/apk/release/app-release.apk` ——
+     那是每次构建重写的中间物，**不是存档**，别拿它当回滚底稿。
+3. **APK 在 `.gitignore` 里**（Git 不保它的版本），本机回收站也不可靠（§2.4），
+   所以**备份目录那份就是唯一的异地冗余**，别省这一步。
+4. 回滚到旧版 = **降级安装**（versionCode 变低），Android 默认拒绝；
+   真要退先把 `filesDir/study_progress.json` 等数据拷出来，再讨论 `-d` 强降的风险。
+
+### 14.2 出 release 包（**先按 §14.1 把版本号 +1**，产物按版本号命名，不覆盖旧包，见 §14.1.1）
 
 ```powershell
 cd "D:\AI project\lang-partner"
 $env:JAVA_HOME = "D:\a\jbr"
 .\gradlew.bat clean :app:assembleRelease :app:testDebugUnitTest --console=plain
-Copy-Item app\build\outputs\apk\release\app-release.apk .\Shiyu-v<版本号>-release.apk
+# 注意：以上一步改出来的**新版本号**命名，不要覆盖任何旧 APK
+Copy-Item app\build\outputs\apk\release\app-release.apk .\Shiyu-v<新的版本号>-release.apk
+# 同步一份到备份目录做异地冗余
+Copy-Item .\Shiyu-v<新的版本号>-release.apk "D:\AI project\项目备份\拾语\发布物\"
 # 验签（可选但推荐）
 & "D:\AndroidSdk\build-tools\36.0.0\apksigner.bat" verify --print-certs app\build\outputs\apk\release\app-release.apk
 ```

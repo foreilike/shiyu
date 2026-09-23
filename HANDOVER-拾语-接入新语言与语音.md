@@ -46,9 +46,12 @@ JAVA_HOME="D:/a/jbr" ./gradlew :app:compileReleaseKotlin --console=plain
 # 跑单测（388 例）
 JAVA_HOME="D:/a/jbr" ./gradlew :app:testDebugUnitTest --console=plain
 
-# 出 release 包（已配签名）
+# 出 release 包（已配签名）。**版本号必须先 +1、产物按版本号命名、不覆盖任何旧 APK**
+# 见总纲 HANDOVER-拾语App.md §14.1.1（这是硬性约定）
 JAVA_HOME="D:/a/jbr" ./gradlew :app:clean :app:assembleRelease --console=plain
 # 产物：app/build/outputs/apk/release/app-release.apk
+cp app/build/outputs/apk/release/app-release.apk ./Shiyu-v<新的版本号>-release.apk
+cp ./Shiyu-v<新的版本号>-release.apk "/d/AI project/项目备份/拾语/发布物/"
 
 # 装机
 "D:/AndroidSdk/platform-tools/adb.exe" install -r app/build/outputs/apk/release/app-release.apk
