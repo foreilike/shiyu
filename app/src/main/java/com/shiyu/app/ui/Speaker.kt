@@ -3,6 +3,7 @@ package com.shiyu.app.ui
 import android.content.Context
 import android.os.Bundle
 import android.speech.tts.TextToSpeech
+import android.speech.tts.UtteranceProgressListener
 import com.shiyu.app.core.lang.LangId
 import java.util.Locale
 
@@ -25,6 +26,19 @@ class Speaker(context: Context) : TextToSpeech.OnInitListener {
 
     /** 语音包缺失时的回调，供 UI 提示（可为空） */
     var onLanguageUnavailable: ((Locale) -> Unit)? = null
+
+    /**
+     * 该语言**只有联网音色**时的回调。
+     *
+     * 实测踩过：英语的默认音色是 `en-us-x-iog-lstm-**embedded**`（本地合成，随时能响），
+     * 而日语默认给的是 `ja-jp-x-jab-**server**`（**要联网去 Google 取**）。
+     * 网络不通时它**不报错、不回调**，就是一声不响 —— 用户看到的现象是「日语卡片点喇叭没声音」。
+     * 所以这里要主动告诉 UI。
+     */
+    var onNetworkVoiceOnly: ((Locale) -> Unit)? = null
+
+    /** 合成失败（引擎 onError）时的回调，参数为引擎错误码 */
+    var onSpeechError: ((Int) -> Unit)? = null
 
     /** 抑制开关：录音期间置 true，阻断一切朗读，从根上避免「外放被录进麦克风」的回环。 */
     private var suppressed = false
@@ -53,6 +67,24 @@ class Speaker(context: Context) : TextToSpeech.OnInitListener {
     override fun onInit(status: Int) {
         ready = status == TextToSpeech.SUCCESS
         if (ready) {
+            // 合成失败要能看见：默认的静默失败会让人以为「这个按钮坏了」
+            try {
+                tts?.setOnUtteranceProgressListener(object : UtteranceProgressListener() {
+                    override fun onStart(utteranceId: String?) = Unit
+                    override fun onDone(utteranceId: String?) = Unit
+
+                    @Deprecated("引擎仍会调旧签名", ReplaceWith(""))
+                    override fun onError(utteranceId: String?) {
+                        onSpeechError?.invoke(-1)
+                    }
+
+                    override fun onError(utteranceId: String?, errorCode: Int) {
+                        onSpeechError?.invoke(errorCode)
+                    }
+                })
+            } catch (e: Exception) {
+                // 忽略：拿不到错误回调不影响朗读本身
+            }
             applyRate(rate)
             // 引擎连上后才真正生效：把调用方早先设过的语言补上
             locale?.let { applyLanguage(it) }
@@ -82,6 +114,38 @@ class Speaker(context: Context) : TextToSpeech.OnInitListener {
             // 设备没装这门语言的语音包：保留系统默认，并通知 UI。
             // 不抛异常 —— 朗读失败不该影响主链路。
             onLanguageUnavailable?.invoke(target)
+            return
+        }
+        preferEmbeddedVoice(target)
+    }
+
+    /**
+     * **优先挑本地（非联网）音色。**
+     *
+     * 同一个语言在系统里可能同时有联网音色和本地音色，默认给的不一定是本地那个 ——
+     * 实测日语默认就给到联网音色（见 [onNetworkVoiceOnly] 的注释），网络不通时一声不响。
+     * 本地音色合成是瞬时的、离线可用，学习场景明显更合适，所以只要存在就换过去。
+     *
+     * 一个本地音色都没有时，保留系统默认（联网音色）并回调通知 UI ——
+     * 能响就响，响不了也要让人知道是「语音包/网络」的问题，而不是以为按钮坏了。
+     */
+    private fun preferEmbeddedVoice(target: Locale) {
+        val voices = try {
+            tts?.voices
+        } catch (e: Exception) {
+            null
+        } ?: return
+        val sameLang = voices.filter { it.locale.language == target.language }
+        if (sameLang.isEmpty()) return
+        val embedded = sameLang.firstOrNull { !it.isNetworkConnectionRequired }
+        if (embedded == null) {
+            onNetworkVoiceOnly?.invoke(target)
+            return
+        }
+        try {
+            tts?.voice = embedded
+        } catch (e: Exception) {
+            // 换不过去就用默认的，不该影响已有的朗读能力
         }
     }
 

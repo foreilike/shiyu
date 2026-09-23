@@ -513,6 +513,23 @@ class VoiceChatActivity : BaseActivity() {
         /** 新一轮响应开始 → 关闭打断丢弃窗口，正常播放 */
         override fun onResponseStarted() {
             audio?.resumeAudio()
+            // **AI 开始回复 = 用户这一轮结束了，必须收麦。**
+            //
+            // 不收的话麦克风一直开着，AI 的外放会从自己的麦克风回到服务端（本项目没有真 AEC），
+            // 服务端判为「用户在说话」→ 触发 barge-in → **把 AI 正在说的后半句掐掉**。
+            // 真机上「AI 回复后半句没声音」就是这么来的。
+            //
+            // 触发点选「AI 开始回复」而不是「服务端报 speech_stopped」：
+            // VAD 的静音判定很敏感，用户句中稍一停顿就可能报 speech_stopped，
+            // 拿它当收麦信号会把用户的话吃掉。而 AI 都开始回复了，这一轮确定已经结束。
+            // 用户想打断 AI，照旧点「开始说话」（会重新开麦并打断）。
+            if (audio?.pushing == true) {
+                audio?.pushing = false
+                runOnUiThread {
+                    speaking = false
+                    binding.micLabel.text = getString(R.string.voice_btn_start)
+                }
+            }
         }
 
         override fun onReconnecting(attempt: Int) {
@@ -552,6 +569,17 @@ class VoiceChatActivity : BaseActivity() {
         }
 
         override fun onUserSpeechStarted() {
+            // **只有我们真的在推麦克风时，才把 speech_started 当作「用户打断」。**
+            //
+            // 本项目没有真 AEC：喇叭外放的声音会被自己的麦克风录进去。若用户点过「开始说话」
+            // 之后一直没收麦，AI 回复时它的声音就从这个口子回到服务端，服务端判定「用户在说话」
+            // → 我们又调 interrupt() → **把 AI 正在说的后半句掐掉**。这是真机上「AI 回复后半句没声音」的根因。
+            // 没在收音（pushToTalkMode 下推的是静音帧）时服务端还能听到人声，那就不是用户 ——
+            // 一律不当打断处理。
+            if (audio?.pushing != true) {
+                android.util.Log.i(TAG, "忽略 speech_started：当前未在收音，判为外放回环")
+                return
+            }
             // barge-in：用户一开口就停播，并让服务端也停掉当前这轮生成。
             // 只调 interrupt() 是不够的 —— 服务端还在往下推流，
             // 残留的音频包会立刻把播放重新拉起来（这就是"打断没反应"）。
@@ -561,6 +589,9 @@ class VoiceChatActivity : BaseActivity() {
         }
 
         override fun onUserSpeechStopped() {
+            // 这里**只更新文案、不收麦**。服务端报「用户停下了」不代表用户真的说完了 ——
+            // VAD 静音判定很敏感，句中停顿也会报，在这里收麦会把用户后半句吃掉。
+            // 收麦放在 onResponseStarted（AI 真开始回复时），见那里的注释。
             runOnUiThread { binding.voiceState.text = getString(R.string.voice_thinking) }
         }
 
