@@ -524,6 +524,7 @@ class VoiceChatActivity : BaseActivity() {
             // 拿它当收麦信号会把用户的话吃掉。而 AI 都开始回复了，这一轮确定已经结束。
             // 用户想打断 AI，照旧点「开始说话」（会重新开麦并打断）。
             if (audio?.pushing == true) {
+                android.util.Log.i(TAG, "AI 开始回复 → 自动收麦（防止外放回环触发打断）")
                 audio?.pushing = false
                 runOnUiThread {
                     speaking = false

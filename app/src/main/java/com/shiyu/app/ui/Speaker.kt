@@ -52,6 +52,22 @@ class Speaker(context: Context) : TextToSpeech.OnInitListener {
     /** 当前朗读语言；例句语速要按语言分，所以得记住 */
     private var currentLang: LangId? = null
 
+    /**
+     * 三个回调统一从**主线程**发出。
+     *
+     * 必须这么做：`onSpeechError` 是 TTS 引擎从 **Binder 线程**回调上来的，
+     * 调用方在里面碰 UI（比如弹 Toast）会抛
+     * `Can't toast on a thread that has not called Looper.prepare()` ——
+     * 而且那个异常被系统吞掉，表现是「提示根本没出现」，比崩溃还难查（真机上踩过）。
+     * 在源头收口，所有调用方就不必各自记住这件事。
+     */
+    private val mainHandler = android.os.Handler(android.os.Looper.getMainLooper())
+
+    private fun postToMain(block: () -> Unit) {
+        if (android.os.Looper.myLooper() == android.os.Looper.getMainLooper()) block()
+        else mainHandler.post(block)
+    }
+
     fun setLanguage(langId: LangId) {
         currentLang = langId
         val target = if (langId == LangId.JA) Locale.JAPANESE else Locale.ENGLISH
@@ -75,11 +91,11 @@ class Speaker(context: Context) : TextToSpeech.OnInitListener {
 
                     @Deprecated("引擎仍会调旧签名", ReplaceWith(""))
                     override fun onError(utteranceId: String?) {
-                        onSpeechError?.invoke(-1)
+                        postToMain { onSpeechError?.invoke(-1) }
                     }
 
                     override fun onError(utteranceId: String?, errorCode: Int) {
-                        onSpeechError?.invoke(errorCode)
+                        postToMain { onSpeechError?.invoke(errorCode) }
                     }
                 })
             } catch (e: Exception) {
@@ -113,7 +129,7 @@ class Speaker(context: Context) : TextToSpeech.OnInitListener {
         if (result == TextToSpeech.LANG_MISSING_DATA || result == TextToSpeech.LANG_NOT_SUPPORTED) {
             // 设备没装这门语言的语音包：保留系统默认，并通知 UI。
             // 不抛异常 —— 朗读失败不该影响主链路。
-            onLanguageUnavailable?.invoke(target)
+            postToMain { onLanguageUnavailable?.invoke(target) }
             return
         }
         preferEmbeddedVoice(target)
@@ -139,7 +155,7 @@ class Speaker(context: Context) : TextToSpeech.OnInitListener {
         if (sameLang.isEmpty()) return
         val embedded = sameLang.firstOrNull { !it.isNetworkConnectionRequired }
         if (embedded == null) {
-            onNetworkVoiceOnly?.invoke(target)
+            postToMain { onNetworkVoiceOnly?.invoke(target) }
             return
         }
         try {
