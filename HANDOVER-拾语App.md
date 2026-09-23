@@ -1437,6 +1437,52 @@ if (!tmp.renameTo(target)) { ... }
 残留 tmp 能被认领、目标存在时不认领、空 tmp 不认领、隔离保留原始内容。
 **376 → 387 例全绿**，lint 0 error。
 
+### 17.16 日语朗读改走云端 TTS，修复国内移动网络(5G)下无声（2026-09-23）
+
+**现象**：日语单词/例句/五十音朗读，连公司 WiFi（能上外网）正常，连手机 5G 就没声；
+英语在两种网络下都正常。实时对话（WebSocket）不受影响。
+
+**根因**（链路排查，逐条坐实）：
+- 单词/例句/发音表朗读走的是**系统 TTS**（`ui/Speaker`，Android `TextToSpeech`）。
+- 魅族 22 默认引擎是 Google 文字转语音，但**没装离线日语语音包**，于是它对日语走
+  **联网合成**——合成请求要发到 Google 服务器。公司网能到、5G 到不了，就没声。
+  英语离线包设备自带，走本地合成，所以英语两种网络都好。
+- 更坑的是：`TextToSpeech.setLanguage(JAPANESE)` 对这种「联网才可用」的语言仍返回
+  `LANG_AVAILABLE`，**不触发** `Speaker.onLanguageUnavailable`，所以连提示都没有，纯静默。
+- 离线包想装也装不了：Google TTS 的语音包下载走 GMS，魅族阉割版 GMS 在「正在下载…」
+  永久卡死（实测 GMS 侧 0 字节流量）；设备无 root，adb 也塞不进 `/data/data/com.google.android.tts`。
+
+**为什么不修系统 TTS 而是绕开它**：多引擎自动切换在真机上不可靠（见 §17 之前 Speaker 的
+两次回退：commit `7fad5d3`/`c82bd71`）。所以不动 `Speaker` 引擎逻辑，另开一条云端路径。
+
+**改动**：
+1. **新增 `ui/WordTtsPlayer`**：日语走云端 TTS（stepfun `/audio/speech` 返回 MP3 →
+   `MediaPlayer` 播放），彻底绕开 Google；云端未配置或失败时**回落系统 `Speaker`，绝不静音**。
+   英语仍走系统离线 TTS，不耗 API。方法名 `releasePlayer()` 刻意避开 `MediaPlayer.release()`
+   （否则 `apply{}` 块里的监听器会解析成 MediaPlayer 自己的 release）。
+2. **三处日语朗读接入**：`ReviewActivity`（单词/例句两键）、`ChartActivity`（发音表格子）、
+   `ChatActivity`（点历史消息重播；保留录音期防回环 `if (!recording)`）。
+   对话页 AI 回复的自动朗读 `maybeAutoPlay` 本就走 `providerRegistry...tts()`，配好 tts 组后一并真的能响了。
+3. **补齐缺失的 tts 组**：`assets/preset_config.json` 此前**只有 chat/realtime、没有 tts**，
+   所以 `providerRegistry` 一直返回 `MockTtsProvider`（云 TTS 从没真配过）。补上：
+   `baseUrl=https://api.stepfun.com/step_plan/v1`、`model=stepaudio-2.5-tts`、
+   `voice=jilingshaonv`（**voice 必填**，缺了服务端回 400 `voice is required`）。
+4. **版本门控迁移 `PresetConfig.applyPresetMigrations`**：`seedIfEmpty` 只在「本地一份配置都没有」
+   时才写，已装机器早 seed 过 chat/realtime，光靠它新增的 tts 组永远进不去。新增按
+   `PRESET_VERSION`（现为 2）+ `filesDir/preset_seed.version` 门控：本地版本落后就把预置里
+   定义的组**强制同步**（推修正配置），版本相同只补**本地空着**的组、不覆盖用户已填的。
+   **以后改了 `preset_config.json` 任何组的值，就把 `PRESET_VERSION` +1**，老机器下次启动自动同步。
+   标记文件在 `filesDir`（与加密的设置文件、学习进度分开），读写不影响进度。
+
+**验证**：真机魅族 22，**关 WiFi 走移动数据(5G)**，复习页日语词「あざ笑う」、发音表五十音
+首格分别点朗读 → logcat 明确显示本 App(uid 10324) 经云 TTS 合成并外放约 2.4~2.6s 音频
+（`AudioFlinger getActiveTrackUid=10324`、`NuPlayer audioShutdown`、Flyme `AppUsage ... audio com.shiyu.app`）。
+单测全绿；release 覆盖安装（同 keystore）不丢学习进度。commit `4b660e1`。
+
+> 附录 A 常量表里「TTS 默认音色 alloy」是 `OpenAiWire` 的兜底值；实际生效音色由预置的
+> tts 组给到 `jilingshaonv`。若日语朗读又没声，先查设置页「语音合成」组是否 baseUrl/voice 齐全、
+> 点「测试连接」；再确认 5G 能到 `api.stepfun.com`。
+
 ## 附录 A：关键常量速查
 
 | 常量 | 值 | 位置 |
