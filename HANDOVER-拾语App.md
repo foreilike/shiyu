@@ -1763,6 +1763,46 @@ if (!tmp.renameTo(target)) { ... }
 
 **待补的一个验证**：需排除「她只是按剧本走」的可能 —— 说一句**明显偏离场景剧本**的话
 （如突然问天气、问一个具体问题），看她能否接住。能接住才算真的听懂。
+> 2026-09-24 用户已确认：说的是偏离剧本的内容也能听懂、回复也没问题 → **确认真的听懂了**。
+
+#### 17.21.4 ★★ 更优方案 B′：复用已预留的「语音识别」槽位修字幕
+
+**已预留的 ASR 组是什么**（`SettingsRepository.Group.ASR`，设置页显示「语音识别 / Whisper 兼容」）：
+
+- 协议：OpenAI 兼容 `POST {baseUrl}/audio/transcriptions`（即 Whisper 定义的接口格式，
+  所以任何实现该格式的服务都能填——stepfun ASR、自建 faster-whisper、Groq 等）
+- multipart 三字段：`file`（音频，按扩展名推断 mime，wav/mp3/webm/ogg/flac/m4a 均支持）、
+  `model`、**`language`**；响应取 `text` 字段
+- 实现：`ai/openai/OpenAiSttProvider.kt`（§5.3.2）
+- **当前唯一用途**：`ChatActivity:278` 的**回合制录音**（场景对话页点「录音」→ 停 →
+  VAD 裁剪 → 上传 → 回填输入框）。**与实时语音页完全无关。**
+- ⚠️ **`preset_config.json` 只预置了 chat / realtime / tts 三组，ASR 组是空的**，
+  需要用户自己在设置页填；不填则回合制录音不可用（`ChatActivity:254` 会提示）。
+
+**为什么它能修字幕，而且比 B 便宜**：
+
+关键在于它**支持 `language` 参数**（可传 `ja`），能正确出日文。思路：
+
+> 实时语音页每说完一句（服务端 VAD 断句 / 端上静音门控）→ 把这段 PCM 存成 wav
+> → 调一次 `OpenAiSttProvider.transcribe(file, "ja")` → 用返回的**正确日文**替换
+> stepfun 吐出的中文谐音字幕。
+
+| | B（独立 ASR WebSocket 流） | **B′（复用现有 STT 槽位）** |
+|---|---|---|
+| 连接 | 需要**第二条 WebSocket** | **一次 HTTP POST**（复用现有 Provider） |
+| 新增代码 | 新的流式 ASR Provider + 连接管理 | 在 `VoiceChatActivity` 里加「存 wav → 调 STT → 换字幕」 |
+| 已有基建 | 无 | `RealtimeAudioController` 有 PCM 帧回调、`AudioVadTrimmer` 会写 wav |
+| 设置/错误处理 | 要新建一组 | 复用现成的 ASR 组与 `AiError` 分类 |
+
+**代价与前提**：
+
+1. 每句一次 HTTP 往返 → **字幕会比现在晚一点出现**；
+2. 多一笔 ASR 费用；
+3. ⚠️ **前提：ASR 服务端必须支持日语。这一点有分歧，需实测确认** ——
+   三方对官方 API 文档的汇总说「TTS/ASR 支持中英日韩法西」，但阶跃**中文**官方文档
+   对 ASR 只写了「中文、英文、方言、中英混说」，**没提日语**。
+   先拿一句日语音频去试 `/audio/transcriptions`（language=ja）再决定。
+4. STT 未配置或调用失败时，**必须回退到现在的字幕**，不能变空白。
 
 ### 17.22 全盘审计：文档与代码不一致清单（2026-09-23）
 
