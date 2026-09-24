@@ -26,6 +26,10 @@ import com.shiyu.app.data.model.RealtimeOptions
 import com.shiyu.app.data.store.SettingsRepository
 import com.shiyu.app.databinding.ActivitySettingsBinding
 import com.shiyu.app.ui.AiErrorMessages
+import com.shiyu.app.ai.AiError
+import com.shiyu.app.audio.ProbeAudio
+import com.shiyu.app.ai.openai.SttProviders
+import com.shiyu.app.core.net.StepfunAsrWire
 import com.shiyu.app.ui.BaseActivity
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -526,12 +530,26 @@ class SettingsActivity : BaseActivity() {
                 (result as? AiResult.Err)?.error
             }
             SettingsRepository.Group.ASR -> {
-                val probe = File(cacheDir, "probe_audio.m4a")
-                probe.writeBytes(ByteArray(64) { 0 })
-                val provider = OpenAiSttProvider(config, transport)
+                // 必须是**合法**音频：原先写 64 字节全 0 + 扩展名 .m4a，
+                // 服务端只能回「音频格式异常，无法解析」，填对了也永远探不活
+                val probe = File(cacheDir, "probe_audio.wav")
+                probe.writeBytes(ProbeAudio.silentWav())
+                // 必须走 SttProviders，不能自己 new：
+                // ASR 有「Whisper 兼容」与「stepfun 原生」两套协议，
+                // 写死 OpenAiSttProvider 会让填了 stepfun 的用户「录音能跑、测试连接却 404」。
+                val provider = SttProviders.create(config, transport)
                 val result = provider.transcribe(probe, langStt())
                 probe.delete()
-                (result as? AiResult.Err)?.error
+                val error = (result as? AiResult.Err)?.error
+                // 探针是一段静音，服务端必然回空转写 —— 那恰恰说明地址与鉴权都通了，
+                // 算探活成功（真正的配置错误会是 404 / 401，不会被这条掩盖）
+                if (error is AiError.BadResponse &&
+                    error.detail == StepfunAsrWire.EMPTY_TRANSCRIPT
+                ) {
+                    null
+                } else {
+                    error
+                }
             }
             SettingsRepository.Group.TTS -> {
                 val provider = OpenAiTtsProvider(config, transport)

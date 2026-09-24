@@ -22,8 +22,8 @@ android {
         minSdk = 26
         targetSdk = 35
         // 发版必须 +1（§14.1）：versionCode 是升级判定依据，versionName 只是给人看的
-        versionCode = 5
-        versionName = "1.0.4"
+        versionCode = 7
+        versionName = "1.0.6"
     }
 
     signingConfigs {

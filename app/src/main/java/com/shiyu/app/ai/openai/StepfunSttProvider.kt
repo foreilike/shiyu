@@ -71,7 +71,7 @@ class StepfunSttProvider(
         if (text.isBlank()) {
             // 识别完了但没内容：多半是音频里没人声，或音频格式服务端解不出来。
             // 明确报错，别让 UI 回填一个空串（那看起来像"识别了个寂寞"）
-            return AiResult.Err(AiError.BadResponse("empty transcript"))
+            return AiResult.Err(AiError.BadResponse(StepfunAsrWire.EMPTY_TRANSCRIPT))
         }
         return AiResult.Ok(text)
     }
