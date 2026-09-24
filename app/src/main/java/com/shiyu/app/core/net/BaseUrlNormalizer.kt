@@ -13,7 +13,9 @@ object BaseUrlNormalizer {
     private val SUFFIXES = listOf(
         "/chat/completions",
         "/audio/transcriptions",
-        "/audio/speech"
+        "/audio/speech",
+        // stepfun 原生 ASR（§17.21.5）：用户常直接把文档里的完整端点粘进来
+        "/audio/asr/sse"
     )
 
     fun normalize(raw: String): String? {

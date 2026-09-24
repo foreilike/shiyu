@@ -1804,6 +1804,50 @@ if (!tmp.renameTo(target)) { ... }
    先拿一句日语音频去试 `/audio/transcriptions`（language=ja）再决定。
 4. STT 未配置或调用失败时，**必须回退到现在的字幕**，不能变空白。
 
+#### 17.21.5 stepfun 原生 ASR：实测结论与落地代码（2026-09-24，v1.0.4）
+
+**实测（用真实端点到真实音频，非推断）：**
+
+| 项 | 结果 |
+|---|---|
+| `POST {base}/audio/transcriptions` | **404** —— stepfun 没有这个 OpenAI 兼容端点（ASR 组填了也调不通的根因） |
+| `POST {base}/audio/asr/sse` | **200**，请求格式正确时能正常出字 |
+| **日语（language=ja）** | ✅ **能识别**。实测两段日语样本分别返回<br>`天気练习残业安心すんなり电波せんべい玄米线本専用本屋3円単位。`<br>`雪、勇気、外、…「三円」「三年」「记入」「金融」「记念」「禁烟」。` |
+| 中文（language=zh） | ✅ 正常（对照组返回「你好」） |
+| `stepaudio-3-asr-max` / `stepaudio-2-asr-pro` | ❌ **404 `model_invalid`** —— 当前套餐无权访问 |
+| `stepaudio-2.5-asr` | ✅ 可用（**本套餐唯一可用的 ASR 模型**） |
+
+> 排障经验：一开始拿 0.9 秒的短样本测，日/中都返回空且 `audio_tokens=0`，
+> 差点误判成"不支持日语"。**换成长样本才出字** —— 短音频容易什么都识别不出来，
+> 排查时先换一段 10 秒以上的音频再下结论。
+
+**落地代码（v1.0.4）：**
+
+| 文件 | 作用 |
+|---|---|
+| `core/net/StepfunAsrWire.kt`（新） | 纯 JVM 协议层：构造「JSON + base64」请求体、解析 SSE 响应、取 error 事件、host 判定 |
+| `ai/openai/StepfunSttProvider.kt`（新） | stepfun 原生 STT Provider，实现 `SpeechToTextProvider` |
+| `ai/AiProviderRegistry.kt` | ASR 组按 host 择一：stepfun → 原生 Provider；其它 → Whisper 兼容 Provider |
+| `core/net/BaseUrlNormalizer.kt` | `SUFFIXES` 增加 `/audio/asr/sse`（用户常直接粘文档里的完整端点） |
+| `core/net/StepfunAsrWireTest.kt`（新） | 13 例，钉住请求体嵌套、SSE 解析、错误事件、host 判定 |
+
+**两个刻意的设计决定：**
+
+1. **不改动 `OpenAiSttProvider`**。ASR 组对外承诺是「Whisper 兼容」，
+   很多服务（Groq / OpenAI / 自建 faster-whisper）都实现 `/audio/transcriptions`，
+   那套必须原样保留，只在 host 指向 stepfun 时才切到私有协议。
+2. **host 判定用域名后缀匹配，不是 `contains("stepfun")`**。
+   否则 `my-stepfun-mirror.example.com` 这类自建/代理域名会被误判，
+   拿 stepfun 私有协议去打一个其实是 Whisper 兼容的服务 —— 单测
+   `other_hosts_are_not_stepfun` 专门守这条（这是写测试时真抓出来的）。
+3. **必须查 SSE 里的 `error` 事件**。服务端会以「HTTP 200 + SSE 带 error」报错
+   （例如 model 无权访问），只看状态码会漏，表现成"返回空"。
+4. 识别结果为空时**明确报 `BadResponse("empty transcript")`**，不返回空串 ——
+   否则 UI 会回填一个空白，用户看到的是"识别了个寂寞"。
+
+**用法**：设置页 → 「语音识别」组 → 填 baseUrl `https://api.stepfun.com/step_plan/v1`、
+model `stepaudio-2.5-asr`、Key，勾选启用。填完在**场景对话页**点「录音」验证。
+
 ### 17.22 全盘审计：文档与代码不一致清单（2026-09-23）
 
 起因：用户指出「App 里根本没有『按住说话』，是点击开始/暂停」——文档把**已删除的旧交互**

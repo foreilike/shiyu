@@ -9,9 +9,11 @@ import com.shiyu.app.ai.openai.OpenAiChatProvider
 import com.shiyu.app.ai.openai.OpenAiSttProvider
 import com.shiyu.app.ai.openai.OpenAiTtsProvider
 import com.shiyu.app.ai.openai.StepfunRealtimeProvider
+import com.shiyu.app.ai.openai.StepfunSttProvider
 import com.shiyu.app.core.lang.LangId
 import com.shiyu.app.core.lang.MockReplies
 import com.shiyu.app.core.net.HttpTransport
+import com.shiyu.app.core.net.StepfunAsrWire
 import com.shiyu.app.data.model.ProviderConfig
 import com.shiyu.app.data.store.SettingsRepository
 
@@ -60,7 +62,7 @@ class AiProviderRegistry(
                 MockChatProvider(MockReplies.chat(lang))
             },
             sttProvider = if (langConfig.asr.isUsable()) {
-                OpenAiSttProvider(langConfig.asr, transport)
+                buildSttProvider(langConfig.asr)
             } else {
                 MockSttProvider(MockReplies.stt(lang))
             },
@@ -72,6 +74,22 @@ class AiProviderRegistry(
             realtimeProvider = realtimeProvider
         )
     }
+
+    /**
+     * ASR 组的两套协议择一（§17.21.5）：
+     *
+     * - 默认走 **Whisper 兼容**的 `POST /audio/transcriptions` —— 多数服务都实现这个；
+     * - 但 **stepfun 没有这个端点**（实测 404），它要用自己的 `POST /audio/asr/sse`
+     *   （JSON + base64，响应是 SSE）。所以 host 指向 stepfun 时改走 [StepfunSttProvider]。
+     *
+     * 按 host 判断而不是加配置项，是为了不动 `AppSettings` 的持久化结构（省一次迁移）。
+     */
+    private fun buildSttProvider(config: ProviderConfig): SpeechToTextProvider =
+        if (StepfunAsrWire.isStepfunHost(config.baseUrl)) {
+            StepfunSttProvider(config, transport)
+        } else {
+            OpenAiSttProvider(config, transport)
+        }
 
     /** 当前语言的对话能力是否真实可用（否则是 Mock 回复） */
     fun isChatEnabled(lang: LangId): Boolean = settings.configFor(lang).chat.isUsable()
