@@ -395,12 +395,14 @@ class VoiceChatActivity : BaseActivity() {
         correctTranscripts = !module.id.realtimeTranscriptReliable &&
             AppGraph.providerRegistry.isSttEnabled(module.id)
         utteranceBuffer.clear()
-        if (!module.id.realtimeTranscriptReliable && !correctTranscripts) {
-            android.util.Log.i(
-                TAG_STT,
-                "语言 ${module.id.tag} 的实时转写不可信，但语音识别组未配置 → 字幕只能是实时通道的谐音结果"
-            )
-        }
+        // 无条件记一条：这条日志是「到底有没有启用纠错」的唯一客观依据，
+        // 排查时不必再靠猜（曾因为没这条，先怀疑了配置、又怀疑了版本）
+        android.util.Log.i(
+            TAG_STT,
+            "纠错开关=$correctTranscripts（语言=${module.id.tag}" +
+                " 实时转写可信=${module.id.realtimeTranscriptReliable}" +
+                " 识别组可用=${AppGraph.providerRegistry.isSttEnabled(module.id)}）"
+        )
 
         val p = AppGraph.providerRegistry.factory(module.id).realtime(voicePrompt)
         provider = p
@@ -411,10 +413,15 @@ class VoiceChatActivity : BaseActivity() {
         speaking = false
         binding.micLabel.text = getString(R.string.voice_btn_start)
         audio = RealtimeAudioController(
-            // 同一帧走两条路：发给实时通道（理解与回复），同时留下副本供句末做识别纠错
+            // 只在**用户真的开着麦**时留副本。
+            //
+            // 关键：关麦时实时链路会推「等长静音帧」（为了让服务端断句），那些零值帧
+            // 一旦混进缓冲，VadPolicy 看到的就成了「一大段全零 + 一小段人声」，
+            // 很容易超过 maxTrimmedRatio(0.98) 而判定「几乎全是静音」→ 直接放弃纠错，
+            // 表现成「什么都没做」。按 pushing 过滤就只剩用户真实说话的那一段。
             onAudioFrame = { pcm ->
                 p.sendAudio(pcm)
-                if (correctTranscripts) utteranceBuffer.offer(pcm)
+                if (correctTranscripts && audio?.pushing == true) utteranceBuffer.offer(pcm)
             },
             onSpeechStateChanged = { active ->
                 runOnUiThread {
@@ -729,19 +736,28 @@ class VoiceChatActivity : BaseActivity() {
      */
     private fun recognizeUtterance(bubble: TextView, turnIndex: Int, rawText: String) {
         val samples = Pcm16.toShorts(utteranceBuffer.drain())
-        // 端上先裁静音：省一次计费上传，也避免把纯静音送去识别
-        val trimmed = VadPolicy.trim(samples, VadPolicy.Params(sampleRate = RealtimeAudioController.SAMPLE_RATE))
-        if (trimmed == null) {
-            // 整段无有效语音（点了开始却没说话 / 全是门控静音帧）→ 沿用实时通道的文本
+        if (samples.isEmpty()) {
             bubble.text = rawText
-            android.util.Log.i(TAG_STT, "SKIP 无可识别语音（${samples.size} 样本）")
+            android.util.Log.i(TAG_STT, "SKIP 没缓冲到音频（这一句麦没开过）→ 沿用原文")
             return
         }
-        val speech = samples.copyOfRange(trimmed.startSample, trimmed.endSample)
+        // 端上先裁静音：省一次计费上传，也避免把纯静音送去识别。
+        // 但**裁不出来也不放弃** —— 宁可整段送过去让服务端判断，也比直接退回谐音原文好。
+        // （曾经就是在这里 return 掉，用户看到的效果是「功能完全没生效」）
+        val trimmed = VadPolicy.trim(
+            samples,
+            VadPolicy.Params(sampleRate = RealtimeAudioController.SAMPLE_RATE)
+        )
+        val speech = if (trimmed != null) {
+            samples.copyOfRange(trimmed.startSample, trimmed.endSample)
+        } else {
+            android.util.Log.i(TAG_STT, "裁剪判定无有效语音（${samples.size} 样本）→ 改送整段")
+            samples
+        }
         val wav = WavWriter.mono16(Pcm16.toBytes(speech), RealtimeAudioController.SAMPLE_RATE)
         android.util.Log.i(
             TAG_STT,
-            "SEND ${speech.size} 样本（裁掉静音 ${trimmed.trimmedMs}ms，原 ${trimmed.originalMs}ms）"
+            "SEND ${speech.size} 样本（原 ${samples.size}）原文='${rawText.take(30)}'"
         )
 
         lifecycleScope.launch {
