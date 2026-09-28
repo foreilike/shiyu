@@ -1,5 +1,5 @@
 {
-  "_comment": "出厂预置配置：首次启动且本地没有任何配置时写入。放进 APK 意味着 API Key 是明文的，只适合自用/内部分发，不要外传这个安装包。",
+  "_comment": "出厂预置配置（明文，仅自用/内部分发）。groups 对所有语言生效；langGroups.<tag>.<组> 用于按语言覆盖，只影响该语言。",
   "activeLang": "ja",
   "groups": {
     "chat": {
@@ -20,6 +20,16 @@
       "model": "stepaudio-2.5-tts",
       "voice": "jilingshaonv",
       "enabled": true
+    }
+  },
+  "langGroups": {
+    "ja": {
+      "asr": {
+        "baseUrl": "https://ark.cn-beijing.volces.com/api/v3",
+        "apiKey": "REDACTED_API_KEY",
+        "model": "doubao-seed-2-0-mini-260428",
+        "enabled": true
+      }
     }
   }
 }

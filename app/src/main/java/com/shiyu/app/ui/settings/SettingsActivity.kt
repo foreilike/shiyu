@@ -27,9 +27,9 @@ import com.shiyu.app.data.store.SettingsRepository
 import com.shiyu.app.databinding.ActivitySettingsBinding
 import com.shiyu.app.ui.AiErrorMessages
 import com.shiyu.app.ai.AiError
+import com.shiyu.app.ai.SttContract
 import com.shiyu.app.audio.ProbeAudio
 import com.shiyu.app.ai.openai.SttProviders
-import com.shiyu.app.core.net.StepfunAsrWire
 import com.shiyu.app.ui.BaseActivity
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -544,7 +544,7 @@ class SettingsActivity : BaseActivity() {
                 // 探针是一段静音，服务端必然回空转写 —— 那恰恰说明地址与鉴权都通了，
                 // 算探活成功（真正的配置错误会是 404 / 401，不会被这条掩盖）
                 if (error is AiError.BadResponse &&
-                    error.detail == StepfunAsrWire.EMPTY_TRANSCRIPT
+                    error.detail == SttContract.EMPTY_TRANSCRIPT
                 ) {
                     null
                 } else {

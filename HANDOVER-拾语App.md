@@ -2076,6 +2076,116 @@ logcat 过滤 `ShiyuStt` 应看到 `SEND` 与 `CORRECTED`。<br>
 所以「本机搭 Whisper 服务、手机走局域网连过来」这条**默认走不通**，
 除非给本机服务套一层 HTTPS 隧道。
 
+#### 17.21.13 ★★ 落地：日语语音转写走火山方舟（v1.0.10）
+
+**产品决策（用户明确要求）**：
+> 英语保持原通路（stepfun 实时通道自己的转写），**只有日语语音转文字走火山通路**，其他不动。
+
+**分工因此变成：**
+
+| 语言 | 用户字幕来源 | 说明 |
+|---|---|---|
+| 日语 | **火山方舟**（新增） | stepfun 实时通道给的中文谐音不可用，必须换路 |
+| 英语 | stepfun 实时通道原样 | 实时通道对中英的转写本来就是准的，不动 |
+
+**新增/改动的文件：**
+
+| 文件 | 作用 |
+|---|---|
+| `core/net/ArkAsrWire.kt`（新） | 纯 JVM 协议层：host 判定、提示词、两步请求体、响应解析、MIME |
+| `ai/openai/ArkSttProvider.kt`（新） | 两步实现：`/files` 上传 → `/chat/completions` → best-effort `DELETE` |
+| `ai/SttContract.kt`（新） | `EMPTY_TRANSCRIPT` 公共常量（三套 Provider + 设置页探活共用） |
+| `ai/openai/SttProviders.kt` | 增加方舟分支，**三套协议按 host 择一** |
+| `ai/openai/StepfunSttProvider.kt`、`ui/settings/SettingsActivity.kt` | 改用 `SttContract`，去掉对 stepfun 常量的跨模块引用 |
+| `core/net/StepfunAsrWire.kt` | 移除已迁走的常量 |
+| `core/net/ArkAsrWireTest.kt`（新） | 16 例 |
+
+**三套协议按 baseUrl 的 host 择一**（唯一判断点，注册表与设置页探活共用）：
+
+| host | 协议 |
+|---|---|
+| `*.volces.com`（火山方舟） | 两步：`/files` 上传 → `/chat/completions` 带 `input_audio` |
+| `*.stepfun.com`（阶跃） | `/audio/asr/sse`，JSON + base64 + SSE |
+| 其它 | Whisper 兼容 `/audio/transcriptions`，multipart |
+
+**几个实测得来的关键点（缺一个这条路就废）：**
+
+1. **必须关思考模式**（`thinking:{"type":"disabled"}`）。
+   开着时同一段音频要 **36~137 秒**，关掉后 **1~3 秒** —— 这是能用于字幕的前提。
+2. **提示词必须指定输出文字体系**并禁止解释。
+   只说"逐字转写" → 返回中文谐音 `哦哈哟够咱一妈塞`；
+   不禁止解释 → 返回一大段说明文字，还慢几十秒。
+3. **上传后无需等待文件处理**（`status=processing` 也能直接用于第二步）。
+   实测上传 305ms + 转写 1701ms ≈ **端到端 2 秒**，不必轮询。
+4. **用完必须删文件**：每句话都上传，不清理会在账号里越堆越多。
+   `DELETE {base}/files/{id}` 实测可用，失败**不影响**转写结果（best-effort）。
+
+**配置方式（不需要改代码）**：设置页 →「语音识别」组（**日语页签**）填
+baseUrl `https://ark.cn-beijing.volces.com/api/v3`、
+model `doubao-seed-2-0-mini-260428`（实测最快，1.1s）、Ark Key，勾选启用。
+**英语页签不要动。**
+
+**该账号可用的音频模型**（经 `GET /api/v3/models` 枚举，135 个模型里 3 个支持音频输入）：
+`doubao-seed-2-0-mini-260428`（最快）、`doubao-seed-2-0-lite-260428`、`doubao-seed-2-1-lite-260915`。
+
+> ⚠️ **别用"录音文件识别"那两个产品**（控制台里 `Doubao-录音文件识别` / `…2.0`，
+> 0.8 元/小时、各 20 小时免费额度）。它们虽然专用且对口音做过优化，但：
+> ① 接口在 `openspeech.bytedance.com`，**要另一套语音技术 APP Key**（不是方舟 Key）；
+> ② 音频**必须是公网可访问的 URL**，不能直接传二进制；
+> ③ **异步任务**（提交→轮询）。对"每句话实时出字幕"是逆向的。
+>
+> ⚠️ **排查教训**：我第一次只试了 4 个模型名（其中 3 个是**猜的**）就断言
+> "该账号只有 1 个模型可用"，被用户当场指出。404 的文案是
+> `does not exist **or** you do not have access to it` —— **名字猜错和没权限返回同一个错**，
+> 不能用它来推断账号权限。**要枚举就用 `GET /api/v3/models`。**
+> （实测该账号 135 个模型中 7 个带音频输入，其中 **3 个**是可用于转写的对话模型，
+> 另 4 个是 Seedance 视频生成，音频只是参考输入。）
+
+#### 17.21.14 配置随包下发：`langGroups` 按语言覆盖（v1.0.11）
+
+**需求**：把火山配置**随编译直接配好**，且**只作用于日语**（英语保持原样）。
+用 UI 自动化（adb tap）在真机上填设置页太不可靠 —— 实测多次点击丢焦点、
+把模型名填进了 baseUrl、还因 Activity 重建把未保存的编辑整个丢掉。
+
+**做法：扩展预置配置的按语言覆盖能力。**
+
+`assets/preset_config.json` 新增一段：
+
+```json
+"langGroups": {
+  "ja": { "asr": {
+    "baseUrl": "https://ark.cn-beijing.volces.com/api/v3",
+    "apiKey": "ark-...",
+    "model": "doubao-seed-2-0-mini-260428",
+    "enabled": true
+  } }
+}
+```
+
+| 段落 | 生效范围 |
+|---|---|
+| `groups.<组>` | **所有语言**（原有行为，不变） |
+| `langGroups.<语言tag>.<组>` | **只作用于该语言**，整组替换，覆盖在 `groups` 之后 |
+
+**关键点一：按语言覆盖必须有自己的版本号，不能蹭 `PRESET_VERSION`。**
+
+`PRESET_VERSION` 升级会让 `force=true`，把所有通用组**强制覆盖**一遍。
+实测设备上用户自己选的实时语音音色 `jingdiannvsheng` **不在预置里**（是设备本地值），
+一旦强制同步就会被冲成空。所以新增独立的 `LANG_PRESET_VERSION` +
+`preset_lang_seed.version` 文件，做到「只强制推这一项，其它一律不碰」。
+
+> **教训**：`PRESET_VERSION` 这种"全局强制同步"的开关，
+> 每加一个新组都会顺带把无关组的用户改动一起冲掉。
+> 要推的改动越多，越该按维度拆成独立的版本号。
+
+**关键点二：只有 ja 的覆盖是安全的，因为 `applyLangOverrides` 里有一条保护 —— 通用段没定义、且本地本来空白的组，不会被预置"顺手激活"**，
+所以英语的 asr 组不会被这次改动带上。
+
+**测试**：`PresetConfigLangOverrideTest`（7 例），其中一条**直接读真实
+`assets/preset_config.json`**，断言「覆盖只有 ja.asr 一条、指向 volces.com、且 enabled」——
+防止以后有人手滑加了 `en` 段落把英语也改掉。
+（`parseLangOverrides` 被抽成不依赖 `Context` 的纯函数，才得以单测。）
+
 #### 17.21.6 修「录音能跑、测试连接却 404」（2026-09-24，v1.0.5）
 
 v1.0.4 上线后发现的**我自己引入的不一致**：填好 stepfun 的 ASR 后，

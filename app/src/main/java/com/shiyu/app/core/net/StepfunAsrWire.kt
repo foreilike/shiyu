@@ -21,15 +21,6 @@ object StepfunAsrWire {
     /** ASR 端点后缀（拼在规范化后的 baseUrl 之后） */
     const val ASR_SSE_PATH = "/audio/asr/sse"
 
-    /**
-     * 「端点通了、音频也被接受，但里面没有可识别的人声」时用的错误描述。
-     *
-     * 这个**不是配置错误**：地址错会是 404、Key 错会是 401，而走到这里说明
-     * 鉴权和端点都正常。设置页「测试连接」发的是一段静音探针，必然得到空转写，
-     * 所以探活时要把这条当成**成功**（见 `SettingsActivity.runProbe`）。
-     */
-    const val EMPTY_TRANSCRIPT = "empty transcript"
-
     private val KNOWN_TYPES = setOf("wav", "mp3", "ogg", "m4a", "flac", "pcm")
 
     /**

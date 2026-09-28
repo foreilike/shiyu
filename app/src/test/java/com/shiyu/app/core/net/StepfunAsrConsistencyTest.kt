@@ -39,7 +39,7 @@ class StepfunAsrConsistencyTest {
     fun sse_path_and_empty_marker_are_stable() {
         // 这两个常量被 Provider 与设置页探活同时引用，改了必须同步
         assertEquals("/audio/asr/sse", StepfunAsrWire.ASR_SSE_PATH)
-        assertEquals("empty transcript", StepfunAsrWire.EMPTY_TRANSCRIPT)
+        assertEquals("empty transcript", com.shiyu.app.ai.SttContract.EMPTY_TRANSCRIPT)
     }
 
     private fun assertTrue2(msg: String, cond: Boolean) {
