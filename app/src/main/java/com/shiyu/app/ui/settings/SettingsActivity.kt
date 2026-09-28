@@ -1,7 +1,9 @@
 package com.shiyu.app.ui.settings
 
 import android.os.Bundle
+import android.text.Editable
 import android.text.InputType
+import android.text.TextWatcher
 import android.widget.EditText
 import android.widget.Switch
 import android.widget.Toast
@@ -29,6 +31,7 @@ import com.shiyu.app.ui.AiErrorMessages
 import com.shiyu.app.ai.AiError
 import com.shiyu.app.ai.SttContract
 import com.shiyu.app.audio.ProbeAudio
+import com.shiyu.app.ai.openai.SttProtocolKind
 import com.shiyu.app.ai.openai.SttProviders
 import com.shiyu.app.ui.BaseActivity
 import kotlinx.coroutines.Dispatchers
@@ -77,6 +80,14 @@ class SettingsActivity : BaseActivity() {
         binding.asrClear.setOnClickListener { confirmClearGroup(SettingsRepository.Group.ASR) }
         binding.ttsClear.setOnClickListener { confirmClearGroup(SettingsRepository.Group.TTS) }
         binding.realtimeClear.setOnClickListener { confirmClearGroup(SettingsRepository.Group.REALTIME) }
+
+        // 协议标签跟着接口地址实时变：用户刚把 stepfun 地址改成火山方舟时，
+        // 标签必须立刻反映出来，否则"看着 Whisper 兼容、其实连的是方舟"
+        binding.asrBaseUrl.addTextChangedListener(object : TextWatcher {
+            override fun afterTextChanged(s: Editable?) = refreshAsrProtocolLabel()
+            override fun beforeTextChanged(s: CharSequence?, a: Int, b: Int, c: Int) {}
+            override fun onTextChanged(s: CharSequence?, a: Int, b: Int, c: Int) {}
+        })
 
         binding.chatTest.setOnClickListener { testGroup(SettingsRepository.Group.CHAT) }
         binding.asrTest.setOnClickListener { testGroup(SettingsRepository.Group.ASR) }
@@ -214,6 +225,24 @@ class SettingsActivity : BaseActivity() {
 
     // ---------- 表单 ----------
 
+    /**
+     * 刷新「语音识别」组的协议标签（§17.21.13）。
+     *
+     * 判据取自 [SttProviders.protocolKind] —— 和 [SttProviders.create] 用的是同一个函数，
+     * 所以标签**不可能**与实际走的协议不一致。曾经这行字写死在布局里（"Whisper 兼容"），
+     * 加了 stepfun 原生与火山方舟两套之后就脱节了。
+     */
+    private fun refreshAsrProtocolLabel() {
+        binding.asrProtocol.setText(
+            when (SttProviders.protocolKind(binding.asrBaseUrl.text.toString())) {
+                SttProtocolKind.ARK -> R.string.asr_protocol_ark
+                SttProtocolKind.STEPFUN -> R.string.asr_protocol_stepfun
+                SttProtocolKind.WHISPER -> R.string.asr_protocol_whisper
+                SttProtocolKind.UNSET -> R.string.asr_protocol_unset
+            }
+        )
+    }
+
     private fun loadForm() {
         val lang = AppGraph.settingsRepository.activeLang()
         keyVisible.clear()
@@ -229,6 +258,7 @@ class SettingsActivity : BaseActivity() {
             binding.asrBaseUrl, binding.asrApiKey, binding.asrModel,
             binding.asrKeyToggle, null, binding.switchAsr
         )
+        refreshAsrProtocolLabel()
         loadGroup(
             SettingsRepository.Group.TTS,
             binding.ttsBaseUrl, binding.ttsApiKey, binding.ttsModel,

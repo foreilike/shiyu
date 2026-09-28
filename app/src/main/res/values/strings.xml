@@ -253,6 +253,11 @@
     <!-- 各配置卡片的标题：说明这一组说的是哪种协议，与上方分区标题不同 -->
     <string name="provider_chat_card">OpenAI 兼容</string>
     <string name="provider_asr_card">Whisper 兼容</string>
+    <!-- ASR 组协议标签：按填写的接口地址动态显示，见 SttProviders.protocolKind -->
+    <string name="asr_protocol_ark">火山方舟</string>
+    <string name="asr_protocol_stepfun">StepFun 原生</string>
+    <string name="asr_protocol_whisper">Whisper 兼容</string>
+    <string name="asr_protocol_unset">未配置</string>
     <string name="provider_tts_card">OpenAI TTS</string>
     <string name="provider_realtime_card">StepFun Realtime</string>
     <string name="field_server_vad">服务端 VAD（server_vad）</string>
