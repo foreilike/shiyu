@@ -2007,6 +2007,25 @@ logcat 过滤 `ShiyuStt` 应看到 `SEND` 与 `CORRECTED`。<br>
 > `File model.bin is incomplete: failed to read a value of size 4 at position 0`。
 > `blobs/` 里其实是完整的 —— 手动把对应 blob 复制成 snapshot 里的文件名即可。
 
+#### 17.21.11 替代 ASR 选型：国内服务盘点（2026-09-28 查证）
+
+前提：只有**提供 OpenAI 兼容 `/audio/transcriptions`** 的服务才能**零代码改动**接入
+（工程 ASR 组就是按这个协议实现的，见 §17.21.5）。
+
+| 服务 | 日语 | OpenAI `/audio/transcriptions` | 代码改动 | 备注 |
+|---|---|---|---|---|
+| **硅基流动 · SenseVoice-Small** | ✅ 原生（中/粤/英/**日**/韩） | ✅ **是** | **零**（设置页填三个框） | 非自回归，10 秒音频约 70ms（比 Whisper-Small 快 5 倍）；CTC + **语言 token**，`language=ja` 属**硬约束**（与 Whisper 同机制） |
+| **火山引擎 · 豆包语音识别 2.0**（`doubao-seed-asr-2.0`） | ✅ `ja-JP`（2.0 新增 13 种外语） | ❌ 否 | 要新写 Provider | **对口音专门优化（口音错误率较传统模型降约 60%）**，对学习者口音可能正好对症；录音文件识别 **0.8 元/小时**、流式 1.0 元/小时。⚠️ 三种接入方式都不兼容：① 录音文件识别要**公网可访问的 URL**（异步任务）② 流式是 **WebSocket** ③ 方舟音频理解走 `files` + `chat/completions`（`input_audio`） |
+| **阿里云百炼 · qwen-audio-3.0-asr-flash** | ✅（30 语种） | ❌ 否 | 要新写 Provider | **1.7% 错字率，Artificial Analysis 评测全球第一**；约 **0.79 元/小时**；调用是 `chat/completions` + `input_audio`。另有 `qwen-audio-3.1-asr-flash-message` 明确重点优化日语，但只提供 **WebSocket** |
+| 本机 faster-whisper | ✅（**实测全对**，§17.21.10） | 需自建服务 | 要搭服务 | 免费、可离线；CPU 上约 1.65× 实时 |
+
+**建议的验证顺序（成本从低到高）**：
+
+1. **硅基流动**（零代码）：设置页换三个框 → 说一句日语 → 看 `ShiyuStt` 日志的 `纠错='...'`。**2 分钟出结论。**
+2. **火山豆包 ASR**：若第 1 步效果不理想再考虑 —— 它的"口音优化"卖点对学习者场景最对症，
+   但要写新 Provider（推荐走方舟 `files` + `chat/completions` 这条路，比公网 URL / WebSocket 都好接）。
+3. 本机 Whisper 兜底（已验证效果，但需要一台常开的机器 + 局域网可达）。
+
 #### 17.21.6 修「录音能跑、测试连接却 404」（2026-09-24，v1.0.5）
 
 v1.0.4 上线后发现的**我自己引入的不一致**：填好 stepfun 的 ASR 后，
