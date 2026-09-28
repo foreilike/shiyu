@@ -755,6 +755,8 @@ class VoiceChatActivity : BaseActivity() {
             samples
         }
         val wav = WavWriter.mono16(Pcm16.toBytes(speech), RealtimeAudioController.SAMPLE_RATE)
+        // 诊断留档（**临时**，见下面 DEBUG_DUMP_UTTERANCE 的说明）
+        if (DEBUG_DUMP_UTTERANCE) dumpForDiagnosis(wav)
         android.util.Log.i(
             TAG_STT,
             "SEND ${speech.size} 样本（原 ${samples.size}）原文='${rawText.take(30)}'"
@@ -788,7 +790,10 @@ class VoiceChatActivity : BaseActivity() {
                         ) {
                             recordedTurns[turnIndex] = SessionTurn("user", corrected)
                         }
-                        android.util.Log.i(TAG_STT, "CORRECTED ${cost}ms len=${corrected.length}")
+                        android.util.Log.i(
+                            TAG_STT,
+                            "CORRECTED ${cost}ms 原文='${rawText.take(20)}' 纠错='${corrected.take(20)}'"
+                        )
                     }
                 }
                 is AiResult.Err -> {
@@ -802,8 +807,30 @@ class VoiceChatActivity : BaseActivity() {
         }
     }
 
-    private fun newAiBubble(): TextView =
-        TextView(this).apply {
+    /**
+     * 把「这一句送去识别的音频」留一份到外置目录，便于在电脑上做对照实验。
+     *
+     * **为什么需要**：用户带中文口音的日语会被自动语种检测判成中文，
+     * 实时通道与识别通道都输出中文谐音（详见 HANDOVER §17.21.9）。
+     * 要判断下一步怎么修，必须拿**真实录音**去比对不同服务/参数 ——
+     * 原生发音的样本复现不了这个问题。
+     *
+     * 落点是 `Android/data/<包名>/files/stt_debug/last.wav`（**每次覆盖，只有一个文件**），
+     * 该路径可用 `adb pull` 取出。纯诊断用，确认结论后把
+     * [DEBUG_DUMP_UTTERANCE] 置 false 即可停掉，不必删代码。
+     */
+    private fun dumpForDiagnosis(wav: ByteArray) {
+        try {
+            val dir = getExternalFilesDir(null) ?: return
+            val f = File(File(dir, "stt_debug"), "last.wav")
+            f.parentFile?.mkdirs()
+            f.writeBytes(wav)
+        } catch (e: Exception) {
+            // 诊断留档失败不影响任何功能
+        }
+    }
+
+    private fun newAiBubble(): TextView =        TextView(this).apply {
             textSize = 15f
             setTextColor(ContextCompat.getColor(context, R.color.cream))
             // 深色页专用气泡底。这里以前用的是 bg_card（浅色页的白底卡片），
@@ -857,6 +884,14 @@ class VoiceChatActivity : BaseActivity() {
 
         /** 用户字幕纠错专用的日志标签，便于真机验证：SEND / CORRECTED / EMPTY / FAIL / SKIP */
         private const val TAG_STT = "ShiyuStt"
+
+        /**
+         * 是否把每句送去识别的音频留档到外置目录（见 [dumpForDiagnosis]）。
+         *
+         * **临时诊断开关**：用于排查「带口音的日语被判成中文」（HANDOVER §17.21.9）。
+         * 结论落地后置 false 即可，代码可留。
+         */
+        private const val DEBUG_DUMP_UTTERANCE = true
 
         const val EXTRA_SCENARIO_ID = "extra_scenario_id"
 
