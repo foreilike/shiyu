@@ -2026,6 +2026,56 @@ logcat 过滤 `ShiyuStt` 应看到 `SEND` 与 `CORRECTED`。<br>
    但要写新 Provider（推荐走方舟 `files` + `chat/completions` 这条路，比公网 URL / WebSocket 都好接）。
 3. 本机 Whisper 兜底（已验证效果，但需要一台常开的机器 + 局域网可达）。
 
+#### 17.21.12 ★★★ 火山方舟 + 豆包：**加一句日语提示词就全对**（2026-09-28 实测）
+
+用用户的**同一段真实录音**（`user_utt.wav`，说「おはようございます」带中文口音）实测。
+接入路径按官方文档（`docs/82379/2377589`）：
+
+```
+1) POST https://ark.cn-beijing.volces.com/api/v3/files     multipart, purpose=user_data → file_id
+2) POST https://ark.cn-beijing.volces.com/api/v3/chat/completions
+   model = doubao-seed-2-0-lite-260428
+   messages[0].content = [ {type:input_audio, input_audio:{file_id}}, {type:text, text:<提示词>} ]
+```
+
+**只改提示词，结果如下：**
+
+| 提示词 | 输出 |
+|---|---|
+| 只说「逐字转写，不要翻译」 | `哦哈哟够咱一妈塞` ← 中文谐音 |
+| **「音频是日语，请用日文（平假名片假名汉字）逐字转写，不要用中文汉字谐音」** | **`おはようございます`** ✅ |
+| **日语写的同等指令** | **`おはようございます`** ✅ |
+| **强约束 + 给出反例**（听到 ohayou gozaimasu 要输出 おはようございます） | **`おはようございます`** ✅ |
+| **「この音声は日本語で何と言っていますか？日本語で答えてください」** | **`おはようございます`** ✅ |
+
+**5 个提示词里 4 个完全正确**，与 Whisper small 的结果一致。
+
+**为什么这条路能成（与 §17.21.10 的 stepfun 形成对照）：**
+
+| | stepfun ASR | 火山方舟这条路 |
+|---|---|---|
+| 形态 | **固定解码器** | **大模型 + 指令** |
+| 能否指定输出文字体系 | ❌ `language`/`prompt`/`hotwords` 全试过，改不了 | ✅ **一句话就掰过来** |
+
+基线那次输出「哦哈哟够咱一妈塞」**读音几乎逐字对上**，证明模型**确实听到了音频**
+（不是靠"猜常见问候语"）；加日文指令后只是换了输出文字体系。
+
+**⚠️ 接入代价**：方舟这条路**不是** OpenAI 的 `/audio/transcriptions`，是**两步**
+（`files` 上传 → `chat/completions` 带 `input_audio`），所以**要新写一个 Provider**。
+路由可按 host 判断（`volces.com`），与 §17.21.5 的 ASR 协议择一逻辑放在同一处。
+
+**⚠️ 局限**：目前只有**一句样本**（且是极常见的问候语）。写 Provider 之前，
+建议**再录 2–3 句不同的日语**（尤其长句、句中有停顿的）复测，确认不是偶然。
+
+**⚠️ 实测边界**：该账号下只有 `doubao-seed-2-0-lite-260428` 可用；
+`doubao-seed-2-0-lite` / `doubao-seed-1-6-250615` / `doubao-1.5-vision-pro-32k-250115`
+均返回 404 `InvalidEndpointOrModel.NotFound`（模型名需带日期后缀或未开通）。
+
+**另记一个会挡住"本地自建端点"的约束**：`BaseUrlNormalizer` **只允许 https/wss**，
+`http://` 直接返回 null 且有单测守着（`BaseUrlNormalizerTest`）。
+所以「本机搭 Whisper 服务、手机走局域网连过来」这条**默认走不通**，
+除非给本机服务套一层 HTTPS 隧道。
+
 #### 17.21.6 修「录音能跑、测试连接却 404」（2026-09-24，v1.0.5）
 
 v1.0.4 上线后发现的**我自己引入的不一致**：填好 stepfun 的 ASR 后，
