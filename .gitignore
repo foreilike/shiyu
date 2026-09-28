@@ -18,3 +18,9 @@ local.properties
 # 真机抓的日志与临时分析脚本不入库
 .workbuddy/*.log
 .workbuddy/*.py
+# 排障用的音频样本与 uiautomator dump（曾经误入库过一个 2.2MB 的 wav）
+.workbuddy/*.ogg
+.workbuddy/*.wav
+.workbuddy/*.pcm
+.workbuddy/*.mp3
+.workbuddy/ui*.xml
