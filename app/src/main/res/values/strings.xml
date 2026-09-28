@@ -187,6 +187,9 @@
     <string name="voice_speaking">说话中…点「暂停说话」结束</string>
     <string name="voice_tap_start">点「开始说话」开口</string>
     <string name="voice_thinking">AI 回复中…</string>
+    <!-- 实时语音的用户字幕：stepfun 实时通道对日语会给中文谐音，
+         所以先用占位，等独立语音识别返回正确语种再填（HANDOVER §17.21.5） -->
+    <string name="voice_transcript_pending">识别中…</string>
     <string name="voice_type_close">收起</string>
     <string name="voice_type_hint">输入想说的话…</string>
     <string name="voice_type_send">发送</string>

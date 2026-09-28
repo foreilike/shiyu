@@ -1848,6 +1848,64 @@ if (!tmp.renameTo(target)) { ... }
 **用法**：设置页 → 「语音识别」组 → 填 baseUrl `https://api.stepfun.com/step_plan/v1`、
 model `stepaudio-2.5-asr`、Key，勾选启用。填完在**场景对话页**点「录音」验证。
 
+#### 17.21.8 ★ B′ 已落地：实时语音的用户字幕改用独立识别（2026-09-28，v1.0.7）
+
+**做了什么**：实时语音页在日语场景下，把「用户说了什么」这行字幕从**中文谐音**
+换成**独立语音识别**给出的正确日文。
+
+**为什么可以这么做**（前提已在 §17.21.3 实测确立）：
+stepfun 实时通道**本身听得懂日语**（她的回复是对的），错的只是那行给用户看的字幕。
+所以不需要换模型、不需要第二条 WebSocket，把字幕这一路单独修好即可。
+
+**触发条件**（不满足就完全沿用原行为，零回归）：
+
+| 条件 | 说明 |
+|---|---|
+| `LangId.realtimeTranscriptReliable == false` | 新增字段。**日语 false、英语 true** —— 实时通道对中英的转写是准的，英语不必多花一次请求 |
+| 语音识别组已配置（`isSttEnabled`） | 没配就回退到实时通道的转写，并在日志里说明原因 |
+
+**链路**：
+
+```
+RealtimeAudioController.onAudioFrame
+  ├─→ provider.sendAudio(pcm)                 （理解与回复，照旧）
+  └─→ utteranceBuffer.offer(pcm)              （留副本，仅纠错启用时）
+        ↓ onUserTranscript（服务端转写完成）
+     气泡先显示占位「识别中…」
+        ↓ drain → VadPolicy 端上裁静音 → 包成 WAV
+     送 SttProviders 识别（24kHz 单声道 16bit，采样率照实写进 WAV 头）
+        ↓ 成功 → 覆盖气泡文本 + 同步改 recordedTurns[turnIndex]
+        ↓ 失败/空 → 回退显示实时通道给的原文本
+```
+
+**新增/改动的文件**：
+
+| 文件 | 作用 |
+|---|---|
+| `core/audio/WavWriter.kt`（新） | 裸 PCM → WAV；`ProbeAudio` 改为委托它，**消除两处重复的头部写法** |
+| `core/audio/Pcm16.kt`（新） | 小端字节 ↔ 样本互转（`VadPolicy` 吃 `ShortArray`，采集链路给 `ByteArray`） |
+| `core/audio/PcmUtteranceBuffer.kt`（新） | 累积「这一句」的音频，**带 30 秒上限**（VAD 一直不报说完时内存不会失控） |
+| `core/lang/LangId.kt` | 新增 `realtimeTranscriptReliable` |
+| `ui/voice/VoiceChatActivity.kt` | 纠错链路主体 `recognizeUtterance()` + 日志 |
+| `core/audio/RealtimeTranscriptAudioTest.kt`（新） | 14 例，钉住 WAV 头、采样率、小端、缓冲上限 |
+| `values/strings.xml` | 新增 `voice_transcript_pending`（识别中…） |
+
+**几个刻意的决定**：
+
+1. **失败一律回退原文**，绝不把气泡留成「识别中…」卡住 ——
+   宁可显示不完美的谐音，也不能让用户以为程序死了。
+2. **端上先用 `VadPolicy` 裁静音**再上传：既省一次计费，也避免把纯静音送去识别
+   （纯静音会被服务端判为空转写，白花一次请求）。
+3. **WAV 头里必须写真实采样率 24000**（复用 `RealtimeAudioController.SAMPLE_RATE`，
+   不另定义常量）。写错会让识别结果是变速的。
+4. **临时文件名带纳秒**：连续两句的识别可能重叠，共用一个名字会互相删掉对方的文件。
+5. **新增 `ShiyuStt` 日志标签**（`SEND` / `CORRECTED` / `EMPTY` / `FAIL` / `SKIP` + 耗时），
+   把主观感受变成可观测指标，真机验证时有据可依。
+
+**待验证**：真机上日语说一句 → 气泡应先显示「识别中…」再变成正确日文；
+logcat 过滤 `ShiyuStt` 应看到 `SEND` 与 `CORRECTED`。<br>
+**英语不受影响**（走原路径），**识别组未配置也不受影响**（回退）。
+
 #### 17.21.6 修「录音能跑、测试连接却 404」（2026-09-24，v1.0.5）
 
 v1.0.4 上线后发现的**我自己引入的不一致**：填好 stepfun 的 ASR 后，

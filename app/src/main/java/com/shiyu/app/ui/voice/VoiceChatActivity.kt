@@ -6,6 +6,7 @@ import android.content.pm.PackageManager
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
+import android.os.SystemClock
 import android.view.View
 import android.widget.LinearLayout
 import android.widget.TextView
@@ -19,6 +20,10 @@ import com.shiyu.app.ai.ChatMessage
 import com.shiyu.app.ai.ChatRequest
 import com.shiyu.app.ai.RealtimeVoiceProvider
 import com.shiyu.app.audio.RealtimeAudioController
+import com.shiyu.app.core.audio.Pcm16
+import com.shiyu.app.core.audio.PcmUtteranceBuffer
+import com.shiyu.app.core.audio.VadPolicy
+import com.shiyu.app.core.audio.WavWriter
 import com.shiyu.app.core.lang.LangId
 import com.shiyu.app.core.lang.LanguageModule
 import com.shiyu.app.core.lang.LanguageRegistry
@@ -31,7 +36,10 @@ import com.shiyu.app.ui.AiErrorMessages
 import com.shiyu.app.ui.BaseActivity
 import com.shiyu.app.ui.LangStyle
 import com.shiyu.app.ui.home.HomeActivity
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
+import java.io.File
 import java.time.LocalDate
 
 /**
@@ -77,6 +85,18 @@ class VoiceChatActivity : BaseActivity() {
     private val aiBuffer = StringBuilder()
     private var userBubble: TextView? = null
     private val userBuffer = StringBuilder()
+
+    // ---------- B′：用独立语音识别纠正实时通道的转写（§17.21.5）----------
+    //
+    // 背景：stepfun realtime 的转写头只按中英训练，说日语会显示成中文谐音；
+    // 但模型本身听得懂（实测回复是对的），错的只是给你看的字幕。
+    // 做法：把这一句的采集音频另存一份，句末送一次语音识别，拿正确语种覆盖字幕。
+    // 英语不需要（实时通道本来就准），只有 LangId.realtimeTranscriptReliable=false 才走。
+
+    /** 用户这一句的采集音频（来自 onAudioFrame） */
+    private val utteranceBuffer = PcmUtteranceBuffer()
+    /** 本次会话是否需要「另送识别纠错」：语言实时转写不可信 + 识别组已配置 */
+    private var correctTranscripts = false
 
     private val permissionLauncher =
         registerForActivityResult(ActivityResultContracts.RequestPermission()) { granted ->
@@ -368,6 +388,20 @@ class VoiceChatActivity : BaseActivity() {
         )
         basePrompt = voicePrompt
         languageMode = VoicePrompts.LanguageMode.TARGET
+
+        // 是否需要「另送识别纠错」（§17.21.5 B′）：
+        // 实时通道对这门语言的转写可信（如英语）就不必多花一次请求与等待；
+        // 日语不可信，且识别组已配置时才启用 —— 否则回退到实时通道自己的转写。
+        correctTranscripts = !module.id.realtimeTranscriptReliable &&
+            AppGraph.providerRegistry.isSttEnabled(module.id)
+        utteranceBuffer.clear()
+        if (!module.id.realtimeTranscriptReliable && !correctTranscripts) {
+            android.util.Log.i(
+                TAG_STT,
+                "语言 ${module.id.tag} 的实时转写不可信，但语音识别组未配置 → 字幕只能是实时通道的谐音结果"
+            )
+        }
+
         val p = AppGraph.providerRegistry.factory(module.id).realtime(voicePrompt)
         provider = p
         p.setListener(listener)
@@ -377,7 +411,11 @@ class VoiceChatActivity : BaseActivity() {
         speaking = false
         binding.micLabel.text = getString(R.string.voice_btn_start)
         audio = RealtimeAudioController(
-            onAudioFrame = { pcm -> p.sendAudio(pcm) },
+            // 同一帧走两条路：发给实时通道（理解与回复），同时留下副本供句末做识别纠错
+            onAudioFrame = { pcm ->
+                p.sendAudio(pcm)
+                if (correctTranscripts) utteranceBuffer.offer(pcm)
+            },
             onSpeechStateChanged = { active ->
                 runOnUiThread {
                     binding.voiceGateHint.visibility = if (active) View.GONE else View.VISIBLE
@@ -618,16 +656,33 @@ class VoiceChatActivity : BaseActivity() {
 
         override fun onUserTranscript(text: String) {
             runOnUiThread {
-                if (text.isNotBlank()) {
-                    recordedTurns.add(SessionTurn("user", text))
+                if (correctTranscripts) {
+                    // 实时通道给的是「谐音中文」（日语场景），先占位，
+                    // 由 recognizeUtterance 用正确语种覆盖（§17.21.5 B′）
+                    val bubble = newUserBubble()
+                    bubble.text = getString(R.string.voice_transcript_pending)
+                    userBuffer.append(text)
+                    val turnIndex = if (text.isNotBlank()) {
+                        recordedTurns.add(SessionTurn("user", text))
+                        turns++
+                        recordedTurns.lastIndex
+                    } else {
+                        -1
+                    }
                     applyLanguageSwitchIfRequested(text)
-                    // turns 计数必须与 recordedTurns 同步递增：服务端偶发回一条空/纯静音
-                    // 转写时，之前 turns++ 在 if 外照加，结算页轮数与 chatTurns 会虚高于会话文件。
-                    turns++
+                    recognizeUtterance(bubble, turnIndex, text)
+                } else {
+                    if (text.isNotBlank()) {
+                        recordedTurns.add(SessionTurn("user", text))
+                        applyLanguageSwitchIfRequested(text)
+                        // turns 计数必须与 recordedTurns 同步递增：服务端偶发回一条空/纯静音
+                        // 转写时，之前 turns++ 在 if 外照加，结算页轮数与 chatTurns 会虚高于会话文件。
+                        turns++
+                    }
+                    val bubble = newUserBubble()
+                    userBuffer.append(text)
+                    bubble.text = userBuffer.toString()
                 }
-                val bubble = newUserBubble()
-                userBuffer.append(text)
-                bubble.text = userBuffer.toString()
                 binding.transcriptScroll.post {
                     binding.transcriptScroll.fullScroll(View.FOCUS_DOWN)
                 }
@@ -660,6 +715,74 @@ class VoiceChatActivity : BaseActivity() {
 
         override fun onClosed() {
             runOnUiThread { resetWave() }
+        }
+    }
+
+    /**
+     * 把「用户这一句」的采集音频另送一次语音识别，用正确语种覆盖字幕（§17.21.5 B′）。
+     *
+     * 背景：stepfun 实时通道的转写头只按中英训练，说日语会显示成中文谐音；
+     * 但模型**本身听得懂**（实测她的回复是对的），错的只是给你看的这行字幕。
+     *
+     * 失败一律**回退到实时通道给的原文本**，绝不把气泡留成占位文案 ——
+     * 宁可显示不完美的谐音，也不能让用户看到「识别中…」卡住不动。
+     */
+    private fun recognizeUtterance(bubble: TextView, turnIndex: Int, rawText: String) {
+        val samples = Pcm16.toShorts(utteranceBuffer.drain())
+        // 端上先裁静音：省一次计费上传，也避免把纯静音送去识别
+        val trimmed = VadPolicy.trim(samples, VadPolicy.Params(sampleRate = RealtimeAudioController.SAMPLE_RATE))
+        if (trimmed == null) {
+            // 整段无有效语音（点了开始却没说话 / 全是门控静音帧）→ 沿用实时通道的文本
+            bubble.text = rawText
+            android.util.Log.i(TAG_STT, "SKIP 无可识别语音（${samples.size} 样本）")
+            return
+        }
+        val speech = samples.copyOfRange(trimmed.startSample, trimmed.endSample)
+        val wav = WavWriter.mono16(Pcm16.toBytes(speech), RealtimeAudioController.SAMPLE_RATE)
+        android.util.Log.i(
+            TAG_STT,
+            "SEND ${speech.size} 样本（裁掉静音 ${trimmed.trimmedMs}ms，原 ${trimmed.originalMs}ms）"
+        )
+
+        lifecycleScope.launch {
+            val started = SystemClock.elapsedRealtime()
+            // 文件名带纳秒：连续两句的识别可能重叠，共用一个名字会互相删掉对方的文件
+            val file = File(cacheDir, "rt_utterance_${System.nanoTime()}.wav")
+            val result = withContext(Dispatchers.IO) {
+                try {
+                    file.writeBytes(wav)
+                    AppGraph.providerRegistry.factory(module.id)
+                        .stt().transcribe(file, module.id.sttLanguage)
+                } finally {
+                    file.delete()
+                }
+            }
+            val cost = SystemClock.elapsedRealtime() - started
+            when (result) {
+                is AiResult.Ok -> {
+                    val corrected = result.value.trim()
+                    if (corrected.isEmpty()) {
+                        bubble.text = rawText
+                        android.util.Log.i(TAG_STT, "EMPTY ${cost}ms → 回退原文本")
+                    } else {
+                        bubble.text = corrected
+                        // recordedTurns 里那条也要一起改：结算页与会话落盘读的是它
+                        if (turnIndex in recordedTurns.indices &&
+                            recordedTurns[turnIndex].role == "user"
+                        ) {
+                            recordedTurns[turnIndex] = SessionTurn("user", corrected)
+                        }
+                        android.util.Log.i(TAG_STT, "CORRECTED ${cost}ms len=${corrected.length}")
+                    }
+                }
+                is AiResult.Err -> {
+                    bubble.text = rawText
+                    android.util.Log.w(TAG_STT, "FAIL ${cost}ms ${result.error} → 回退原文本")
+                }
+            }
+            binding.transcriptScroll.post {
+                binding.transcriptScroll.fullScroll(View.FOCUS_DOWN)
+            }
         }
     }
 
@@ -715,6 +838,9 @@ class VoiceChatActivity : BaseActivity() {
 
     companion object {
         private const val TAG = "ShiyuVoice"
+
+        /** 用户字幕纠错专用的日志标签，便于真机验证：SEND / CORRECTED / EMPTY / FAIL / SKIP */
+        private const val TAG_STT = "ShiyuStt"
 
         const val EXTRA_SCENARIO_ID = "extra_scenario_id"
 
