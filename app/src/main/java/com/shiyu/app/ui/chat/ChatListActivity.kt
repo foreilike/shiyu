@@ -39,8 +39,8 @@ class ChatListActivity : BaseActivity() {
         binding.scenarioList.layoutManager = LinearLayoutManager(this)
 
         binding.btnVoiceRealtime.setOnClickListener {
-            val first = scenarios.firstOrNull() ?: return@setOnClickListener
-            startActivity(VoiceChatActivity.intent(this, first.id))
+            // 实时语音 = 自由聊天，不绑场景（原因见 VoicePrompts 注释）
+            startActivity(VoiceChatActivity.intent(this))
         }
     }
 

@@ -44,6 +44,7 @@ class SessionStore(private val sessionsDir: File) {
     fun saveRealtimeSession(
         lang: LangId,
         scenarioId: String,
+        title: String,
         turns: List<SessionTurn>,
         durationSeconds: Long
     ): SessionRecord? {
@@ -53,6 +54,7 @@ class SessionStore(private val sessionsDir: File) {
             sessionId = "s_$now",
             langId = lang.tag,
             scenarioId = scenarioId,
+            title = title,
             startedAt = now,
             mode = com.shiyu.app.data.model.MODE_REALTIME,
             durationSeconds = durationSeconds,

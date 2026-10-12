@@ -828,10 +828,17 @@ lint error 会直接让这条命令失败，别忽略。
 > **操作经验（省下接手人的时间）：**
 > - 这台机器的 USB 连接**约 1–2 分钟掉一次**，`adb tcpip 5555` 在本机网络下连不上；截图前先
 >   `adb shell svc power stayon true`，并确认 `dumpsys power | grep mWakefulness` 不是 Dozing。
-> - **`adb shell input tap` 连续点击经常丢**。不要靠肉眼估算坐标：先
->   `uiautomator dump` 拿真实 bounds 再点，并且每次点完用
->   `dumpsys activity activities | grep topResumedActivity` 复核落点。
-> - Git Bash 下 `/sdcard/...` 会被当成本地路径，拉 dump 文件要 `export MSYS_NO_PATHCONV=1`。
+> - **`adb shell input tap` 连续点击经常丢**。不要靠肉眼估算坐标：先 dump 拿真实 bounds
+>   再点，并且每次点完用 `dumpsys activity activities | grep topResumedActivity` 复核落点。
+>   dump **必须显式写到 `/data/local/tmp/`**（这个目录不进 MediaStore，也不会出现在
+>   文件管理器里）：
+>   `adb shell uiautomator dump /data/local/tmp/ui.xml && adb shell cat /data/local/tmp/ui.xml`
+>   读完顺手 `adb shell rm -f /data/local/tmp/ui.xml`，别在手机上留文件。
+>   省略路径时默认落 `/sdcard/window_dump.xml`，会在手机存储根目录堆一地 xml
+>   （2026-09-28 一轮真机验收就攒了 35 个：`s5.xml s10.xml va.xml vf.xml e1.xml w1.xml _f.xml`）。
+>   同类做法见 bottom-radar-android 的 `tools/ui_dump.sh`（dump 完立刻删手机端临时文件）。
+> - Git Bash 下 `/sdcard/...`、`/data/local/tmp/...` 都会被当成本地路径，
+>   拉 dump 文件要 `export MSYS_NO_PATHCONV=1`（或直接写成 `//data/local/tmp/...`）。
 > - **想读落盘数据就装 debug 包**（release 不可调试，`run-as` 用不了）：
 >   `adb shell run-as com.shiyu.app cat files/daily_stats.json`。
 
@@ -2384,6 +2391,95 @@ Java/Kotlin 绑定 + 预编译 demo APK，统一跑 VITS/Piper/Matcha/Kokoro/Mel
 > 剩下的「换更快的模型」那一半要凭据，留给用户在设置页改 TTS `model`
 > （如 `step-tts-mini`，厂商/三方反馈 TTFB 约快一半），用 `ShiyuTts` 的 `MISS` 耗时对比即可判断。
 
+
+
+### 17.24 ★ 实时语音改为「自由聊天」——修「每次都问名字」的死板问题（2026-10-12，v1.0.13）
+
+**用户反馈**：实时对话时英语过于死板、**每次都问名字**，日语也相对死板；
+想要**随机的、自然的对话**。问「是我们加了约束么」——**是的，两处叠加**。
+
+#### 17.24.1 根因（两处叠加，缺一都不会这么明显）
+
+**① 结构性问题：实时语音永远进「自我介绍」场景**
+
+两个入口都写死取场景列表的第一个：
+
+```kotlin
+// HomeActivity.openVoice()（首页 REALTIME TALK 卡片）
+/** 实时语音需要一个场景来提供 systemPrompt，取当前语言的第一个场景 */
+val first = scenarios.firstOrNull() ?: return
+startActivity(VoiceChatActivity.intent(this, first.id))
+
+// ChatListActivity（对话页顶部同一个入口）
+val first = scenarios.firstOrNull() ?: return@setOnClickListener
+```
+
+而 `scenarios_en.json` / `scenarios_ja.json` 的**第一个场景都是 `self_intro`**。
+更糟的是**实时页标题只显示「AI 语伴 · 日语」，不显示当前场景** —— 用户无从察觉。
+
+**② 提示词里的强约束（我们自己加的）**
+
+`VoicePrompts.forScenario()` 末尾：
+
+```
+这个场景可以引导对方说出这些表达：My name is ...、I am from ...、…
+自然地创造机会让他说出来，但不要机械地逐条提问。
+```
+
+而 `self_intro` 的 `goalExpressions` 第一条就是 `My name is ...`。
+模型为了「创造机会」，开口就问名字；目标表达只有 5 条，问完就重复 → 像问卷。
+
+**日语为什么只是"相对"死板**：同样锁死 self_intro，但日语目标是「〜と言います」这类
+**句式**（不像"问名字"那么直白），且后期场景角色扮演成分更强。
+佐证：2026-09-28 真机两次会话的开场**都是「おはようございます！…」**
+（`今日はどうしましたか？` / `元気でしたか？`）—— 同场景固定的重复特征。
+
+#### 17.24.2 修法（用户选定的两条）
+
+| 决策 | 内容 |
+|---|---|
+| 实时语音默认模式 | **自由聊天**（不绑场景） |
+| 场景引导提示词 | **完全去掉** |
+
+**改动清单：**
+
+| 文件 | 改动 |
+|---|---|
+| `core/lang/VoicePrompts.kt` | **删** `forScenario()`（去掉后无人调用），**新增** `forFreeTalk(lang)` + `freeTalkHints(lang)` |
+| `ui/voice/VoiceChatActivity.kt` | 去掉 `scenario` 字段与场景查找；改用 `forFreeTalk`；`intent()` 不再要 scenarioId；落盘用保留 id `free_talk` + 中文标题；副标题显示语言+模式 |
+| `ui/home/HomeActivity.kt`、`ui/chat/ChatListActivity.kt` | 去掉 `scenarios.first()` 这个 hack |
+| `data/store/SessionStore.kt` | `saveRealtimeSession()` 增加 `title` 参数 |
+| `values/strings.xml` | 新增 `voice_partner_sub` / `voice_mode_free_talk` / `voice_hint_line` |
+| `core/lang/VoicePromptsTest.kt`（新） | 12 例 |
+
+#### 17.24.3 自由聊天提示词的关键几条（为什么这么写）
+
+1. **话题跟着对方走，并且要经常换** —— 一个话题聊两三轮就自然转到别处，
+   并给了具体方向（今天过得怎么样、天气、吃了什么、周末打算……），
+   否则模型在"随便聊"的指令下容易反复问同一句。
+2. **严禁反复提问同一个问题**，并**点名**「你叫什么名字/你从哪里来/你几岁」
+   这类自我介绍问题 + 一句判断「那是问卷，不是聊天」。
+   —— 只写"要自然"不够，实测必须把**具体的坏行为**点出来。
+3. 保留既有底线：只用目标语言、**学习者要中文时必须照做**（这条是历史踩坑修出来的，
+   见 §17.6 的注释）、每次 1~2 句、不念格式标记。
+
+#### 17.24.4 「提示」按钮改为话题方向
+
+以前提示给的是场景的 `goalExpressions`（"该练哪句"）。自由聊天没有目标表达，
+学习者真正需要的是**"能说什么"** —— 改成从 `freeTalkHints()` 随机抽一条
+（目标语言 + 中文），每次不同，避免反复看到同一句。
+
+#### 17.24.5 会话落盘
+
+自由聊天没有场景，但 `SessionRecord` 需要 `scenarioId`：
+用保留字 **`free_talk`**，并**直接写入中文标题**（否则历史页会回退显示裸的 `free_talk`）。
+保留字的副作用是**好事**：「对话」页按 `scenarioId` 分组统计场景轮数，
+自由聊天的轮数不会再被算进「自我介绍」里。
+
+> **教训**：这次是**两处独立的小决定叠加**造成的用户可见问题 ——
+> 「实时语音随便找个场景提供 prompt」+「提示词引导学习者说出目标表达」，
+> 单看都合理，合起来就是"每次都被问名字"。
+> 加约束时要问一句：**这个约束在真实使用频率下会退化成什么？**
 
 
 ## 附录 A：关键常量速查

@@ -165,6 +165,11 @@
         <string name="voice_partner_online">AI 语伴 %1$s 在线 · 像朋友一样聊天</string>
     <string name="voice_kicker">REALTIME TALK</string>
     <string name="voice_listening">正在聆听…</string>
+    <!-- 实时语音页副标题：语言 + 模式。实时语音固定是自由聊天（不绑场景） -->
+    <string name="voice_partner_sub">AI 语伴 · %1$s · %2$s</string>
+    <string name="voice_mode_free_talk">自由聊天</string>
+    <!-- 「提示」按钮：给一个话题方向（目标语言 + 中文） -->
+    <string name="voice_hint_line">可以试试：%1$s（%2$s）</string>
         <string name="voice_ready_title">和 %1$s 聊聊天</string>
     <string name="voice_gated">已静默暂停推流 · 省流量计费</string>
     <string name="voice_start">开始对话</string>

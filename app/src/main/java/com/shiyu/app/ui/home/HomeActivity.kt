@@ -67,12 +67,14 @@ class HomeActivity : BaseActivity() {
         )
     }
 
-    /** 实时语音需要一个场景来提供 systemPrompt，取当前语言的第一个场景 */
+    /**
+     * 实时语音 = **自由聊天**，不绑场景。
+     *
+     * 这里原来取的是 `scenarios.first()`（= 自我介绍），导致每次开聊都被问名字 ——
+     * 详见 [com.shiyu.app.core.lang.VoicePrompts] 的注释与 HANDOVER §17.24。
+     */
     private fun openVoice() {
-        val module = LanguageRegistry.module(AppGraph.settingsRepository.activeLang())
-        val scenarios = module.buildScenarios(AppGraph.assetRepository.scenariosJson(module))
-        val first = scenarios.firstOrNull() ?: return
-        startActivity(VoiceChatActivity.intent(this, first.id))
+        startActivity(VoiceChatActivity.intent(this))
     }
 
     private fun render() {

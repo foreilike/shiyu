@@ -588,7 +588,9 @@ docs/ja-translation/
 ### 6.2 真机相关
 
 - **魅族 22 的 USB 每 1–2 分钟掉一次**，是常态。`adb devices` 空了就重试/重插。
-- **`input tap` 连点常丢**：先用 `uiautomator dump` 拿真实坐标再点，点完复核落点。
+- **`input tap` 连点常丢**：先 dump 拿真实坐标再点，点完复核落点。dump 要显式写路径：
+  `adb shell uiautomator dump /data/local/tmp/ui.xml`（读完 `rm -f` 掉）。**别省路径**——
+  省略时默认落 `/sdcard/window_dump.xml`，会把手机存储根目录堆满 xml（每轮验收几十个）。
   另外 dump 有时抓到的是**上一个窗口**的层级，必要时多 dump 一次。
 - **读落盘数据要装 debug 包**（release 不可调试，`run-as` 用不了）。
 
@@ -771,7 +773,7 @@ docs/ja-translation/
 | 新语言的记录跑进了日语 | `LangId.fromTag` 没改成通用查找 | §4 步骤 1，这是硬编码遗留 |
 | 首页与「我的」页数字对不上 | 统计有两套真相 | 两边都必须从会话文件 / `DailyQuota` 派生，见 §9.1 |
 | 卡片上有一条空白 | 该卡本来就没有例句或译文 | **正常**，代码已做容错（空则隐藏，不留空行） |
-| `input tap` 点了没反应 | 魅族 22 上连续点击常丢 | 先 `uiautomator dump` 拿真实坐标再点，点完复核 |
+| `input tap` 点了没反应 | 魅族 22 上连续点击常丢 | 先 `uiautomator dump /data/local/tmp/ui.xml` 拿真实坐标再点，点完复核 |
 | 单测全绿但装到手机上崩 | 单测覆盖不到 UI | 这个项目**栽过两次**，UI 改动必须真机验 |
 | 构建报找不到符号 / 行为诡异 | 用了增量产物 | `./gradlew :app:clean` 再来 |
 

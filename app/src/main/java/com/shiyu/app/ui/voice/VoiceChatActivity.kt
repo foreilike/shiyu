@@ -28,7 +28,6 @@ import com.shiyu.app.core.lang.LangId
 import com.shiyu.app.core.lang.LanguageModule
 import com.shiyu.app.core.lang.LanguageRegistry
 import com.shiyu.app.core.lang.VoicePrompts
-import com.shiyu.app.data.model.Scenario
 import com.shiyu.app.data.store.SettingsRepository
 import com.shiyu.app.data.model.SessionTurn
 import com.shiyu.app.databinding.ActivityVoiceChatBinding
@@ -54,8 +53,6 @@ class VoiceChatActivity : BaseActivity() {
 
     private lateinit var binding: ActivityVoiceChatBinding
     private lateinit var module: LanguageModule
-    private lateinit var scenario: Scenario
-
     private var provider: RealtimeVoiceProvider? = null
     // WS 回调线程（onAudioDelta）会读它，主线程 startSession/endSession 写它 —— 加 @Volatile，
     // 否则 onDestroy 置 null 后回调线程可能仍读到过期的非 null 引用，往已释放的控制器推音频。
@@ -119,14 +116,6 @@ class VoiceChatActivity : BaseActivity() {
 
         val lang = AppGraph.settingsRepository.activeLang()
         module = LanguageRegistry.module(lang)
-        val scenarioId = intent.getStringExtra(EXTRA_SCENARIO_ID)
-        val loaded = module.buildScenarios(AppGraph.assetRepository.scenariosJson(module))
-            .firstOrNull { it.id == scenarioId }
-        if (loaded == null) {
-            finish()
-            return
-        }
-        scenario = loaded
 
         fitTopInset(binding.voiceTopBar)
         // 底部容器整体吃「导航栏 / 键盘」两者较大的那个：edge-to-edge 下
@@ -138,7 +127,11 @@ class VoiceChatActivity : BaseActivity() {
         // 切到英语后仍然显示日语语伴，和首页对不上。
         val partner = LangStyle.partnerName(lang)
         binding.voicePartnerName.text = partner
-        binding.voicePartnerSub.text = "AI 语伴 · " + lang.displayName
+        binding.voicePartnerSub.text = getString(
+            R.string.voice_partner_sub,
+            lang.displayName,
+            getString(R.string.voice_mode_free_talk)
+        )
         binding.readyTitle.text = getString(R.string.voice_ready_title, partner)
         binding.readyAvatar.text = partner.firstOrNull()?.uppercase().orEmpty()
 
@@ -155,7 +148,10 @@ class VoiceChatActivity : BaseActivity() {
         // 否则用户点完发现"什么都没发生"（其实只是字幕区没了，而它本来就可能是空的）
         binding.btnCc.setOnClickListener { toggleSubtitles() }
         binding.btnHint.setOnClickListener {
-            appendAiLine("提示：" + scenario.goalExpressions.firstOrNull().orEmpty())
+            // 自由聊天没有"目标表达"了，提示改成给一个**话题方向** —— 学习者卡壳时最需要的
+            // 是"能说什么"，而不是"该练哪句"。每次随机抽一条，避免反复看到同一句。
+            val hint = VoicePrompts.freeTalkHints(module.id).random()
+            appendAiLine(getString(R.string.voice_hint_line, hint.first, hint.second))
         }
         binding.btnAgain.setOnClickListener { resetSession() }
         binding.btnHangup.setOnClickListener { endSession() }
@@ -382,10 +378,9 @@ class VoiceChatActivity : BaseActivity() {
         handler.post(ticker)
 
         // 语音模式必须用专门的提示词：场景自带的 systemPrompt 是给文字对话写的，
-        // 要求输出 [JA]/[ZH]/[FIX] 三段式，语音下会被整个念出来（见 VoicePrompts 注释）
-        val voicePrompt = VoicePrompts.forScenario(
-            module.id, scenario.titleZh, scenario.goalExpressions
-        )
+        // 要求输出 [JA]/[ZH]/[FIX] 三段式，语音下会被整个念出来（见 VoicePrompts 注释）。
+        // 而且实时语音是**自由聊天**，不绑场景 —— 绑场景会变成"问卷"（§17.24）
+        val voicePrompt = VoicePrompts.forFreeTalk(module.id)
         basePrompt = voicePrompt
         languageMode = VoicePrompts.LanguageMode.TARGET
 
@@ -510,8 +505,14 @@ class VoiceChatActivity : BaseActivity() {
         )
         // 实时语音以前完全不落盘，聊完即消失；现在写进会话记录，
         // 「历史对话」里能看到，也让「累计对话轮数」覆盖到实时语音。
+        // 自由聊天没有场景，用一个保留字当 scenarioId；标题直接给中文名，
+        // 否则历史页会回退显示裸的 "free_talk"
         AppGraph.sessionStore.saveRealtimeSession(
-            module.id, scenario.id, recordedTurns.toList(), capped
+            module.id,
+            FREE_TALK_SCENARIO_ID,
+            getString(R.string.voice_mode_free_talk),
+            recordedTurns.toList(),
+            capped
         )
     }
 
@@ -893,13 +894,20 @@ class VoiceChatActivity : BaseActivity() {
          */
         private const val DEBUG_DUMP_UTTERANCE = true
 
-        const val EXTRA_SCENARIO_ID = "extra_scenario_id"
+        /**
+         * 自由聊天的会话在记录里用的保留 scenarioId。
+         *
+         * 实时语音不绑场景（绑了会变成"问卷"，见 [VoicePrompts] 注释），
+         * 但会话落盘需要一个 id —— 用这个保留字，它不会和任何真实场景撞上，
+         * 于是「对话」页的场景轮数统计也不会把自由聊天的轮数算进某个场景。
+         */
+        const val FREE_TALK_SCENARIO_ID = "free_talk"
 
         /** 单次实时会话最多计 2 小时，防止挂着页面不管导致统计虚高 */
         private const val MAX_SESSION_SECONDS = 2L * 3600L
 
-        fun intent(context: android.content.Context, scenarioId: String): Intent =
+        /** 实时语音不需要场景：进去就是自由聊天 */
+        fun intent(context: android.content.Context): Intent =
             Intent(context, VoiceChatActivity::class.java)
-                .putExtra(EXTRA_SCENARIO_ID, scenarioId)
     }
 }
