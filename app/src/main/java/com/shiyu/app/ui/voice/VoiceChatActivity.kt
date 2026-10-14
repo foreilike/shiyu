@@ -27,6 +27,7 @@ import com.shiyu.app.core.audio.WavWriter
 import com.shiyu.app.core.lang.LangId
 import com.shiyu.app.core.lang.LanguageModule
 import com.shiyu.app.core.lang.LanguageRegistry
+import com.shiyu.app.core.lang.TextScript
 import com.shiyu.app.core.lang.VoicePrompts
 import com.shiyu.app.data.store.SettingsRepository
 import com.shiyu.app.data.model.SessionTurn
@@ -70,10 +71,6 @@ class VoiceChatActivity : BaseActivity() {
     /** 本轮的完整往返，结束时整条写入 SessionStore（实时语音不逐轮落盘） */
     private val recordedTurns = mutableListOf<SessionTurn>()
 
-    /** 本轮的基础系统提示（不随语言开关变化），与当前语言模式 */
-    private var basePrompt = ""
-    private var languageMode = VoicePrompts.LanguageMode.TARGET
-
     /** 字幕当前是否显示（默认开） */
     private var subtitlesOn = true
 
@@ -83,17 +80,41 @@ class VoiceChatActivity : BaseActivity() {
     private var userBubble: TextView? = null
     private val userBuffer = StringBuilder()
 
-    // ---------- B′：用独立语音识别纠正实时通道的转写（§17.21.5）----------
+    // ---------- 日语字幕修正：语种判据 = **模型回复用的语言** ----------
     //
-    // 背景：stepfun realtime 的转写头只按中英训练，说日语会显示成中文谐音；
-    // 但模型本身听得懂（实测回复是对的），错的只是给你看的字幕。
-    // 做法：把这一句的采集音频另存一份，句末送一次语音识别，拿正确语种覆盖字幕。
-    // 英语不需要（实时通道本来就准），只有 LangId.realtimeTranscriptReliable=false 才走。
+    // 实时通道的转写头只按中英训练，说日语会被解成中文谐音（すみません →「是密码谁」）。
+    // 独立 ASR 能把日语转对，但它必须收一个确定的 `language`。
+    //
+    // **2026-10-14 上午删过一版**：那时是句末**无条件**送 ASR（按 `activeLang` 传 language），
+    // 自动跟随语种后这么干是错的 —— 真机实测它拿着 language=ja 干的是**翻译**而不是转写：
+    //   中文「我今天有点累」    → 「今日はちょっと疲れました。」
+    //   中文「你刚才说了什么？」 → 「なに」
+    //   英语「Do you like music?」→ 原样保留
+    //   日语「かわいいですね」   → 修对了
+    // 即：用户说中文，字幕显示日语。无条件开着比关掉更错，所以当时整条删了。
+    //
+    // **下午换了判据接回来**：模型判语种走音频，实测极准（转写给出阿拉伯文乱码、甚至空字符串时，
+    // 它照样用日语回答且内容接得上）。所以反过来用它当语种判据：
+    // **它用日语回你，就说明你刚才那句说的是日语** → 只有这一句才送 ASR。
+    // 它用中文/英语回答时一律不送 —— 那正是上面那四行错误的来源。
+    //
+    // 再加一道保险：修回来的结果**必须含假名**才采用，否则保留原文。
+    // 这样即使语种判错，也不会把一句中文字幕换成日语。
+    //
+    // 代价：每句日语多一次 ASR 调用，字幕先出谐音、约 1.5~2.5s 后原地替换成正确日语。
 
-    /** 用户这一句的采集音频（来自 onAudioFrame） */
+    /** 用户这一句的采集音频（来自 onAudioFrame，只在真的开着麦时留） */
     private val utteranceBuffer = PcmUtteranceBuffer()
-    /** 本次会话是否需要「另送识别纠错」：语言实时转写不可信 + 识别组已配置 */
-    private var correctTranscripts = false
+
+    /** 等着看"模型用什么语言回"的那一句：音频 + 它的气泡 + 它在 recordedTurns 里的下标 */
+    private class PendingUtterance(
+        val pcm: ShortArray,
+        val bubble: TextView,
+        val turnIndex: Int,
+        val rawText: String
+    )
+
+    private var pendingUtterance: PendingUtterance? = null
 
     private val permissionLauncher =
         registerForActivityResult(ActivityResultContracts.RequestPermission()) { granted ->
@@ -127,9 +148,11 @@ class VoiceChatActivity : BaseActivity() {
         // 切到英语后仍然显示日语语伴，和首页对不上。
         val partner = LangStyle.partnerName(lang)
         binding.voicePartnerName.text = partner
+        // 顶栏副标题**不带语言**：实时语音已改成自动跟随用户说的语种，
+        // 标任何单一语言都是错的 —— 写「· 英语 ·」会让人以为现在只能说英语，
+        // 而这正是取消分入口要消除的印象。
         binding.voicePartnerSub.text = getString(
             R.string.voice_partner_sub,
-            lang.displayName,
             getString(R.string.voice_mode_free_talk)
         )
         binding.readyTitle.text = getString(R.string.voice_ready_title, partner)
@@ -188,21 +211,6 @@ class VoiceChatActivity : BaseActivity() {
         }
     }
 
-    /**
-     * 学习者说「用中文 / 翻译一下」时，**在客户端把系统提示改掉**并重发 session.update。
-     *
-     * 为什么不交给提示词：实测 `step-audio-2-mini` 面对「默认日语」+「用户要求中文就照做」
-     * 两条规则时几乎总守前者，换了两版措辞都无效。改成由客户端直接改写系统提示，
-     * 模型看到的就从"可选规则"变成"现在就用中文"。
-     * 详见 `VoicePrompts.detectLanguageSwitch` 的注释与单测。
-     */
-    private fun applyLanguageSwitchIfRequested(userText: String) {
-        val wanted = VoicePrompts.detectLanguageSwitch(userText) ?: return
-        if (wanted == languageMode) return
-        languageMode = wanted
-        provider?.updateInstructions(VoicePrompts.withLanguageMode(basePrompt, wanted))
-    }
-
     /** 字幕开关：关掉后转写区整块隐藏，图标变暗表示已关 */
     private fun toggleSubtitles() {
         subtitlesOn = !subtitlesOn
@@ -247,7 +255,6 @@ class VoiceChatActivity : BaseActivity() {
         bubble.text = text
         recordedTurns.add(SessionTurn("user", text))
         turns++
-        applyLanguageSwitchIfRequested(text)
 
         provider?.sendUserText(text)
     }
@@ -263,14 +270,18 @@ class VoiceChatActivity : BaseActivity() {
      * 复用设置页里已经配好的「对话服务」，悄悄译一遍挂上去，实时语音链路完全不参与。
      *
      * 未开启开关、没配对话服务、或翻译失败时都静默跳过 —— 字幕是锦上添花，不该打断对话。
+     *
+     * **本来就是中文的直接不译**（2026-10-14）：自动跟随语种后模型经常用中文回答，
+     * 再"翻译"一遍只会让同一句话在气泡里印两遍（真机实测，连着五个气泡都是重复的）。
+     * 这里提前返回，顺带省掉一次没意义的 API 调用。
      */
     private fun translateInto(bubble: TextView?, original: String) {
         if (bubble == null) return
         if (!AppGraph.settingsRepository.realtimeTranslate()) return
         if (original.isBlank()) return
+        if (TextScript.isChineseOnly(original)) return
         if (!AppGraph.providerRegistry.isChatEnabled(module.id)) return
 
-        val target = module.id.displayName
         lifecycleScope.launch {
             val provider = AppGraph.providerRegistry.factory(module.id).chat()
             val request = ChatRequest(
@@ -280,21 +291,37 @@ class VoiceChatActivity : BaseActivity() {
                 messages = listOf(
                     ChatMessage(
                         role = "system",
-                        content = "你是翻译。把用户给的$target 句子翻译成简体中文。只输出译文本身，不要解释、不要加引号、不要重复原文。"
+                        // 不写死源语言：自动跟随语种后，这句可能是日语，也可能是英语。
+                        // （中文的那种情况上面已经提前返回，根本不会走到这里）
+                        content = "你是翻译。把用户给的句子翻译成简体中文。" +
+                            "只输出译文本身，不要解释、不要加引号、不要重复原文。"
                     ),
                     ChatMessage(role = "user", content = original)
                 ),
                 temperature = 0.2
             )
-            when (val result = provider.chat(request)) {
+            // 失败重试一次：实测这条路会偶发失败（同一句话上一轮译得出来、这一轮就没有），
+            // 而它整条是静默的，用户看到的只是"有的句子没译文"。重试一次能挡掉大部分抖动。
+            val first = provider.chat(request)
+            val result = if (first is AiResult.Err) {
+                android.util.Log.w(TAG, "翻译失败，重试一次：${first.error}")
+                provider.chat(request)
+            } else {
+                first
+            }
+            when (result) {
                 is AiResult.Ok -> {
                     val zh = result.value.trim()
-                    if (zh.isNotEmpty()) {
+                    // 兜底：模型偶尔把原文原样吐回来，照样会变成重复两遍
+                    if (zh.isNotEmpty() && zh != original) {
                         bubble.text = bubble.text.toString() + "\n\n" + zh
+                    } else {
+                        android.util.Log.i(TAG, "翻译返回空或与原文相同，不追加译文")
                     }
                 }
-                // 翻译失败不打扰用户：对话本身是正常的
-                is AiResult.Err -> Unit
+                // 翻译失败不打扰用户：对话本身是正常的。但**必须留日志** ——
+                // 这条路以前一行日志都没有，出问题时只能靠猜（已经猜过一次了）。
+                is AiResult.Err -> android.util.Log.w(TAG, "翻译重试后仍失败：${result.error}")
             }
         }
     }
@@ -380,23 +407,17 @@ class VoiceChatActivity : BaseActivity() {
         // 语音模式必须用专门的提示词：场景自带的 systemPrompt 是给文字对话写的，
         // 要求输出 [JA]/[ZH]/[FIX] 三段式，语音下会被整个念出来（见 VoicePrompts 注释）。
         // 而且实时语音是**自由聊天**，不绑场景 —— 绑场景会变成"问卷"（§17.24）
-        val voicePrompt = VoicePrompts.forFreeTalk(module.id)
-        basePrompt = voicePrompt
-        languageMode = VoicePrompts.LanguageMode.TARGET
-
-        // 是否需要「另送识别纠错」（§17.21.5 B′）：
-        // 实时通道对这门语言的转写可信（如英语）就不必多花一次请求与等待；
-        // 日语不可信，且识别组已配置时才启用 —— 否则回退到实时通道自己的转写。
-        correctTranscripts = !module.id.realtimeTranscriptReliable &&
-            AppGraph.providerRegistry.isSttEnabled(module.id)
+        //
+        // **提示词与 activeLang 无关**（2026-10-14）：说什么语言由模型按用户的发音自己判。
+        // `module` 在这里只剩一个用途 —— 决定用哪一组 API 配置（key/baseUrl/model 是按语言存的），
+        // 它**不再决定模型用什么语言说话**。
+        val voicePrompt = VoicePrompts.forFreeTalk()
         utteranceBuffer.clear()
-        // 无条件记一条：这条日志是「到底有没有启用纠错」的唯一客观依据，
-        // 排查时不必再靠猜（曾因为没这条，先怀疑了配置、又怀疑了版本）
+        pendingUtterance = null
         android.util.Log.i(
             TAG_STT,
-            "纠错开关=$correctTranscripts（语言=${module.id.tag}" +
-                " 实时转写可信=${module.id.realtimeTranscriptReliable}" +
-                " 识别组可用=${AppGraph.providerRegistry.isSttEnabled(module.id)}）"
+            "日语字幕修正可用=${AppGraph.providerRegistry.isSttEnabled(module.id)}" +
+                "（识别组按语言取，当前=${module.id.tag}）"
         )
 
         val p = AppGraph.providerRegistry.factory(module.id).realtime(voicePrompt)
@@ -408,15 +429,11 @@ class VoiceChatActivity : BaseActivity() {
         speaking = false
         binding.micLabel.text = getString(R.string.voice_btn_start)
         audio = RealtimeAudioController(
-            // 只在**用户真的开着麦**时留副本。
-            //
-            // 关键：关麦时实时链路会推「等长静音帧」（为了让服务端断句），那些零值帧
-            // 一旦混进缓冲，VadPolicy 看到的就成了「一大段全零 + 一小段人声」，
-            // 很容易超过 maxTrimmedRatio(0.98) 而判定「几乎全是静音」→ 直接放弃纠错，
-            // 表现成「什么都没做」。按 pushing 过滤就只剩用户真实说话的那一段。
+            // 只在**用户真的开着麦**时留副本：关麦时链路推的是等长静音帧（为了让服务端断句），
+            // 那些零值帧混进来会让 VadPolicy 把整段判成"几乎全是静音"，修正直接作废。
             onAudioFrame = { pcm ->
                 p.sendAudio(pcm)
-                if (correctTranscripts && audio?.pushing == true) utteranceBuffer.offer(pcm)
+                if (audio?.pushing == true) utteranceBuffer.offer(pcm)
             },
             onSpeechStateChanged = { active ->
                 runOnUiThread {
@@ -664,33 +681,29 @@ class VoiceChatActivity : BaseActivity() {
 
         override fun onUserTranscript(text: String) {
             runOnUiThread {
-                if (correctTranscripts) {
-                    // 实时通道给的是「谐音中文」（日语场景），先占位，
-                    // 由 recognizeUtterance 用正确语种覆盖（§17.21.5 B′）
-                    val bubble = newUserBubble()
-                    bubble.text = getString(R.string.voice_transcript_pending)
-                    userBuffer.append(text)
-                    val turnIndex = if (text.isNotBlank()) {
-                        recordedTurns.add(SessionTurn("user", text))
-                        turns++
-                        recordedTurns.lastIndex
-                    } else {
-                        -1
-                    }
-                    applyLanguageSwitchIfRequested(text)
-                    recognizeUtterance(bubble, turnIndex, text)
-                } else {
-                    if (text.isNotBlank()) {
-                        recordedTurns.add(SessionTurn("user", text))
-                        applyLanguageSwitchIfRequested(text)
-                        // turns 计数必须与 recordedTurns 同步递增：服务端偶发回一条空/纯静音
-                        // 转写时，之前 turns++ 在 if 外照加，结算页轮数与 chatTurns 会虚高于会话文件。
-                        turns++
-                    }
-                    val bubble = newUserBubble()
-                    userBuffer.append(text)
-                    bubble.text = userBuffer.toString()
+                // 字幕先直出实时通道给什么显示什么。日语这时候会是中文谐音
+                // （すみません →「是密码谁」），等模型回复回来、确认它用的是日语，
+                // 再由 maybeFixJapaneseSubtitle 原地换成正确日语。
+                var turnIndex = -1
+                if (text.isNotBlank()) {
+                    recordedTurns.add(SessionTurn("user", text))
+                    turnIndex = recordedTurns.lastIndex
+                    // turns 计数必须与 recordedTurns 同步递增：服务端偶发回一条空/纯静音
+                    // 转写时，之前 turns++ 在 if 外照加，结算页轮数与 chatTurns 会虚高于会话文件。
+                    turns++
                 }
+                val bubble = newUserBubble()
+                userBuffer.append(text)
+                bubble.text = userBuffer.toString()
+
+                // 把这一句的音频**现在就取走**：等到 onResponseDone 再取，用户可能已经开始说下一句了
+                val pcm = Pcm16.toShorts(utteranceBuffer.drain())
+                pendingUtterance = if (pcm.isNotEmpty()) {
+                    PendingUtterance(pcm, bubble, turnIndex, text)
+                } else {
+                    null
+                }
+
                 binding.transcriptScroll.post {
                     binding.transcriptScroll.fullScroll(View.FOCUS_DOWN)
                 }
@@ -706,6 +719,8 @@ class VoiceChatActivity : BaseActivity() {
                     recordedTurns.add(SessionTurn("assistant", said))
                     translateInto(aiBubble, said)
                 }
+                // 模型用什么语言回的，决定要不要去修用户那句的字幕
+                maybeFixJapaneseSubtitle(said)
                 aiBuffer.clear()
                 aiBubble = null
                 userBuffer.clear()
@@ -727,40 +742,39 @@ class VoiceChatActivity : BaseActivity() {
     }
 
     /**
-     * 把「用户这一句」的采集音频另送一次语音识别，用正确语种覆盖字幕（§17.21.5 B′）。
+     * 模型用日语回了 → 说明用户刚才那句说的就是日语 → 把那句的字幕从谐音修成正确日语。
      *
-     * 背景：stepfun 实时通道的转写头只按中英训练，说日语会显示成中文谐音；
-     * 但模型**本身听得懂**（实测她的回复是对的），错的只是给你看的这行字幕。
+     * 判据为什么是"模型回复用的语言"：它判语种走音频，实测极准 ——
+     * 转写给出阿拉伯文乱码、甚至空字符串时，它照样用日语回答且内容接得上。
+     * 而两个文本源（实时转写给谐音中文、独立 ASR 把什么都翻成日语）都认不出语种。
      *
-     * 失败一律**回退到实时通道给的原文本**，绝不把气泡留成占位文案 ——
-     * 宁可显示不完美的谐音，也不能让用户看到「识别中…」卡住不动。
+     * 失败、超时、结果不含假名，一律**保留原文**，绝不把气泡改坏 ——
+     * 宁可显示谐音，也不能把一句中文换成日语。
      */
-    private fun recognizeUtterance(bubble: TextView, turnIndex: Int, rawText: String) {
-        val samples = Pcm16.toShorts(utteranceBuffer.drain())
-        if (samples.isEmpty()) {
-            bubble.text = rawText
-            android.util.Log.i(TAG_STT, "SKIP 没缓冲到音频（这一句麦没开过）→ 沿用原文")
+    private fun maybeFixJapaneseSubtitle(aiText: String) {
+        val p = pendingUtterance ?: return
+        pendingUtterance = null
+        if (!TextScript.hasKana(aiText)) return
+        if (TextScript.hasKana(p.rawText)) return   // 已经是日语了，不用修
+        if (!AppGraph.providerRegistry.isSttEnabled(module.id)) {
+            android.util.Log.i(TAG_STT, "SKIP 识别组不可用 → 保留原文")
             return
         }
-        // 端上先裁静音：省一次计费上传，也避免把纯静音送去识别。
-        // 但**裁不出来也不放弃** —— 宁可整段送过去让服务端判断，也比直接退回谐音原文好。
-        // （曾经就是在这里 return 掉，用户看到的效果是「功能完全没生效」）
+
+        // 端上先裁静音省一次上传；裁不出来也不放弃，整段送过去让服务端判断
         val trimmed = VadPolicy.trim(
-            samples,
+            p.pcm,
             VadPolicy.Params(sampleRate = RealtimeAudioController.SAMPLE_RATE)
         )
         val speech = if (trimmed != null) {
-            samples.copyOfRange(trimmed.startSample, trimmed.endSample)
+            p.pcm.copyOfRange(trimmed.startSample, trimmed.endSample)
         } else {
-            android.util.Log.i(TAG_STT, "裁剪判定无有效语音（${samples.size} 样本）→ 改送整段")
-            samples
+            p.pcm
         }
         val wav = WavWriter.mono16(Pcm16.toBytes(speech), RealtimeAudioController.SAMPLE_RATE)
-        // 诊断留档（**临时**，见下面 DEBUG_DUMP_UTTERANCE 的说明）
-        if (DEBUG_DUMP_UTTERANCE) dumpForDiagnosis(wav)
         android.util.Log.i(
             TAG_STT,
-            "SEND ${speech.size} 样本（原 ${samples.size}）原文='${rawText.take(30)}'"
+            "SEND ${speech.size} 样本 原文='${p.rawText.take(20)}'（模型用日语回的）"
         )
 
         lifecycleScope.launch {
@@ -771,7 +785,7 @@ class VoiceChatActivity : BaseActivity() {
                 try {
                     file.writeBytes(wav)
                     AppGraph.providerRegistry.factory(module.id)
-                        .stt().transcribe(file, module.id.sttLanguage)
+                        .stt().transcribe(file, LangId.JA.sttLanguage)
                 } finally {
                     file.delete()
                 }
@@ -779,55 +793,43 @@ class VoiceChatActivity : BaseActivity() {
             val cost = SystemClock.elapsedRealtime() - started
             when (result) {
                 is AiResult.Ok -> {
-                    val corrected = result.value.trim()
-                    if (corrected.isEmpty()) {
-                        bubble.text = rawText
-                        android.util.Log.i(TAG_STT, "EMPTY ${cost}ms → 回退原文本")
-                    } else {
-                        bubble.text = corrected
-                        // recordedTurns 里那条也要一起改：结算页与会话落盘读的是它
-                        if (turnIndex in recordedTurns.indices &&
-                            recordedTurns[turnIndex].role == "user"
+                    val fixed = result.value.trim()
+                    // **必须含假名才采用**：这是语种判错时的最后一道保险 ——
+                    // 结果要是一句中文，说明 ASR 并没有把它当日语转，换上去只会更错。
+                    if (fixed.isNotEmpty() && TextScript.hasKana(fixed)) {
+                        // 前缀「≈」= **这行是机器猜的**。
+                        //
+                        // 真机实测 8 次修正 5 对 3 错，而且错的时候编出来的是像模像样的假日语
+                        // （ありがとう → なりたいと / あれから / なにかと）。
+                        // 比起原来那串一眼就知道坏了的谐音（「奥利给阿杜」），这种"体面的错"
+                        // 对学习者更有害 —— 他会以为自己真说出了那句话。
+                        //
+                        // 又挑不出能预测对错的特征（音频长短、原转写长什么样都试过，都不相关），
+                        // 也就没法在客户端判断哪次该信。既然这行永远只是猜测，就得标成猜测。
+                        val marked = "≈ $fixed"
+                        p.bubble.text = marked
+                        // recordedTurns 里那条也要一起改：结算页与会话落盘读的是它。
+                        // **存的是不带「≈」的原文** —— 标记是给眼睛看的，不该进数据。
+                        if (p.turnIndex in recordedTurns.indices &&
+                            recordedTurns[p.turnIndex].role == "user"
                         ) {
-                            recordedTurns[turnIndex] = SessionTurn("user", corrected)
+                            recordedTurns[p.turnIndex] = SessionTurn("user", fixed)
                         }
                         android.util.Log.i(
                             TAG_STT,
-                            "CORRECTED ${cost}ms 原文='${rawText.take(20)}' 纠错='${corrected.take(20)}'"
+                            "FIXED ${cost}ms '${p.rawText.take(16)}' → '${fixed.take(16)}'"
                         )
+                    } else {
+                        android.util.Log.i(TAG_STT, "结果无假名或为空 ${cost}ms → 保留原文")
                     }
                 }
-                is AiResult.Err -> {
-                    bubble.text = rawText
-                    android.util.Log.w(TAG_STT, "FAIL ${cost}ms ${result.error} → 回退原文本")
-                }
+                is AiResult.Err -> android.util.Log.w(
+                    TAG_STT, "FAIL ${cost}ms ${result.error} → 保留原文"
+                )
             }
             binding.transcriptScroll.post {
                 binding.transcriptScroll.fullScroll(View.FOCUS_DOWN)
             }
-        }
-    }
-
-    /**
-     * 把「这一句送去识别的音频」留一份到外置目录，便于在电脑上做对照实验。
-     *
-     * **为什么需要**：用户带中文口音的日语会被自动语种检测判成中文，
-     * 实时通道与识别通道都输出中文谐音（详见 HANDOVER §17.21.9）。
-     * 要判断下一步怎么修，必须拿**真实录音**去比对不同服务/参数 ——
-     * 原生发音的样本复现不了这个问题。
-     *
-     * 落点是 `Android/data/<包名>/files/stt_debug/last.wav`（**每次覆盖，只有一个文件**），
-     * 该路径可用 `adb pull` 取出。纯诊断用，确认结论后把
-     * [DEBUG_DUMP_UTTERANCE] 置 false 即可停掉，不必删代码。
-     */
-    private fun dumpForDiagnosis(wav: ByteArray) {
-        try {
-            val dir = getExternalFilesDir(null) ?: return
-            val f = File(File(dir, "stt_debug"), "last.wav")
-            f.parentFile?.mkdirs()
-            f.writeBytes(wav)
-        } catch (e: Exception) {
-            // 诊断留档失败不影响任何功能
         }
     }
 
@@ -883,16 +885,8 @@ class VoiceChatActivity : BaseActivity() {
     companion object {
         private const val TAG = "ShiyuVoice"
 
-        /** 用户字幕纠错专用的日志标签，便于真机验证：SEND / CORRECTED / EMPTY / FAIL / SKIP */
+        /** 日语字幕修正专用的日志标签，便于真机验证：SEND / FIXED / SKIP / FAIL */
         private const val TAG_STT = "ShiyuStt"
-
-        /**
-         * 是否把每句送去识别的音频留档到外置目录（见 [dumpForDiagnosis]）。
-         *
-         * **临时诊断开关**：用于排查「带口音的日语被判成中文」（HANDOVER §17.21.9）。
-         * 结论落地后置 false 即可，代码可留。
-         */
-        private const val DEBUG_DUMP_UTTERANCE = true
 
         /**
          * 自由聊天的会话在记录里用的保留 scenarioId。

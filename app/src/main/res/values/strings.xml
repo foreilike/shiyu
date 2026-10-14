@@ -160,13 +160,13 @@
     <string name="talk_scenarios">场景练习</string>
     <string name="back">返回</string>
     <!-- 实时语音（拾语设计稿） -->
-    <string name="voice_ready_sub">实时语音对话 · 点「开始说话」开口，说完点「暂停说话」交给 AI\nAI 语伴会先开口，轮到你时点开始</string>
+    <string name="voice_ready_sub">实时语音对话 · 点「开始说话」开口，说完点「暂停说话」交给 AI</string>
     <string name="voice_entry_title">实时语音对话</string>
         <string name="voice_partner_online">AI 语伴 %1$s 在线 · 像朋友一样聊天</string>
     <string name="voice_kicker">REALTIME TALK</string>
     <string name="voice_listening">正在聆听…</string>
     <!-- 实时语音页副标题：语言 + 模式。实时语音固定是自由聊天（不绑场景） -->
-    <string name="voice_partner_sub">AI 语伴 · %1$s · %2$s</string>
+    <string name="voice_partner_sub">AI 语伴 · %1$s</string>
     <string name="voice_mode_free_talk">自由聊天</string>
     <!-- 「提示」按钮：给一个话题方向（目标语言 + 中文） -->
     <string name="voice_hint_line">可以试试：%1$s（%2$s）</string>
@@ -194,7 +194,6 @@
     <string name="voice_thinking">AI 回复中…</string>
     <!-- 实时语音的用户字幕：stepfun 实时通道对日语会给中文谐音，
          所以先用占位，等独立语音识别返回正确语种再填（HANDOVER §17.21.5） -->
-    <string name="voice_transcript_pending">识别中…</string>
     <string name="voice_type_close">收起</string>
     <string name="voice_type_hint">输入想说的话…</string>
     <string name="voice_type_send">发送</string>

@@ -22,16 +22,29 @@ package com.shiyu.app.core.lang
 object VoicePrompts {
 
     /**
-     * 自由聊天的 system prompt。
+     * 自由聊天的 system prompt —— **与语言无关，三个语种共用这一份**。
      *
-     * @param lang 目标语言，决定"用什么语言说话"以及提示词的措辞
+     * 2026-10-14 之前这里按目标语言分叉（「默认只用日语说话」）；现在改成
+     * 「跟随对方这一句用的语种」，由模型自己判断该用中文 / 英语 / 日语回答。
+     *
+     * **实测依据（两轮真机，共 14 句）**：中英 6/6，日语 6/7 ——
+     * 唯一那次失手是模型跟着**转写文本**（谐音中文）走了，补上「只听发音」这条之后
+     * 日语 5/5。决定性证据是有两句的转写分别是阿拉伯文乱码和空字符串，
+     * 模型照样用日语答且内容接得上 —— 它判语种走音频，和转写那条线无关。
+     * 所以这里**只需要提示词**，不需要客户端再去识别语种改写提示（旧的
+     * `detectLanguageSwitch` + `session.update` 硬切已随之删除）。
      */
-    fun forFreeTalk(lang: LangId): String {
-        val t = lang.displayName
+    fun forFreeTalk(): String {
         val b = StringBuilder()
-        b.append("你是一位").append(t).append("口语陪练，正在和学习者**自由聊天**（不限定话题）。\n\n")
+        b.append("你是一位多语言口语陪练，正在和学习者**自由聊天**（不限定话题）。\n\n")
         b.append("说话规则（务必遵守）：\n")
-        b.append("1. **默认只用").append(t).append("说话。**\n")
+        b.append("1. **跟随对方这一句话用的语种，用同一种语言回答。** ")
+        b.append("他这句说中文，你就用中文答；说英语就用英语答；说日语就用日语答。")
+        b.append("**每一句都重新判断一次** —— 不要因为前面几轮聊的是某种语言，就一直用那种语言，")
+        b.append("对方换了语言你也要立刻跟着换。\n")
+        b.append("   ⚠️ 判断语种**只听他的发音**，不要依据转写出来的文字。")
+        b.append("转写有时会把日语按谐音写成中文（例如 ありがとう 被写成「阿里嘎多」）—— ")
+        b.append("这种时候他说的是日语，你就该用日语回，别被那串中文字带偏。\n")
         b.append("2. **但学习者明确要求你用中文时（例如说「翻译一下」「用中文说」「解释一下意思」），")
         b.append("就直接按他说的用中文回答。** 不要反问「可以吗」、不要请他再说一遍、")
         b.append("不要反复确认 —— 直接照做，一两句说完。\n")
@@ -47,10 +60,10 @@ object VoicePrompts {
         b.append("否则直接聊别的。已经聊过的内容不要再问一遍。\n")
         b.append("6. 用简单常用的词句，学习者水平不高，语速放自然即可。\n")
         b.append("7. **不要念出任何格式标记、标签、翻译或纠错文字。** ")
-        b.append("你嘴里应该只有").append(t).append("本身，不要出现方括号、代号或书面说明。\n")
+        b.append("你嘴里应该只有这一轮该用的那种语言本身，不要出现方括号、代号或书面说明。\n")
         b.append("8. 对方说中文时，先照第 2 条判断：他是要你翻译/解释，还是在正常聊天。")
-        b.append("正常聊天就用").append(t).append("接话（可以先把他的意思用")
-        b.append(t).append("简单复述一遍再继续）。")
+        b.append("两种情况都用中文回答 —— 正常聊天就用中文把话接下去，")
+        b.append("不要擅自切成外语。")
         return b.toString()
     }
 
@@ -82,45 +95,15 @@ object VoicePrompts {
     }
 
     /**
-     * 语音对话里学习者可以随时要求换语言。
+     * 学习者要求换语言的老支路（`LanguageMode` / `detectLanguageSwitch` /
+     * `withLanguageMode`）**已于 2026-10-14 删除**。
      *
-     * **为什么要在客户端判断，而不是交给提示词**：实测 `step-audio-2-mini` 面对"默认说日语"
-     * 和"用户要求中文就照做"两条规则时，几乎总是守前者 —— 换了两版措辞都一样。
-     * 轻量语音模型对长规则列表的遵循度有限，所以改成：**客户端识别意图 → 重发 session.update
-     * 把系统提示里的语言要求直接改掉**。模型看到的不再是"可选规则"，而是"现在就用中文"。
-     */
-    enum class LanguageMode { TARGET, CHINESE }
-
-    /** 识别学习者这句话是不是在要求换语言；不是在要求就返回 null */
-    fun detectLanguageSwitch(text: String): LanguageMode? {
-        val t = text.replace(" ", "").replace("　", "")
-        if (t.isEmpty()) return null
-        val toChinese = listOf(
-            "用中文", "说中文", "讲中文", "中文回复", "中文回答", "中文说",
-            "用汉语", "说汉语", "翻译一下", "翻译成中文", "中文解释"
-        ).any { t.contains(it) }
-        if (toChinese) return LanguageMode.CHINESE
-        val toTarget = listOf(
-            "用日语", "说日语", "日语回复", "日语回答",
-            "用英语", "说英语", "英语回复", "英语回答"
-        ).any { t.contains(it) }
-        if (toTarget) return LanguageMode.TARGET
-        return null
-    }
-
-    /**
-     * 按语言模式改写系统提示；[LanguageMode.TARGET] 时原样返回（即基础提示本身）。
+     * 它当初存在的前提是"提示词压不住语言规则"，所以由客户端识别意图、重发
+     * `session.update` 把提示里的语言要求硬改掉。自动跟随语种之后这个前提不成立了，
+     * 留着反而有害：只要用户说出带「用中文」的字样，它就把会话**按死在中文**上，
+     * 而且追加的硬指令里写着「不要再夹任何日语」，自动跟随从此失效且无法自行退出。
      *
-     * 用 [StringBuilder] 拼换行而不是写转义序列 —— 本机跨工具写文件会把 \\n 折成真换行，
-     * 把 Kotlin 源码写坏（这个坑在别处已经踩过两次）。
+     * 换语言现在由 [forFreeTalk] 的第 1、2 条承担：说什么语言就用什么语言答，
+     * 明确要求中文时照做。
      */
-    fun withLanguageMode(base: String, mode: LanguageMode): String {
-        if (mode == LanguageMode.TARGET) return base
-        val sb = StringBuilder(base)
-        sb.append('\n').append('\n')
-        sb.append("【临时切换】学习者刚刚明确要求你用中文。")
-        sb.append("从现在起，直到他再次要求换回去，你都必须用简体中文回答，")
-        sb.append("每次一到两句，不要再夹任何日语。")
-        return sb.toString()
-    }
 }
