@@ -48,7 +48,7 @@
 ### 📚 单词与题型训练
 
 - **间隔重复（SM-2 算法）**：按记忆强度安排复习，只复习「快忘的」。
-- **12 本词书 / 题库**（约 12 MB，全部离线内置）：日语 N5–N1、英语 CET4 / CET6 / 考研 /
+- **12 本词书 / 题库**（约 11 MB，全部离线内置）：日语 N5–N1、英语 CET4 / CET6 / 考研 /
   雅思 / 托福 / GRE，另含五十音图与英语音标。
 
 ### 🔊 朗读与学习数据
@@ -136,7 +136,7 @@ cp app/src/main/assets/preset_config.example.json app/src/main/assets/preset_con
 export JAVA_HOME=/path/to/jdk17
 
 ./gradlew :app:assembleDebug        # 调试包
-./gradlew :app:testDebugUnitTest    # 跑单测（约 500 例）
+./gradlew :app:testDebugUnitTest    # 跑单测（498 例）
 ./gradlew :app:lintDebug            # 静态检查
 ```
 
@@ -148,7 +148,7 @@ Release 包需要在 `keystore.properties` 里配置自己的签名（文件同�
 
 | 指标 | 值 |
 |---|---|
-| 单元测试 | **约 500 例 / 40 个测试类，0 失败**（纯 JVM，不依赖真机） |
+| 单元测试 | **498 例 / 40 个测试类，0 失败**（纯 JVM，不依赖真机） |
 | 静态检查 | **lint 0 error** |
 | 主代码 | 93 个 Kotlin 文件 / 约 10,900 行 |
 | 测试代码 | 38 个文件 / 约 5,100 行（≈ 主代码的 47%） |
