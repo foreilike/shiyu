@@ -8,6 +8,10 @@ build/
 keystore/
 keystore.properties
 
+# 出厂预置配置（含真实 API Key，绝不入库）
+# 仓库里放的是 preset_config.example.json；要跑本地构建就复制它并填 Key
+app/src/main/assets/preset_config.json
+
 # 本机路径
 local.properties
 

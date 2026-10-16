@@ -85,7 +85,7 @@ class PresetConfigLangOverrideTest {
     @Test
     fun real_preset_asset_only_overrides_japanese_asr() {
         // 直接读真实 assets 文件，防止以后有人手滑加了 en 段落
-        val text = java.io.File("src/main/assets/preset_config.json").readText()
+        val text = java.io.File("src/main/assets/preset_config.example.json").readText()
         val list = PresetConfig.parseLangOverrides(text)
         assertEquals("真实预置里应只有日语 asr 一条覆盖", 1, list.size)
         assertEquals(LangId.JA, list[0].lang)

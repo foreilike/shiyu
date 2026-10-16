@@ -1,22 +1,22 @@
 {
-  "_comment": "出厂预置配置（明文，仅自用/内部分发）。groups 对所有语言生效；langGroups.<tag>.<组> 用于按语言覆盖，只影响该语言。",
+  "_comment": "出厂预置配置样例（**不含任何密钥**）。要用请复制成同目录下的 preset_config.json 并填入自己的 Key；该真文件已被 .gitignore 排除，不会进仓库。groups 对所有语言生效；langGroups.<语言tag>.<组> 只作用于该语言。",
   "activeLang": "ja",
   "groups": {
     "chat": {
       "baseUrl": "https://api.stepfun.com/step_plan/v1",
-      "apiKey": "REDACTED_API_KEY",
+      "apiKey": "",
       "model": "step-5-preview",
       "enabled": true
     },
     "realtime": {
       "baseUrl": "wss://api.stepfun.com/v1/realtime",
-      "apiKey": "REDACTED_API_KEY",
+      "apiKey": "",
       "model": "stepaudio-3-realtime-preview",
       "enabled": true
     },
     "tts": {
       "baseUrl": "https://api.stepfun.com/step_plan/v1",
-      "apiKey": "REDACTED_API_KEY",
+      "apiKey": "",
       "model": "stepaudio-2.5-tts",
       "voice": "jilingshaonv",
       "enabled": true
@@ -26,7 +26,7 @@
     "ja": {
       "asr": {
         "baseUrl": "https://ark.cn-beijing.volces.com/api/v3",
-        "apiKey": "REDACTED_API_KEY",
+        "apiKey": "",
         "model": "doubao-seed-2-0-mini-260428",
         "enabled": true
       }
