@@ -8,6 +8,25 @@
 
 ---
 
+## 界面预览
+
+<table>
+  <tr>
+    <td align="center" width="33%"><img src="docs/screenshots/01-home.png" width="230"><br><sub><b>首页</b> · 今日目标 · 连续天数</sub></td>
+    <td align="center" width="33%"><img src="docs/screenshots/02-scenarios.png" width="230"><br><sub><b>场景练习</b> · 5 个高频场景</sub></td>
+    <td align="center" width="33%"><img src="docs/screenshots/03-voice-chat.png" width="230"><br><sub><b>实时语音对话</b> · 字幕 + 中文翻译</sub></td>
+  </tr>
+  <tr>
+    <td align="center"><img src="docs/screenshots/04-voice-ready.png" width="230"><br><sub><b>实时语音</b> · 不选语言，直接开口</sub></td>
+    <td align="center"><img src="docs/screenshots/05-review-card.png" width="230"><br><sub><b>单词复习</b> · 释义/读音/例句 + 记忆评分</sub></td>
+    <td align="center"><img src="docs/screenshots/06-stats.png" width="230"><br><sub><b>学习统计</b> · 周条形图与成就</sub></td>
+  </tr>
+</table>
+
+> 上图为 2026-10 在真机（魅族 22）上的实际运行截图。
+
+---
+
 ## 核心特性
 
 ### 🎙️ 实时语音对话（主打）
